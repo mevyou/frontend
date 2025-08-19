@@ -1,11 +1,11 @@
 import { Header } from '@/components/Header'
-import { BettingDashboard } from '@/components/BettingDashboard'
+import { UserProfile } from '@/components/UserProfile'
 
-export default function Home() {
+export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-900">
       <Header />
-      <BettingDashboard />
+      <UserProfile />
     </div>
   )
 }
