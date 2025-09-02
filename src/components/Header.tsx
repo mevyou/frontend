@@ -2,12 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useAccount, useBalance, useDisconnect } from 'wagmi'
-import { Menu, X, User, Wallet, LogOut, TrendingUp, Home, ChevronDown, Copy, ExternalLink } from 'lucide-react'
+import { Menu, X, User, LogOut, TrendingUp, Home, ChevronDown, Copy, ExternalLink } from 'lucide-react'
 import { WalletConnect } from './WalletConnect'
 import { formatWeiToEther, formatAddress, cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { toast } from 'react-hot-toast'
+import { ThemeToggle } from './ThemeToggle'
 
 export function Header() {
   const { address, isConnected } = useAccount()
@@ -54,16 +55,16 @@ export function Header() {
   ]
 
   return (
-    <header className="bg-gray-800 border-b border-gray-700">
+    <header className="bg-card border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-brand-blue to-primary rounded-lg flex items-center justify-center">
                 <TrendingUp size={20} className="text-white" />
               </div>
-              <span className="text-xl font-bold text-white">MevYou</span>
+              <span className="text-xl font-bold text-card-foreground">MevYou</span>
             </Link>
           </div>
 
@@ -79,8 +80,8 @@ export function Header() {
                   className={cn(
                     "flex items-center gap-2 transition-colors px-3 py-2 rounded-lg",
                     isActive
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-card-foreground hover:bg-muted"
                   )}
                 >
                   <Icon size={16} />
@@ -92,15 +93,16 @@ export function Header() {
 
           {/* Desktop Wallet & Profile */}
           <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             {isConnected && address ? (
               <div className="flex items-center gap-4">
                 {/* Balance Display */}
                 {balance && (
                   <div className="text-right">
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-sm font-medium text-card-foreground">
                       {parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH
                     </div>
-                    <div className="text-xs text-gray-400">Balance</div>
+                    <div className="text-xs text-muted-foreground">Balance</div>
                   </div>
                 )}
 
@@ -108,49 +110,49 @@ export function Header() {
                 <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                    className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-lg transition-colors"
+                    className="flex items-center gap-2 bg-muted hover:bg-accent hover:text-accent-foreground px-3 py-2 rounded-lg transition-colors"
                   >
-                    <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-gradient-to-r from-brand-blue to-primary rounded-full flex items-center justify-center">
                       <User size={14} className="text-white" />
                     </div>
-                    <span className="text-white text-sm font-medium">
+                    <span className="text-card-foreground text-sm font-medium">
                       {formatAddress(address)}
                     </span>
-                    <ChevronDown size={16} className="text-gray-400" />
+                    <ChevronDown size={16} className="text-muted-foreground" />
                   </button>
 
                   {/* Profile Dropdown */}
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-50">
-                      <div className="p-4 border-b border-gray-700">
+                    <div className="absolute right-0 mt-2 w-64 bg-card border border-border rounded-lg shadow-lg z-50">
+                      <div className="p-4 border-b border-border">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                          <div className="w-10 h-10 bg-gradient-to-r from-brand-blue to-primary rounded-full flex items-center justify-center">
                             <User size={20} className="text-white" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-white">Connected Wallet</p>
-                            <p className="text-xs text-gray-400">{formatAddress(address)}</p>
+                            <p className="text-sm font-medium text-card-foreground">Connected Wallet</p>
+                            <p className="text-xs text-muted-foreground">{formatAddress(address)}</p>
                           </div>
                         </div>
                         {balance && (
-                          <div className="mt-3 p-2 bg-gray-700 rounded">
-                            <p className="text-xs text-gray-400">Balance</p>
-                            <p className="text-sm font-medium text-white">{parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH</p>
+                          <div className="mt-3 p-2 bg-muted rounded">
+                            <p className="text-xs text-muted-foreground">Balance</p>
+                            <p className="text-sm font-medium text-card-foreground">{parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH</p>
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="p-2">
                         <button
                           onClick={copyAddress}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded transition-colors"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-card-foreground hover:bg-muted rounded transition-colors"
                         >
                           <Copy size={16} />
                           <span>Copy Address</span>
                         </button>
                         <button
                           onClick={openEtherscan}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded transition-colors"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-card-foreground hover:bg-muted rounded transition-colors"
                         >
                           <ExternalLink size={16} />
                           <span>View on Etherscan</span>
@@ -158,15 +160,15 @@ export function Header() {
                         <Link
                           href="/profile"
                           onClick={() => setIsProfileMenuOpen(false)}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded transition-colors"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-card-foreground hover:bg-muted rounded transition-colors"
                         >
                           <User size={16} />
                           <span>View Profile</span>
                         </Link>
-                        <hr className="my-2 border-gray-700" />
+                        <hr className="my-2 border-border" />
                         <button
                           onClick={handleDisconnect}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-gray-700 rounded transition-colors"
+                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-brand-red hover:text-red-500 hover:bg-muted rounded transition-colors"
                         >
                           <LogOut size={16} />
                           <span>Disconnect</span>
@@ -182,10 +184,11 @@ export function Header() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-card-foreground transition-colors"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -195,7 +198,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-gray-800 border-t border-gray-700">
+        <div className="md:hidden bg-card border-t border-border">
           <div className="px-4 py-3 space-y-3">
             {/* Navigation Links */}
             {navigation.map((item) => {
@@ -208,8 +211,8 @@ export function Header() {
                   className={cn(
                     "flex items-center gap-2 transition-colors py-2 px-3 rounded-lg",
                     isActive
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-card-foreground hover:bg-muted"
                   )}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -220,14 +223,14 @@ export function Header() {
             })}
 
             {/* Wallet Section */}
-            <div className="pt-3 border-t border-gray-700">
+            <div className="pt-3 border-t border-border">
               {isConnected && address ? (
                 <div className="space-y-3">
                   {/* Balance */}
                   {balance && (
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-gray-400">Balance:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-muted-foreground">Balance:</span>
+                      <span className="text-card-foreground font-medium">
                         {parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH
                       </span>
                     </div>
@@ -235,14 +238,14 @@ export function Header() {
 
                   {/* Address */}
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-gray-400">Address:</span>
-                    <span className="text-white font-medium">{formatAddress(address)}</span>
+                    <span className="text-muted-foreground">Address:</span>
+                    <span className="text-card-foreground font-medium">{formatAddress(address)}</span>
                   </div>
 
                   {/* Profile Link */}
                   <Link
                     href="/profile"
-                    className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors py-2"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-card-foreground transition-colors py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <User size={16} />
@@ -255,7 +258,7 @@ export function Header() {
                       disconnect()
                       setIsMobileMenuOpen(false)
                     }}
-                    className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors py-2"
+                    className="flex items-center gap-2 text-brand-red hover:text-red-500 transition-colors py-2"
                   >
                     <LogOut size={16} />
                     Disconnect Wallet

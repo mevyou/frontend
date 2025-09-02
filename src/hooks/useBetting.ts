@@ -1,8 +1,8 @@
 'use client'
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther, formatEther } from 'viem'
-import { BETTING_CONTRACT_ABI, BETTING_CONTRACT_ADDRESS, Bet, BetStatus } from '@/lib/contracts/BettingContract'
+import { parseEther } from 'viem'
+import { BETTING_CONTRACT_ABI, BETTING_CONTRACT_ADDRESS, Bet } from '@/lib/contracts/BettingContract'
 import { toast } from 'react-hot-toast'
 
 export function useCreateBet() {

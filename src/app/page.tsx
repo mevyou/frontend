@@ -3,7 +3,7 @@ import { BettingDashboard } from '@/components/BettingDashboard'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Header />
       <BettingDashboard />
     </div>

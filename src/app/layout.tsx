@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/providers/Web3Provider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Toaster } from 'react-hot-toast';
 
 const outfit = Outfit({
@@ -23,20 +24,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} font-outfit antialiased bg-gray-900 text-white`}
+        className={`${outfit.variable} font-outfit antialiased`}
       >
-        <Web3Provider>
-          {children}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: '#1f2937',
-                color: '#fff',
-              },
-            }}
-          />
-        </Web3Provider>
+        <ThemeProvider>
+          <Web3Provider>
+            {children}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                style: {
+                  background: 'var(--color-card)',
+                  color: 'var(--color-card-foreground)',
+                  border: '1px solid var(--color-border)',
+                },
+              }}
+            />
+          </Web3Provider>
+        </ThemeProvider>
       </body>
     </html>
   );

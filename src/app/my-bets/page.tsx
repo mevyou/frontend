@@ -18,8 +18,8 @@ export default function MyBetsPage() {
   const userBets = useMemo(() => {
     if (!address) return []
     return dummyBets
-      .filter(bet => 
-        bet.creator.toLowerCase() === address.toLowerCase() || 
+      .filter(bet =>
+        bet.creator.toLowerCase() === address.toLowerCase() ||
         bet.opponent.toLowerCase() === address.toLowerCase()
       )
       .sort((a, b) => Number(b.id) - Number(a.id))
@@ -66,12 +66,12 @@ export default function MyBetsPage() {
 
   if (!address) {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-white mb-2">Connect Your Wallet</h2>
-            <p className="text-gray-400">Please connect your wallet to view your bets</p>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Connect Your Wallet</h2>
+            <p className="text-muted-foreground">Please connect your wallet to view your bets</p>
           </div>
         </div>
       </div>
@@ -79,55 +79,55 @@ export default function MyBetsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-background">
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">My Bets</h1>
-            <p className="text-gray-400 mt-1">Track your betting activity and performance</p>
+            <h1 className="text-3xl font-bold text-foreground">My Bets</h1>
+            <p className="text-muted-foreground mt-1">Track your betting activity and performance</p>
           </div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp size={20} className="text-blue-400" />
-              <span className="text-gray-400 text-sm">Total Bets</span>
+              <TrendingUp size={20} className="text-brand-blue" />
+              <span className="text-muted-foreground text-sm">Total Bets</span>
             </div>
-            <div className="text-2xl font-bold text-white">{userStats.totalBets}</div>
+            <div className="text-2xl font-bold text-card-foreground">{userStats.totalBets}</div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <Clock size={20} className="text-yellow-400" />
-              <span className="text-gray-400 text-sm">Active</span>
+              <Clock size={20} className="text-yellow-500" />
+              <span className="text-muted-foreground text-sm">Active</span>
             </div>
-            <div className="text-2xl font-bold text-white">{userStats.activeBets}</div>
+            <div className="text-2xl font-bold text-card-foreground">{userStats.activeBets}</div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <Trophy size={20} className="text-green-400" />
-              <span className="text-gray-400 text-sm">Won</span>
+              <Trophy size={20} className="text-green-500" />
+              <span className="text-muted-foreground text-sm">Won</span>
             </div>
-            <div className="text-2xl font-bold text-white">{userStats.wonBets}</div>
+            <div className="text-2xl font-bold text-card-foreground">{userStats.wonBets}</div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <TrendingDown size={20} className="text-red-400" />
-              <span className="text-gray-400 text-sm">Lost</span>
+              <TrendingDown size={20} className="text-brand-red" />
+              <span className="text-muted-foreground text-sm">Lost</span>
             </div>
-            <div className="text-2xl font-bold text-white">{userStats.lostBets}</div>
+            <div className="text-2xl font-bold text-card-foreground">{userStats.lostBets}</div>
           </div>
         </div>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-6">
-          <div className="flex items-center gap-2 text-gray-400">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Filter size={16} />
             <span className="text-sm font-medium">Filter:</span>
           </div>
@@ -136,10 +136,10 @@ export default function MyBetsPage() {
               key={option.value}
               onClick={() => setFilter(option.value as FilterType)}
               className={cn(
-                'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+                'px-3 py-1.5 rounded-full text-sm font-medium transition-colors border',
                 filter === option.value
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                  : 'bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground border-border hover:border-accent'
               )}
             >
               {option.label} ({option.count})
@@ -156,10 +156,10 @@ export default function MyBetsPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <div className="text-gray-400 text-lg mb-2">
+            <div className="text-muted-foreground text-lg mb-2">
               {filter === 'all' ? 'No bets found' : `No ${filter} bets found`}
             </div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-muted-foreground/70 text-sm">
               {filter === 'all' ? 'Start betting to see your activity here!' : 'Try adjusting your filter'}
             </p>
           </div>
