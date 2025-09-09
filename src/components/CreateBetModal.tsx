@@ -111,14 +111,14 @@ export function CreateBetModal({ isOpen, onClose, onSuccess }: CreateBetModalPro
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-800 rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
-          <h2 className="text-xl font-bold text-white">Create New Bet</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Create New Bet</h2>
           <button
             onClick={handleClose}
             disabled={isPending}
-            className="text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors disabled:opacity-50"
           >
             <X size={24} />
           </button>
@@ -128,7 +128,7 @@ export function CreateBetModal({ isOpen, onClose, onSuccess }: CreateBetModalPro
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Description */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <FileText size={16} />
               Bet Description
             </label>
@@ -138,22 +138,22 @@ export function CreateBetModal({ isOpen, onClose, onSuccess }: CreateBetModalPro
               placeholder="Describe what this bet is about..."
               rows={3}
               className={cn(
-                'w-full px-3 py-2 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none',
-                errors.description ? 'border-red-500' : 'border-gray-600'
+                'w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none',
+                errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               )}
               disabled={isPending}
             />
             {errors.description && (
               <p className="text-red-400 text-sm mt-1">{errors.description}</p>
             )}
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-600 dark:text-gray-500 text-xs mt-1">
               {formData.description.length}/200 characters
             </p>
           </div>
 
           {/* Amount */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <DollarSign size={16} />
               Stake Amount (ETH)
             </label>
@@ -166,22 +166,22 @@ export function CreateBetModal({ isOpen, onClose, onSuccess }: CreateBetModalPro
               onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
               placeholder="0.1"
               className={cn(
-                'w-full px-3 py-2 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500',
-                errors.amount ? 'border-red-500' : 'border-gray-600'
+                'w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500',
+                errors.amount ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               )}
               disabled={isPending}
             />
             {errors.amount && (
               <p className="text-red-400 text-sm mt-1">{errors.amount}</p>
             )}
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-600 dark:text-gray-500 text-xs mt-1">
               Both you and your opponent will stake this amount
             </p>
           </div>
 
           {/* Deadline */}
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               <Calendar size={16} />
               Bet Deadline
             </label>
@@ -192,23 +192,23 @@ export function CreateBetModal({ isOpen, onClose, onSuccess }: CreateBetModalPro
               value={formData.deadline}
               onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
               className={cn(
-                'w-full px-3 py-2 bg-gray-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500',
-                errors.deadline ? 'border-red-500' : 'border-gray-600'
+                'w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500',
+                errors.deadline ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
               )}
               disabled={isPending}
             />
             {errors.deadline && (
               <p className="text-red-400 text-sm mt-1">{errors.deadline}</p>
             )}
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-600 dark:text-gray-500 text-xs mt-1">
               When should this bet be resolved?
             </p>
           </div>
 
           {/* Wallet Connection Warning */}
           {!isConnected && (
-            <div className="bg-yellow-900/20 border border-yellow-800 rounded-lg p-3">
-              <p className="text-yellow-400 text-sm">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+              <p className="text-yellow-700 dark:text-yellow-400 text-sm">
                 Please connect your wallet to create a bet
               </p>
             </div>
@@ -220,7 +220,7 @@ export function CreateBetModal({ isOpen, onClose, onSuccess }: CreateBetModalPro
               type="button"
               onClick={handleClose}
               disabled={isPending}
-              className="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-600/50 text-white rounded-lg font-medium transition-colors"
+              className="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-700 disabled:bg-gray-300/50 dark:disabled:bg-gray-600/50 text-gray-900 dark:text-white rounded-lg font-medium transition-colors"
             >
               Cancel
             </button>

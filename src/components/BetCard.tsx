@@ -50,7 +50,7 @@ export function BetCard({ bet, onUpdate }: BetCardProps) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-colors">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
       {/* Status Badge */}
       <div className="flex justify-between items-start mb-4">
         <span className={cn(
@@ -60,16 +60,16 @@ export function BetCard({ bet, onUpdate }: BetCardProps) {
           {getBetStatusText(bet.status)}
         </span>
         <div className="text-right">
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">
             {formatWeiToEther(bet.amount)} ETH
           </div>
-          <div className="text-sm text-gray-400">Stake Amount</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">Stake Amount</div>
         </div>
       </div>
 
       {/* Description */}
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-2">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           {truncateText(bet.description, 60)}
         </h3>
       </div>
@@ -77,23 +77,23 @@ export function BetCard({ bet, onUpdate }: BetCardProps) {
       {/* Participants */}
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-sm">
-          <User size={14} className="text-gray-400" />
-          <span className="text-gray-400">Creator:</span>
-          <span className="text-white font-medium">{formatAddress(bet.creator)}</span>
+          <User size={14} className="text-gray-500 dark:text-gray-400" />
+          <span className="text-gray-600 dark:text-gray-400">Creator:</span>
+          <span className="text-gray-900 dark:text-white font-medium">{formatAddress(bet.creator)}</span>
           {isCreator && <span className="text-blue-400 text-xs">(You)</span>}
         </div>
         {bet.opponent !== '0x0000000000000000000000000000000000000000' && (
           <div className="flex items-center gap-2 text-sm">
-            <User size={14} className="text-gray-400" />
-            <span className="text-gray-400">Opponent:</span>
-            <span className="text-white font-medium">{formatAddress(bet.opponent)}</span>
+            <User size={14} className="text-gray-500 dark:text-gray-400" />
+            <span className="text-gray-600 dark:text-gray-400">Opponent:</span>
+            <span className="text-gray-900 dark:text-white font-medium">{formatAddress(bet.opponent)}</span>
             {isOpponent && <span className="text-blue-400 text-xs">(You)</span>}
           </div>
         )}
       </div>
 
       {/* Deadline */}
-      <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
         <Clock size={14} />
         <span>{getTimeUntilDeadline(bet.deadline)}</span>
         {isExpired && <span className="text-red-400 font-medium">(Expired)</span>}
@@ -101,10 +101,10 @@ export function BetCard({ bet, onUpdate }: BetCardProps) {
 
       {/* Winner (if resolved) */}
       {bet.status === BetStatus.RESOLVED && bet.winner !== '0x0000000000000000000000000000000000000000' && (
-        <div className="flex items-center gap-2 text-sm mb-4 p-2 bg-green-900/20 rounded-lg border border-green-800">
-          <Trophy size={14} className="text-yellow-400" />
-          <span className="text-gray-400">Winner:</span>
-          <span className="text-green-400 font-medium">{formatAddress(bet.winner)}</span>
+        <div className="flex items-center gap-2 text-sm mb-4 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+          <Trophy size={14} className="text-yellow-500 dark:text-yellow-400" />
+          <span className="text-gray-600 dark:text-gray-400">Winner:</span>
+          <span className="text-green-600 dark:text-green-400 font-medium">{formatAddress(bet.winner)}</span>
           {address && bet.winner.toLowerCase() === address.toLowerCase() && (
             <span className="text-yellow-400 text-xs">(You won!)</span>
           )}
@@ -146,7 +146,7 @@ export function BetCard({ bet, onUpdate }: BetCardProps) {
 
         {showResolveOptions && (
           <div className="space-y-2">
-            <div className="text-sm text-gray-400 text-center mb-2">Who won this bet?</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 text-center mb-2">Who won this bet?</div>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handleResolveBet(bet.creator)}
@@ -167,7 +167,7 @@ export function BetCard({ bet, onUpdate }: BetCardProps) {
             </div>
             <button
               onClick={() => setShowResolveOptions(false)}
-              className="w-full bg-gray-600 hover:bg-gray-700 text-white py-1 px-4 rounded-lg text-sm transition-colors"
+              className="w-full bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-700 text-gray-900 dark:text-white py-1 px-4 rounded-lg text-sm transition-colors"
             >
               Cancel
             </button>

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/providers/Web3Provider";
-import { Toaster } from 'react-hot-toast';
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { Toaster } from "react-hot-toast";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -23,20 +24,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${outfit.variable} font-outfit antialiased bg-gray-900 text-white`}
+        className={`${nunitoSans.variable} font-nunito-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors`}
       >
-        <Web3Provider>
-          {children}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: '#1f2937',
-                color: '#fff',
-              },
-            }}
-          />
-        </Web3Provider>
+        <ThemeProvider>
+          <Web3Provider>
+            {children}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                className:
+                  "dark:bg-gray-800 dark:text-white bg-white text-gray-900",
+              }}
+            />
+          </Web3Provider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -61,14 +61,14 @@ export function BettingDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white">Betting Dashboard</h1>
-          <p className="text-gray-400 mt-1">Create and join peer-to-peer bets</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Betting Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Create and join peer-to-peer bets</p>
         </div>
         <div className="flex gap-3">
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors disabled:opacity-50"
           >
             <RefreshCw size={16} className={cn(isRefreshing && 'animate-spin')} />
             Refresh
@@ -85,7 +85,7 @@ export function BettingDashboard() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-6">
-        <div className="flex items-center gap-2 text-gray-400">
+        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
           <Filter size={16} />
           <span className="text-sm font-medium">Filter:</span>
         </div>
@@ -97,7 +97,7 @@ export function BettingDashboard() {
               'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
               filter === option.value
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
             )}
           >
             {option.label} ({option.count})
