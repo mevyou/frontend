@@ -1,5 +1,5 @@
-import { Header } from '@/components/Header'
-import { UserProfile } from '@/components/UserProfile'
+import { Header } from "@/components/Header";
+import { UserProfile } from "@/components/UserProfile";
 
 export default function ProfilePage() {
   return (
@@ -7,5 +7,5 @@ export default function ProfilePage() {
       <Header />
       <UserProfile />
     </div>
-  )
+  );
 }

@@ -1,58 +1,72 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { useAccount, useBalance, useDisconnect } from 'wagmi'
-import { Menu, X, User, Wallet, LogOut, TrendingUp, Home, ChevronDown, Copy, ExternalLink } from 'lucide-react'
-import { WalletConnect } from './WalletConnect'
-import { ThemeToggle } from './ThemeToggle'
-import { formatWeiToEther, formatAddress, cn } from '@/lib/utils'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { toast } from 'react-hot-toast'
+import { useState, useRef, useEffect } from "react";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
+import {
+  Menu,
+  X,
+  User,
+  Wallet,
+  LogOut,
+  TrendingUp,
+  Home,
+  ChevronDown,
+  Copy,
+  ExternalLink,
+} from "lucide-react";
+import { WalletConnect } from "./WalletConnect";
+import { ThemeToggle } from "./ThemeToggle";
+import { formatWeiToEther, formatAddress, cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export function Header() {
-  const { address, isConnected } = useAccount()
-  const { data: balance } = useBalance({ address })
-  const { disconnect } = useDisconnect()
-  const pathname = usePathname()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-  const profileRef = useRef<HTMLDivElement>(null)
+  const { address, isConnected } = useAccount();
+  const { data: balance } = useBalance({ address });
+  const { disconnect } = useDisconnect();
+  const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setIsProfileMenuOpen(false)
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const copyAddress = () => {
     if (address) {
-      navigator.clipboard.writeText(address)
-      toast.success('Address copied to clipboard!')
+      navigator.clipboard.writeText(address);
+      toast.success("Address copied to clipboard!");
     }
-  }
+  };
 
   const openEtherscan = () => {
     if (address) {
-      window.open(`https://etherscan.io/address/${address}`, '_blank')
+      window.open(`https://etherscan.io/address/${address}`, "_blank");
     }
-  }
+  };
 
   const handleDisconnect = () => {
-    disconnect()
-    setIsProfileMenuOpen(false)
-    toast.success('Wallet disconnected')
-  }
+    disconnect();
+    setIsProfileMenuOpen(false);
+    toast.success("Wallet disconnected");
+  };
 
   const navigation = [
-    { name: 'Dashboard', href: '/', icon: Home },
-    { name: 'My Bets', href: '/my-bets', icon: TrendingUp },
-  ]
+    { name: "Dashboard", href: "/", icon: Home },
+    { name: "My Bets", href: "/my-bets", icon: TrendingUp },
+  ];
 
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors">
@@ -64,15 +78,17 @@ export function Header() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <TrendingUp size={20} className="text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">MevYou</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                MevYou
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -87,7 +103,7 @@ export function Header() {
                   <Icon size={16} />
                   {item.name}
                 </Link>
-              )
+              );
             })}
           </nav>
 
@@ -95,16 +111,19 @@ export function Header() {
           <div className="hidden md:flex items-center gap-4">
             {/* Theme Toggle */}
             <ThemeToggle />
-            
+
             {isConnected && address ? (
               <div className="flex items-center gap-4">
                 {/* Balance Display */}
                 {balance && (
                   <div className="text-right">
                     <div className="text-sm font-medium text-gray-900 dark:text-white">
-                      {parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH
+                      {parseFloat(formatWeiToEther(balance.value)).toFixed(4)}{" "}
+                      ETH
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Balance</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      Balance
+                    </div>
                   </div>
                 )}
 
@@ -120,7 +139,10 @@ export function Header() {
                     <span className="text-gray-900 dark:text-white text-sm font-medium">
                       {formatAddress(address)}
                     </span>
-                    <ChevronDown size={16} className="text-gray-500 dark:text-gray-400" />
+                    <ChevronDown
+                      size={16}
+                      className="text-gray-500 dark:text-gray-400"
+                    />
                   </button>
 
                   {/* Profile Dropdown */}
@@ -132,18 +154,27 @@ export function Header() {
                             <User size={20} className="text-white" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-white">Connected Wallet</p>
-                            <p className="text-xs text-gray-400">{formatAddress(address)}</p>
+                            <p className="text-sm font-medium text-white">
+                              Connected Wallet
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {formatAddress(address)}
+                            </p>
                           </div>
                         </div>
                         {balance && (
                           <div className="mt-3 p-2 bg-gray-700 rounded">
                             <p className="text-xs text-gray-400">Balance</p>
-                            <p className="text-sm font-medium text-white">{parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH</p>
+                            <p className="text-sm font-medium text-white">
+                              {parseFloat(
+                                formatWeiToEther(balance.value)
+                              ).toFixed(4)}{" "}
+                              ETH
+                            </p>
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="p-2">
                         <button
                           onClick={copyAddress}
@@ -203,8 +234,8 @@ export function Header() {
           <div className="px-4 py-3 space-y-3">
             {/* Navigation Links */}
             {navigation.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.name}
@@ -220,7 +251,7 @@ export function Header() {
                   <Icon size={16} />
                   {item.name}
                 </Link>
-              )
+              );
             })}
 
             {/* Theme Toggle */}
@@ -238,7 +269,8 @@ export function Header() {
                     <div className="flex items-center justify-between py-2">
                       <span className="text-gray-400">Balance:</span>
                       <span className="text-white font-medium">
-                        {parseFloat(formatWeiToEther(balance.value)).toFixed(4)} ETH
+                        {parseFloat(formatWeiToEther(balance.value)).toFixed(4)}{" "}
+                        ETH
                       </span>
                     </div>
                   )}
@@ -246,7 +278,9 @@ export function Header() {
                   {/* Address */}
                   <div className="flex items-center justify-between py-2">
                     <span className="text-gray-400">Address:</span>
-                    <span className="text-white font-medium">{formatAddress(address)}</span>
+                    <span className="text-white font-medium">
+                      {formatAddress(address)}
+                    </span>
                   </div>
 
                   {/* Profile Link */}
@@ -262,8 +296,8 @@ export function Header() {
                   {/* Disconnect */}
                   <button
                     onClick={() => {
-                      disconnect()
-                      setIsMobileMenuOpen(false)
+                      disconnect();
+                      setIsMobileMenuOpen(false);
                     }}
                     className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors py-2"
                   >
@@ -289,5 +323,5 @@ export function Header() {
         />
       )}
     </header>
-  )
+  );
 }

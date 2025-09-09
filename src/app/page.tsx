@@ -1,5 +1,5 @@
-import { Header } from '@/components/Header'
-import { BettingDashboard } from '@/components/BettingDashboard'
+import { Header } from "@/components/Header";
+import { BettingDashboard } from "@/components/BettingDashboard";
 
 export default function Home() {
   return (
@@ -7,5 +7,5 @@ export default function Home() {
       <Header />
       <BettingDashboard />
     </div>
-  )
+  );
 }
