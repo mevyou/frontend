@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useAccount } from "wagmi";
-import { Header } from "@/components/Header";
+import { MainLayout } from "@/components/MainLayout";
 import { BetCard } from "@/components/BetCard";
 import { Filter, TrendingUp, Clock, Trophy, TrendingDown } from "lucide-react";
 import { BetStatus } from "@/lib/contracts/BettingContract";
@@ -79,8 +79,7 @@ export default function MyBetsPage() {
 
   if (!address) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Header />
+      <MainLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -91,13 +90,12 @@ export default function MyBetsPage() {
             </p>
           </div>
         </div>
-      </div>
+      </MainLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
+    <MainLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -216,6 +214,6 @@ export default function MyBetsPage() {
           </div>
         )}
       </div>
-    </div>
+    </MainLayout>
   );
 }

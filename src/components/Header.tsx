@@ -6,7 +6,6 @@ import {
   Menu,
   X,
   User,
-  Wallet,
   LogOut,
   TrendingUp,
   Home,

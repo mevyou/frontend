@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${nunitoSans.variable} font-nunito-sans antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors`}
+        className={`${nunitoSans.variable} font-nunito-sans antialiased bg-gray-100 dark:bg-black text-gray-900 dark:text-white transition-colors`}
       >
         <ThemeProvider>
           <Web3Provider>
