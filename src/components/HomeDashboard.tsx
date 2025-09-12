@@ -33,21 +33,15 @@ export function HomeDashboard() {
             </div>
           </div>
 
-          <button className="flex items-center space-x-2 text-primary hover:text-primary/80 transition-colors font-nunito-sans font-medium">
+          <button className="flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors font-nunito-sans font-medium text-white">
             <span>Explore Market</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            <Image
+              src={AppIcons.arrowRight}
+              alt="Arrow Right"
+              width={16}
+              height={16}
+              className="text-white"
+            />
           </button>
         </div>
 
@@ -81,21 +75,15 @@ export function HomeDashboard() {
             </div>
           </div>
 
-          <button className="flex items-center space-x-2 text-primary hover:text-primary/80 transition-colors font-nunito-sans font-medium">
+          <button className="flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors font-nunito-sans font-medium text-white">
             <span>Explore Market</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            <Image
+              src={AppIcons.arrowRight}
+              alt="Arrow Right"
+              width={16}
+              height={16}
+              className="text-white"
+            />
           </button>
         </div>
 

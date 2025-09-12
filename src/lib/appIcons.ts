@@ -47,6 +47,7 @@ export const AppIcons = {
   // Arrow Icons
   arrowDown: "/svg/arrow-down.svg",
   arrowDown1: "/svg/arrow-down1.svg",
+  arrowRight: "/svg/arrow-right.svg",
 
   // Communication Icons
   bubbleChat: "/svg/bubble-chat.svg",

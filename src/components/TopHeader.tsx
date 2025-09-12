@@ -47,7 +47,7 @@ export function TopHeader({ onMenuToggle }: TopHeaderProps) {
   };
 
   return (
-    <header className="bg-gray-900 dark:bg-black border-b border-gray-800 dark:border-gray-700 px-6 py-4">
+    <header className="bg-gray-900 dark:bg-black border-b border-transparent px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Left Section - Menu Toggle & Search */}
         <div className="flex items-center space-x-4">

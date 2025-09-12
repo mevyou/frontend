@@ -14,6 +14,9 @@ const nunitoSans = Nunito_Sans({
 export const metadata: Metadata = {
   title: "MevYou - P2P Betting Platform",
   description: "Decentralized peer-to-peer betting platform on Web3",
+  icons: {
+    icon: "/image/logo.png",
+  },
 };
 
 export default function RootLayout({

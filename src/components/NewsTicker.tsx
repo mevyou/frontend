@@ -73,8 +73,8 @@ export function NewsTicker() {
   }, []);
 
   return (
-    <div className="py-3 px-4 overflow-hidden">
-      <div className="bg-gray-700 rounded-full px-6 py-3 relative overflow-hidden">
+    <div className="py-2 px-4 overflow-hidden">
+      <div className="bg-gray-700/80 rounded-full px-4 py-2 relative overflow-hidden">
         <div className="relative flex items-center">
           <div
             className="flex transition-transform duration-500 ease-in-out"

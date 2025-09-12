@@ -84,10 +84,10 @@ export function BannerCarousel() {
             </div>
 
             {/* Content - Button aligned to bottom left */}
-            <div className="relative z-10 flex items-end justify-start w-full h-full p-8 lg:p-12">
+            <div className="relative z-10 flex items-end justify-start w-full h-full p-6 lg:p-12">
               <button
                 onClick={banner.buttonAction}
-                className="bg-white hover:bg-gray-100 text-gray-900 font-nunito-sans font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg"
+                className="bg-white hover:bg-gray-100 text-gray-900 font-nunito-sans font-bold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg"
               >
                 {banner.buttonText}
               </button>

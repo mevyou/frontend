@@ -8,10 +8,10 @@ import Image from "next/image";
 
 interface SidebarProps {
   isCollapsed: boolean;
-  onToggle: () => void;
+  onToggleAction: () => void;
 }
 
-export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
@@ -50,7 +50,7 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex flex-col bg-gray-900 dark:bg-black border-r border-gray-800 dark:border-gray-700 transition-all duration-300 h-full relative",
+        "flex flex-col bg-gray-900 dark:bg-black border-r border-transparent transition-all duration-300 h-full relative",
         isCollapsed ? "w-16" : "w-64"
       )}
     >
@@ -79,9 +79,9 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           </div>
         )}
         <button
-          onClick={onToggle}
+          onClick={onToggleAction}
           className={cn(
-            "absolute -right-3 top-8 bg-gray-800 dark:bg-gray-700 rounded-full p-1.5 border border-gray-700 dark:border-gray-600 hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors z-10",
+            "absolute -right-3 top-8 bg-gray-800 dark:bg-gray-700 rounded-full p-1.5 border border-transparent hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors z-10",
             isCollapsed && "-right-3"
           )}
         >
@@ -160,15 +160,17 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             <span>Create Bet</span>
           </button>
         ) : (
-          <button className="w-full bg-primary hover:bg-primary/90 text-black font-nunito-sans font-semibold p-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-            <Image
-              src={AppIcons.plusSign}
-              alt="Plus"
-              width={20}
-              height={20}
-              className="text-black"
-            />
-          </button>
+          <div className="w-full bg-gradient-to-r from-primary to-primary-light p-[2px] rounded-lg">
+            <button className="w-full bg-gray-900 hover:bg-gray-800 text-primary p-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+              <Image
+                src={AppIcons.plusSign}
+                alt="Plus"
+                width={20}
+                height={20}
+                className="text-primary"
+              />
+            </button>
+          </div>
         )}
       </div>
     </div>

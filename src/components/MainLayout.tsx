@@ -41,7 +41,10 @@ export function MainLayout({ children }: MainLayoutProps) {
             : "-translate-x-full lg:translate-x-0"
         )}
       >
-        <Sidebar isCollapsed={isSidebarCollapsed} onToggle={toggleSidebar} />
+        <Sidebar
+          isCollapsed={isSidebarCollapsed}
+          onToggleAction={toggleSidebar}
+        />
       </div>
 
       {/* Main Content Area */}
