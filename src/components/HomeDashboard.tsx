@@ -1,7 +1,7 @@
 "use client";
 
 import { BannerCarousel } from "./BannerCarousel";
-import { BetCard } from "./BetCard";
+import { BettingCard } from "./BettingCard";
 import { AppIcons } from "@/lib/assets";
 import { dummyBets } from "@/lib/dummyData";
 import Image from "next/image";
@@ -33,7 +33,7 @@ export function HomeDashboard() {
             </div>
           </div>
 
-          <button className="flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors font-nunito-sans font-medium text-white">
+          <button className="flex items-center space-x-2 px-4 py-2 hover:opacity-80 transition-colors font-nunito-sans font-medium text-white" style={{ backgroundColor: '#242429', borderRadius: '12px' }}>
             <span>Explore Market</span>
             <Image
               src={AppIcons.arrowRight}
@@ -51,7 +51,7 @@ export function HomeDashboard() {
               key={bet.id}
               className="transform hover:scale-105 transition-transform duration-200"
             >
-              <BetCard bet={bet} onUpdate={() => {}} />
+              <BettingCard bet={bet} onUpdateAction={() => {}} />
             </div>
           ))}
         </div>
@@ -75,7 +75,7 @@ export function HomeDashboard() {
             </div>
           </div>
 
-          <button className="flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors font-nunito-sans font-medium text-white">
+          <button className="flex items-center space-x-2 px-4 py-2 hover:opacity-80 transition-colors font-nunito-sans font-medium text-white" style={{ backgroundColor: '#242429', borderRadius: '12px' }}>
             <span>Explore Market</span>
             <Image
               src={AppIcons.arrowRight}
@@ -93,127 +93,13 @@ export function HomeDashboard() {
               key={bet.id}
               className="transform hover:scale-105 transition-transform duration-200"
             >
-              <BetCard bet={bet} onUpdate={() => {}} />
+              <BettingCard bet={bet} onUpdateAction={() => {}} />
             </div>
           ))}
         </div>
       </section>
 
-      {/* Create Bet CTA */}
-      <section className="bg-gradient-to-r from-primary/10 to-primary-light/5 border border-primary/20 rounded-2xl p-8 text-center">
-        <div className="max-w-md mx-auto">
-          <div className="mb-4">
-            <Image
-              src={AppIcons.addCircle}
-              alt="Add"
-              width={48}
-              height={48}
-              className="text-primary mx-auto"
-            />
-          </div>
-          <h3 className="text-2xl font-nunito-sans font-bold text-gray-900 dark:text-white mb-2">
-            Create Your First Bet
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 font-nunito-sans mb-6">
-            Start earning by creating custom bets on any topic. Set your terms
-            and let others join!
-          </p>
-          <button className="bg-primary hover:bg-primary/80 text-white font-nunito-sans font-semibold px-8 py-3 rounded-lg transition-colors duration-200 shadow-lg">
-            + Create Bet
-          </button>
-        </div>
-      </section>
 
-      {/* Stats Cards */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Image
-                src={AppIcons.coins}
-                alt="Total Bets"
-                width={20}
-                height={20}
-                className="text-primary"
-              />
-            </div>
-            <div>
-              <p className="text-2xl font-nunito-sans font-bold text-gray-900 dark:text-white">
-                1,234
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-nunito-sans">
-                Total Bets
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-success/10 rounded-lg">
-              <Image
-                src={AppIcons.chartUp}
-                alt="Active Bets"
-                width={20}
-                height={20}
-                className="text-success"
-              />
-            </div>
-            <div>
-              <p className="text-2xl font-nunito-sans font-bold text-gray-900 dark:text-white">
-                89
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-nunito-sans">
-                Active Bets
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Image
-                src={AppIcons.dollar}
-                alt="Volume"
-                width={20}
-                height={20}
-                className="text-primary"
-              />
-            </div>
-            <div>
-              <p className="text-2xl font-nunito-sans font-bold text-gray-900 dark:text-white">
-                $45.2K
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-nunito-sans">
-                Total Volume
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-success/10 rounded-lg">
-              <Image
-                src={AppIcons.user}
-                alt="Users"
-                width={20}
-                height={20}
-                className="text-success"
-              />
-            </div>
-            <div>
-              <p className="text-2xl font-nunito-sans font-bold text-gray-900 dark:text-white">
-                567
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-nunito-sans">
-                Active Users
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

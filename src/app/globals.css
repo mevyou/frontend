@@ -2,53 +2,33 @@
 
 @layer base {
   :root {
-    /* Light theme */
-    --background: #f3f4f6;
-    --foreground: #171717;
-
-    /* Light theme colors using app palette */
-    --color-primary: #02fefe;
-    --color-primary-foreground: #000000;
-    --color-secondary: #f8fafc;
-    --color-secondary-foreground: #0f172a;
-    --color-muted: #f1f5f9;
-    --color-muted-foreground: #64748b;
-    --color-accent: #02fefe;
-    --color-accent-foreground: #000000;
-    --color-card: #ffffff;
-    --color-card-foreground: #0f172a;
-    --color-border: #e5e7eb;
-    --color-input: #ffffff;
-    --color-ring: #02fefe;
-
-    /* Custom brand colors */
-    --color-success: #22c55e;
-    --color-success-light: #4ade80;
-    --color-error: #ef4444;
-    --color-error-light: #f87171;
-  }
-
-  .dark {
-    /* Dark theme */
-    --background: #000000;
+    /* Dark theme only - using specified colors */
+    --background: #121214; /* Sidebar and header background */
     --foreground: #ffffff;
+    --main-layout: #1A1A1E; /* Main layout background */
+    --search-input: #242429; /* Search bar and explore market button */
+    --news-ticker-bg: #242429; /* News ticker background */
+    --news-ticker-border: #363636; /* News ticker border */
+    --selected-state: #1A1A1E; /* Selected state in sidebar */
+    --create-bet-border: #02FEFE80; /* Create bet border with opacity */
+    --create-bet-fill: #02FEFE1A; /* Create bet fill with reduced opacity */
 
-    /* Dark theme colors using app palette */
+    /* App colors */
     --color-primary: #02fefe;
-    --color-primary-foreground: #000000;
-    --color-secondary: #1f2937;
-    --color-secondary-foreground: #f9fafb;
-    --color-muted: #1f2937;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #1A1A1E;
+    --color-secondary-foreground: #ffffff;
+    --color-muted: #363636;
     --color-muted-foreground: #9ca3af;
     --color-accent: #02fefe;
-    --color-accent-foreground: #000000;
-    --color-card: #1f2937;
-    --color-card-foreground: #f9fafb;
+    --color-accent-foreground: #ffffff;
+    --color-card: #1A1A1E;
+    --color-card-foreground: #ffffff;
     --color-border: #374151;
-    --color-input: #1f2937;
+    --color-input: #242429;
     --color-ring: #02fefe;
 
-    /* Custom brand colors */
+    /* Status colors */
     --color-success: #22c55e;
     --color-success-light: #4ade80;
     --color-error: #ef4444;
@@ -81,4 +61,29 @@ body {
 
 .animate-scroll {
   animation: scroll 30s linear infinite;
+}
+
+/* Dark scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1A1E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #363636;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #363636 #1A1A1E;
 }

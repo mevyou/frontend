@@ -7,7 +7,7 @@ import { AppColors, AppColorKey } from "./appColors";
  * Combines AppIcons, AppImages, and AppColors for easier importing
  * Usage: import { AppIcons, AppImages, AppColors, Assets } from '@/lib/assets'
  */
-export { AppIcons, getIcon, hasIcon } from "./appIcons";
+export { AppIcons, getIcon, hasIcon, getIconWithColor } from "./appIcons";
 export type { AppIconKey } from "./appIcons";
 export {
   AppImages,

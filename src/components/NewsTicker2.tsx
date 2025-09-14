@@ -62,8 +62,8 @@ const newsItems: NewsItem[] = [
 
 export function NewsTicker() {
   return (
-    <div className="bg-gray-800 dark:bg-black border-b border-gray-700 dark:border-gray-800 overflow-hidden">
-      <div className="relative h-10 flex items-center">
+    <div className="py-1 px-0 lg:px-4 overflow-hidden">
+      <div className="bg-news-ticker-bg border border-news-ticker-border rounded-none lg:rounded-full px-4 py-1 lg:py-2 relative overflow-hidden" style={{border: '0.5px solid #363636', background: '#242429'}}>
         <div className="animate-scroll flex items-center space-x-8 whitespace-nowrap">
           {/* Duplicate the array for seamless looping */}
           {[...newsItems, ...newsItems].map((item, index) => (
@@ -88,8 +88,8 @@ export function NewsTicker() {
         </div>
 
         {/* Gradient overlays for fade effect */}
-        <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-gray-800 dark:from-black to-transparent pointer-events-none z-10" />
-        <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-gray-800 dark:from-black to-transparent pointer-events-none z-10" />
+        <div className="absolute left-0 top-0 w-12 h-full bg-gradient-to-r from-news-ticker-bg to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 w-12 h-full bg-gradient-to-l from-news-ticker-bg to-transparent pointer-events-none z-10" />
       </div>
     </div>
   );

@@ -8,7 +8,8 @@
 export const AppIcons = {
   // Navigation & UI Icons
   logo: "/svg/logo.svg",
-  home: "/svg/home1.svg",
+  home: "/svg/home.svg",
+  home1: "/svg/home1.svg",
   homebg: "/svg/homebg.svg",
   sidebarLeft: "/svg/sidebar-left.svg",
   gridView: "/svg/grid-view.svg",
@@ -103,10 +104,60 @@ export const getIcon = (iconName: AppIconKey): string => {
 };
 
 /**
- * Helper function to check if an icon exists
- * @param iconName - The name of the icon to check
- * @returns Boolean indicating if the icon exists
+ * Helper function to/**
+ * Check if an icon exists in the AppIcons object
+ * @param iconName - The icon name to check
+ * @returns boolean indicating if the icon exists
  */
 export const hasIcon = (iconName: string): iconName is AppIconKey => {
   return iconName in AppIcons;
 };
+
+/**
+ * Get an icon with custom color by creating a data URL with modified SVG
+ * @param iconName - The icon name from AppIcons
+ * @param color - The color to apply (hex, rgb, or named color)
+ * @returns Promise<string> - Data URL of the colored SVG
+ */
+export const getColoredIcon = async (iconName: AppIconKey, color: string): Promise<string> => {
+  try {
+    const response = await fetch(AppIcons[iconName]);
+    const svgText = await response.text();
+    
+    // Replace stroke and fill colors in the SVG
+    const coloredSvg = svgText
+      .replace(/stroke="[^"]*"/g, `stroke="${color}"`)
+      .replace(/fill="[^"]*"/g, `fill="${color}"`);
+    
+    // Create data URL
+    const dataUrl = `data:image/svg+xml;base64,${btoa(coloredSvg)}`;
+    return dataUrl;
+  } catch (error) {
+    console.error('Error creating colored icon:', error);
+    return AppIcons[iconName]; // Fallback to original
+  }
+};
+
+/**
+ * Create a colored version of an SVG icon synchronously using CSS filter
+ * @param iconName - The icon name from AppIcons
+ * @param color - The color to apply
+ * @returns object with src and style for Image component
+ */
+export const getIconWithColor = (iconName: AppIconKey, color: string) => {
+  // Convert hex color to CSS filter for black
+  const getFilterForColor = (hexColor: string) => {
+    if (hexColor.toLowerCase() === '#000000' || hexColor.toLowerCase() === 'black') {
+      return 'brightness(0) saturate(100%)';
+    }
+    // For other colors, return empty filter (use original color)
+    return '';
+  };
+
+  return {
+     src: AppIcons[iconName],
+     style: {
+       filter: getFilterForColor(color)
+     }
+   };
+ };

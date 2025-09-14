@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
 import { NewsTicker } from "./NewsTicker2";
+import { MobileNavigation } from "./MobileNavigation";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -23,7 +24,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="h-screen bg-gray-100 dark:bg-gray-900 flex overflow-hidden">
+    <div className="h-screen flex overflow-hidden">
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
         <div
@@ -48,18 +49,32 @@ export function MainLayout({ children }: MainLayoutProps) {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <div className="flex-1 flex flex-col h-full overflow-hidden bg-main-layout">
         {/* Top Header */}
-        <TopHeader onMenuToggle={toggleMobileSidebar} />
+        <TopHeader 
+          onMenuToggle={toggleMobileSidebar}
+          isSidebarCollapsed={isSidebarCollapsed}
+          onSidebarToggle={toggleSidebar}
+        />
 
-        {/* News Ticker */}
-        <NewsTicker />
+        {/* News Ticker - Desktop only */}
+        <div className="hidden lg:block">
+          <NewsTicker />
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden pb-16 lg:pb-0">
           {children}
         </main>
+
+        {/* News Ticker - Mobile only (above navigation) */}
+        <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30">
+          <NewsTicker />
+        </div>
       </div>
+
+      {/* Mobile Navigation */}
+      <MobileNavigation />
     </div>
   );
 }

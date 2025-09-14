@@ -1,15 +1,12 @@
 "use client";
 
 import { useAccount, useDisconnect } from "wagmi";
-import { Wallet, LogOut } from "lucide-react";
+import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { LogOut } from "lucide-react";
+import Image from "next/image";
+import { getIconWithColor } from "@/lib/assets";
 
-// Simple component to render the custom element with custom styling
-const W3MButton = () => (
-  <div
-    className="[&>w3m-button]:bg-transparent [&>w3m-button]:text-black [&>w3m-button]:font-bold"
-    dangerouslySetInnerHTML={{ __html: "<w3m-button></w3m-button>" }}
-  />
-);
+
 
 export function WalletConnect() {
   const { address, isConnected } = useAccount();
@@ -40,19 +37,29 @@ export function WalletConnect() {
   }
 
   return (
-    <div className="relative">
-      <div className="absolute inset-0 bg-primary hover:bg-primary/90 rounded-lg transition-colors pointer-events-none"></div>
-      <div className="relative text-black font-bold">
-        <W3MButton />
-      </div>
-    </div>
+    <ConnectWalletButton />
   );
 }
 
 export function ConnectWalletButton() {
+  const { open } = useWeb3Modal();
+
+  const handleConnect = () => {
+    open();
+  };
+
   return (
-    <button className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-black px-6 py-3 rounded-lg font-bold transition-colors">
-      <Wallet size={20} />
+    <button 
+      onClick={handleConnect}
+      className="flex items-center gap-2 bg-[#02FEFE] hover:bg-[#02FEFE]/90 text-black px-4 py-2 rounded-lg font-bold transition-colors border border-[#02FEFE] h-10"
+    >
+      <Image
+        src={getIconWithColor('wallet', 'black').src}
+        alt="Wallet"
+        width={20}
+        height={20}
+        style={getIconWithColor('wallet', 'black').style}
+      />
       <span>Connect Wallet</span>
     </button>
   );
