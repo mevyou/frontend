@@ -5,6 +5,7 @@ import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { WalletConnect } from "./WalletConnect";
 import { formatWeiToEther, formatAddress, cn } from "@/lib/utils";
 import { AppIcons } from "@/lib/assets";
+import { useSearch } from "@/contexts/SearchContext";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 
@@ -12,12 +13,14 @@ interface TopHeaderProps {
   onMenuToggle?: () => void;
   isSidebarCollapsed?: boolean;
   onSidebarToggle?: () => void;
+  onCreateBetClick?: () => void;
 }
 
-export function TopHeader({ isSidebarCollapsed, onSidebarToggle }: TopHeaderProps) {
+export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClick }: TopHeaderProps) {
   const { address, isConnected } = useAccount();
   const { data: balance } = useBalance({ address });
   const { disconnect } = useDisconnect();
+  const { searchQuery, setSearchQuery } = useSearch();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +87,8 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle }: TopHeaderProp
               <input
                 type="text"
                 placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="border-0 rounded-lg pl-10 pr-4 py-2 h-10 text-white placeholder-gray-400 focus:outline-none focus:ring-0 w-64 lg:w-80 font-nunito-sans"
                 style={{ backgroundColor: '#242429' }}
               />
@@ -370,7 +375,8 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle }: TopHeaderProp
           
           {/* Plus Icon Container */}
           <button 
-            className="text-white p-2 h-10 w-10 rounded-lg transition-colors duration-200 flex items-center justify-center"
+            onClick={onCreateBetClick}
+            className="text-white p-2 h-10 w-10 rounded-lg transition-colors duration-200 flex items-center justify-center hover:opacity-80"
             style={{ 
               border: '1px solid var(--create-bet-border)', 
               backgroundColor: 'var(--create-bet-fill)' 
@@ -378,7 +384,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle }: TopHeaderProp
           >
             <Image
               src={AppIcons.plusSign}
-              alt="Plus"
+              alt="Create Bet"
               width={24}
               height={24}
               className="text-white"

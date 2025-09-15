@@ -30,7 +30,7 @@ const config: Config = {
         },
         // App specific colors
         sidebar: "#121214", // Sidebar and header background
-        "main-layout": "#242429", // Main layout background
+        "main-layout": "#1A1A1E", // Main layout background
         "search-input": "#242429", // Search bar input
         "news-ticker-bg": "#242429", // News ticker background
         "news-ticker-border": "#363636", // News ticker border

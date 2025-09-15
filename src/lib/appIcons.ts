@@ -44,6 +44,12 @@ export const AppIcons = {
   cancelCircle: "/svg/cancel-circle.svg",
   checkmark: "/svg/checkmark.svg",
   checkmarkCircle: "/svg/checkmark-circle.svg",
+  createBet: "/svg/create-bet.svg",
+  informationCircle: "/svg/information-circle.svg",
+  calendar: "/svg/calendar.svg",
+  userLock: "/svg/user-lock.svg",
+  copy: "/svg/copy.svg",
+  stake: "/svg/stake.svg",
 
   // Arrow Icons
   arrowDown: "/svg/arrow-down.svg",

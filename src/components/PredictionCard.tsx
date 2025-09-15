@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Bet } from "@/lib/contracts/BettingContract";
 import { AppIcons, AppImages } from "@/lib/assets";
 import Image from "next/image";
@@ -9,14 +8,37 @@ import {
   getTimeUntilDeadline,
   truncateText,
 } from "@/lib/utils";
+import { useState } from "react";
 
-interface BettingCardProps {
+interface PredictionCardProps {
   bet: Bet;
   onUpdateAction?: () => void;
   onClick?: () => void;
 }
 
-export function BettingCard({ bet, onClick }: BettingCardProps) {
+interface BettingOption {
+  label: string;
+  percentage: string;
+  width: string;
+}
+
+export function PredictionCard({ bet, onClick }: PredictionCardProps) {
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [hoveredOption, setHoveredOption] = useState<string | null>(null);
+
+  const bettingOptions: BettingOption[] = [
+    { label: "≥30M to <40M", percentage: "55.5%", width: "w-36" },
+    { label: "<30M", percentage: "21.1%", width: "w-20" },
+    { label: "≥40M to <50M", percentage: "11.1%", width: "w-12" },
+    { label: "≥50M to <60M", percentage: "6.6%", width: "w-8" },
+    { label: "≥60M", percentage: "5.8%", width: "w-6" },
+  ];
+
+  const handleStake = (option: string) => {
+    console.log(`Staking on ${option}`);
+    // Add stake logic here
+  };
+
   return (
     <div 
       className="w-full transition-all duration-300 hover:scale-[1.02] cursor-pointer"
@@ -75,24 +97,53 @@ export function BettingCard({ bet, onClick }: BettingCardProps) {
             </div>
           </div>
           
-          {/* Progress and Buttons */}
-          <div className="self-stretch pb-3 flex flex-col justify-start items-start gap-2">
-            {/* Progress Bar */}
-            <div className="self-stretch inline-flex justify-start items-center gap-1">
-              <div className="text-center justify-center text-white text-sm font-semibold font-['Nunito_Sans'] capitalize leading-none tracking-tight">57%</div>
-              <div className="flex-1 h-2 relative bg-red-400 rounded-[99px] overflow-hidden">
-                <div className="w-36 h-2 left-0 top-0 absolute bg-green-400" />
-              </div>
-              <div className="text-center justify-center text-white text-sm font-semibold font-['Nunito_Sans'] capitalize leading-none tracking-tight">43%</div>
-            </div>
-            
-            {/* Yes/No Buttons */}
-            <div className="self-stretch inline-flex justify-start items-center gap-2">
-              <div className="flex-1 h-10 p-2.5 bg-green-400/10 rounded-lg border border-green-300 flex justify-center items-center gap-1 overflow-hidden hover:bg-green-400/20 hover:border-green-400 transition-all duration-200 cursor-pointer">
-                <div className="text-center justify-center text-green-500 text-sm font-semibold font-['Inter'] capitalize leading-none tracking-tight">Yes</div>
-              </div>
-              <div className="flex-1 h-10 p-2.5 bg-red-400/10 rounded-lg border border-red-300 flex justify-center items-center gap-1 overflow-hidden hover:bg-red-400/20 hover:border-red-400 transition-all duration-200 cursor-pointer">
-                <div className="text-center justify-center text-red-500 text-sm font-semibold font-['Inter'] capitalize leading-none tracking-tight">No</div>
+          {/* Scrollable Betting Options */}
+          <div className="self-stretch pb-3 flex flex-col justify-start items-start gap-2.5 overflow-hidden">
+            <div className="self-stretch h-16 flex flex-col justify-start items-start gap-2">
+              <div className="self-stretch flex flex-col justify-center items-start gap-2 h-16 overflow-y-auto mt-2 pt-1">
+                {bettingOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="self-stretch inline-flex justify-between items-center overflow-hidden cursor-pointer transition-colors"
+                    style={{
+                      display: 'flex',
+                      height: '36px',
+                      padding: '10px 0',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      alignSelf: 'stretch',
+                      borderRadius: '8px',
+                      background: selectedOption === option.label || hoveredOption === option.label ? 'rgba(156, 163, 175, 0.15)' : '#242429'
+                    }}
+                    onMouseEnter={() => setHoveredOption(option.label)}
+                    onMouseLeave={() => setHoveredOption(null)}
+                    onClick={() => setSelectedOption(selectedOption === option.label ? null : option.label)}
+                  >
+                    <div className="p-2 bg-gray-400/20 rounded-lg flex justify-start items-center gap-2.5">
+                      <div className="text-center justify-center text-white text-sm font-bold font-['Nunito_Sans'] capitalize leading-none tracking-tight">
+                        {option.label}
+                      </div>
+                    </div>
+                    <div className="px-0.5 py-2 flex justify-center items-center gap-2.5">
+                      <div className="text-center justify-center text-white text-xs font-medium font-['Nunito_Sans'] capitalize leading-3 tracking-tight">
+                        {option.percentage}
+                      </div>
+                      {(selectedOption === option.label || hoveredOption === option.label) && (
+                        <div 
+                          className="px-2 py-1.5 bg-cyan-400 rounded-md flex justify-start items-center gap-2.5 cursor-pointer hover:bg-cyan-500 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStake(option.label);
+                          }}
+                        >
+                          <div className="text-center justify-center text-zinc-800 text-sm font-medium font-['Nunito_Sans'] capitalize leading-none tracking-tight">
+                            Stake
+                          </div>
+                        </div>
+                      )}
+                     </div>
+                   </div>
+                 ))}
               </div>
             </div>
           </div>

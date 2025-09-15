@@ -9,9 +9,10 @@ import Image from "next/image";
 interface SidebarProps {
   isCollapsed: boolean;
   onToggleAction: () => void;
+  onCreateBetClick?: () => void;
 }
 
-export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: SidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
@@ -50,11 +51,11 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex flex-col bg-sidebar border-r border-transparent transition-all duration-500 ease-in-out h-full relative transform",
+        "flex flex-col bg-sidebar border-r border-transparent h-full relative",
         isCollapsed ? "w-16" : "w-64"
       )}
       style={{
-        transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+        transition: 'width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
       }}
     >
       {/* Logo Section */}
@@ -109,10 +110,23 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
                   className={cn(
                     "flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 group",
                     isActive
-                      ? "bg-selected-state text-white"
-                      : "text-gray-400 hover:bg-selected-state hover:text-white",
+                      ? "text-white"
+                      : "text-gray-400 hover:text-white",
                     isCollapsed && "justify-end px-2"
                   )}
+                  style={{
+                    backgroundColor: isActive ? '#242429' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = '#242429';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
                   <Image
                     src={item.icon}
@@ -150,7 +164,8 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
       <div className="p-4 border-t border-transparent">
         {!isCollapsed ? (
           <button 
-            className="w-full text-white font-nunito-sans font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+            onClick={onCreateBetClick}
+            className="w-full text-white font-nunito-sans font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 cursor-pointer hover:opacity-80"
             style={{ 
               border: '1px solid var(--create-bet-border)', 
               backgroundColor: 'var(--create-bet-fill)' 
@@ -158,7 +173,7 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
           >
             <Image
               src={AppIcons.plusSign}
-              alt="Plus"
+              alt="Create Bet"
               width={24}
               height={24}
               className="text-white"
@@ -167,7 +182,8 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
           </button>
         ) : (
           <button 
-            className="w-full text-white p-3 rounded-lg transition-colors duration-200 flex items-center justify-center"
+            onClick={onCreateBetClick}
+            className="w-full text-white p-3 rounded-lg transition-colors duration-200 flex items-center justify-center cursor-pointer hover:opacity-80"
             style={{ 
               border: '1px solid var(--create-bet-border)', 
               backgroundColor: 'var(--create-bet-fill)' 
@@ -175,7 +191,7 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
           >
             <Image
               src={AppIcons.plusSign}
-              alt="Plus"
+              alt="Create Bet"
               width={24}
               height={24}
               className="text-white"

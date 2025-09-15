@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
-import { NewsTicker } from "./NewsTicker2";
+import { NewsTicker } from "./NewsTicker";
 import { MobileNavigation } from "./MobileNavigation";
+import { CreateBetModal } from "./CreateBetModal";
+import { SearchProvider } from "@/contexts/SearchContext";
 import { cn } from "@/lib/utils";
 
 interface MainLayoutProps {
@@ -14,6 +16,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isCreateBetModalOpen, setIsCreateBetModalOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -23,8 +26,17 @@ export function MainLayout({ children }: MainLayoutProps) {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
+  const handleCreateBetClick = () => {
+    setIsCreateBetModalOpen(true);
+  };
+
+  const handleCloseCreateBetModal = () => {
+    setIsCreateBetModalOpen(false);
+  };
+
   return (
-    <div className="h-screen flex overflow-hidden">
+    <SearchProvider>
+      <div className="h-screen flex overflow-hidden">
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
         <div
@@ -45,6 +57,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         <Sidebar
           isCollapsed={isSidebarCollapsed}
           onToggleAction={toggleSidebar}
+          onCreateBetClick={handleCreateBetClick}
         />
       </div>
 
@@ -55,6 +68,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           onMenuToggle={toggleMobileSidebar}
           isSidebarCollapsed={isSidebarCollapsed}
           onSidebarToggle={toggleSidebar}
+          onCreateBetClick={handleCreateBetClick}
         />
 
         {/* News Ticker - Desktop only */}
@@ -73,8 +87,15 @@ export function MainLayout({ children }: MainLayoutProps) {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <MobileNavigation />
-    </div>
+        {/* Mobile Navigation */}
+        <MobileNavigation />
+      </div>
+
+      {/* Create Bet Modal */}
+      <CreateBetModal 
+        isOpen={isCreateBetModalOpen}
+        onClose={handleCloseCreateBetModal}
+      />
+    </SearchProvider>
   );
 }
