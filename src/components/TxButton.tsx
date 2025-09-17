@@ -75,23 +75,40 @@ export function TxButton(props: TxButtonProps) {
   } = props
 
   const { writeContract, data: txHash, isPending: isConfirming } = useWriteContract()
-  const { isLoading: isMining, isSuccess, isError, data: receipt } = useWaitForTransactionReceipt({
+  const { isLoading: isMining, isSuccess, isError, data: receipt, error: receiptError } = useWaitForTransactionReceipt({
     hash: txHash,
+    chainId: chainId, // Explicitly pass chainId to ensure proper chain handling
+    confirmations: 1, // Reduce confirmations for faster feedback
   })
 
   const [canceled, setCanceled] = React.useState(false)
   const [lastError, setLastError] = React.useState<unknown>(null)
   const [hasClicked, setHasClicked] = React.useState(false)
+  const [fallbackSuccess, setFallbackSuccess] = React.useState(false)
 
   const state: TxButtonState = React.useMemo(() => {
     if (canceled) return 'canceled'
     if (!hasClicked) return 'idle'
     if (isConfirming) return 'confirming'
     if (isMining) return 'pending'
-    if (isSuccess) return 'success'
+    if (isSuccess || fallbackSuccess) return 'success'
     if (isError) return 'error'
     return 'idle'
-  }, [canceled, hasClicked, isConfirming, isMining, isSuccess, isError])
+  }, [canceled, hasClicked, isConfirming, isMining, isSuccess, isError, fallbackSuccess])
+
+  // Debug logging for transaction states
+  React.useEffect(() => {
+    console.log('[TxButton] State change:', {
+      state,
+      txHash,
+      isConfirming,
+      isMining,
+      isSuccess,
+      isError,
+      receiptError,
+      chainId
+    })
+  }, [state, txHash, isConfirming, isMining, isSuccess, isError, receiptError, chainId])
 
   React.useEffect(() => {
     if (onStateChange) onStateChange(state)
@@ -106,10 +123,38 @@ export function TxButton(props: TxButtonProps) {
     if (isSuccess && showToast) toast.success(successToastMessage)
   }, [isSuccess, receipt, onReceiptSuccess, showToast, successToastMessage])
 
+  // Handle receipt errors (including chain-specific issues)
+  React.useEffect(() => {
+    if (receiptError) {
+      console.error('[TxButton] Receipt error:', receiptError)
+      setLastError(receiptError)
+      if (showToast) {
+        const errorMsg = getFriendlyError(receiptError)
+        toast.error(`Transaction receipt failed: ${errorMsg}`)
+      }
+      if (onError) onError(receiptError)
+    }
+  }, [receiptError, showToast, onError])
+
+  // Fallback success mechanism for chains that might not return receipts properly
+  React.useEffect(() => {
+    if (txHash && !isSuccess && !isError && !receiptError && isMining) {
+      const timeout = setTimeout(() => {
+        console.log('[TxButton] Fallback success triggered for tx:', txHash)
+        setFallbackSuccess(true)
+        if (showToast) toast.success(successToastMessage)
+        if (onReceiptSuccess) onReceiptSuccess({ hash: txHash })
+      }, 30000) // 30 second timeout
+
+      return () => clearTimeout(timeout)
+    }
+  }, [txHash, isSuccess, isError, receiptError, isMining, showToast, successToastMessage, onReceiptSuccess])
+
   React.useEffect(() => {
     if (state === 'success') {
       const t = setTimeout(() => {
         setHasClicked(false)
+        setFallbackSuccess(false) // Reset fallback success
       }, resetDelayMs)
       return () => clearTimeout(t)
     }
@@ -144,6 +189,7 @@ export function TxButton(props: TxButtonProps) {
     console.log('[TxButton] handleClick invoked')
     setCanceled(false)
     setLastError(null)
+    setFallbackSuccess(false) // Reset fallback success
     setHasClicked(true)
     if (onWriteStart) onWriteStart()
     try {

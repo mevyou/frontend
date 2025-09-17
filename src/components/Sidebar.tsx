@@ -136,7 +136,7 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
                   }}
                 >
                   <Image
-                    src={isActive ? (item as any).activeIcon : (item as any).inactiveIcon}
+                    src={isActive ? (item as { activeIcon: string }).activeIcon : (item as { inactiveIcon: string }).inactiveIcon}
                     alt={item.name}
                     width={20}
                     height={20}
@@ -169,8 +169,8 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
 
       {/* Bottom Section */}
       <div className="p-4 border-t border-transparent">
-        <CreateBetButton 
-          onClick={onCreateBetClick || (() => {})} 
+        <CreateBetButton
+          onClick={onCreateBetClick || (() => { })}
           isCollapsed={isCollapsed}
         />
       </div>
