@@ -11,10 +11,10 @@ const metadata = {
   name: 'MevYou P2P Betting',
   description: 'Decentralized Peer-to-Peer Betting Platform',
   url: 'https://mevyou.com',
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
+  icons: ['https://github.com/mevyou/frontend/blob/main/public/image/logo.png']
 }
 
-const chains = [mainnet, polygon, arbitrum, sepolia] as const
+const chains = [sepolia, mainnet, polygon, arbitrum, sepolia] as const
 
 export const config = defaultWagmiConfig({
   chains,

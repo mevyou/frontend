@@ -51,27 +51,27 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
   const topics = [
     {
       name: "Sport",
-      icon: AppImages.type1,
+      icon: AppImages.goldenBall,
       color: "from-yellow-400 to-orange-500",
     },
     {
       name: "Politics",
-      icon: AppImages.type2,
+      icon: AppImages.judgePill,
       color: "from-blue-400 to-purple-500",
     },
     {
       name: "Entertainment",
-      icon: AppImages.type3,
+      icon: AppImages.casinoChips,
       color: "from-pink-400 to-red-500",
     },
     {
       name: "Technology",
-      icon: AppImages.type4,
+      icon: AppImages.goldenCoin,
       color: "from-green-400 to-blue-500",
     },
     {
       name: "Finance",
-      icon: AppImages.type5,
+      icon: AppImages.bitcoin,
       color: "from-purple-400 to-pink-500",
     },
   ];

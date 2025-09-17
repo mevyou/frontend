@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { CloudUploadIcon, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAccount } from "wagmi";
 import { TxButton } from "@/components/TxButton";
@@ -155,8 +155,9 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
                     )}
                   </>
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center text-gray-500 text-xs">
-                    Click to upload
+                  <div className="h-full w-full flex flex-col items-center justify-center text-gray-500 text-xs">
+                    <CloudUploadIcon size={14} className="text-white w-12 h-12" />
+                    <span className="text-white text-xs">Click to upload</span>
                   </div>
                 )}
               </div>
@@ -218,7 +219,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="w-full rounded-lg bg-search-input border border-gray-700 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full rounded-lg bg-search-input border border-gray-700 px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-600 resize-none"
                   placeholder="Tell us something (optional)"
                 />
               </div>
@@ -238,7 +239,6 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
                 abi={registryABI as Abi}
                 functionName="register"
                 args={[createProfileData()]}
-                className="w-full"
                 idleLabel="Register Profile"
                 confirmingLabel="Confirm in wallet..."
                 pendingLabel="Registering..."
@@ -249,6 +249,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
                 onWriteStart={() => setIsRegistering(true)}
                 onReceiptSuccess={handleRegistrationSuccess}
                 onError={handleRegistrationError}
+                className="w-full bg-white rounded-lg text-center hover:bg-white/80"
                 disabled={!name.trim() || !username.trim()}
               />
             )}
