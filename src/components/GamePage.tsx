@@ -11,7 +11,7 @@ export function GamePage() {
         <div className="w-full flex flex-col justify-start items-start gap-6">
           <div className="w-full flex flex-wrap justify-start items-start gap-3">
             <div className="w-72 relative flex flex-col justify-start items-center">
-              <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Pocket Quest" width={300} height={300} />
+              <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Pocket Quest" width={300} height={300} />
               <div className="w-72 px-3 pb-3 left-0 top-[208px] absolute flex flex-col justify-start items-start gap-2.5">
                 <div className="w-full p-4 bg-neutral-800/75 rounded-xl backdrop-blur-sm flex justify-between items-start">
                   <div className="flex flex-col justify-start items-start gap-1">
@@ -45,10 +45,10 @@ export function GamePage() {
                 <div className="w-2 h-3.5 bg-black" />
               </div>
             </div>
-              <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 2" width={300} height={300} />
-            <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 3" width={300} height={300} />
-            <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 4" width={300} height={300} />
-            <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 5" width={300} height={300} />
+              <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Game 2" width={300} height={300} />
+            <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Game 3" width={300} height={300} />
+            <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Game 4" width={300} height={300} />
+            <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Game 5" width={300} height={300} />
           </div>
         </div>
       </div>
@@ -56,22 +56,22 @@ export function GamePage() {
       <div className="w-full flex flex-col justify-start items-start gap-3">
         <div className="text-white text-2xl font-semibold font-['Nunito_Sans'] leading-7">My Bets</div>
         <div className="w-full flex flex-wrap justify-start items-start gap-3">
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="My Bet 1" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="My Bet 2" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="My Bet 3" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="My Bet 4" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-[32px]" src="https://placehold.co/300x300" alt="My Bet 5" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="My Bet 1" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="My Bet 2" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="My Bet 3" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="My Bet 4" width={300} height={300} />
+          <Image className="w-72 h-72 rounded-[32px]" src={AppImages.rocket} alt="My Bet 5" width={300} height={300} />
         </div>
       </div>
       
       <div className="w-full flex flex-col justify-start items-start gap-3">
         <div className="text-white text-2xl font-semibold font-['Nunito_Sans'] leading-7">Recent Games</div>
         <div className="w-full flex flex-wrap justify-start items-start gap-3">
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Recent Game 1" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Recent Game 2" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Recent Game 3" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Recent Game 4" width={300} height={300} />
-          <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Recent Game 5" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Recent Game 1" width={300} height={300} />
+          <Image className="w-72 h-72 rounded-3xl" src={AppImages.rocket} alt="Recent Game 2" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Recent Game 3" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Recent Game 4" width={300} height={300} />
+          <Image className="w-72 h-72 object-cover rounded-3xl" src={AppImages.rocket} alt="Recent Game 5" width={300} height={300} />
         </div>
       </div>
     </div>
