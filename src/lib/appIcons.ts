@@ -100,6 +100,19 @@ export const AppIcons = {
   file: "/svg/file.svg",
   earnInactive: "/svg/invoice.svg",
   transactionHistory: "/svg/transaction-history.svg",
+
+  // Points Icons
+  dollarCoin: "/svg/dollar-coin.svg",
+  rival: "/svg/rival.svg",
+  oracle: "/svg/oracle.svg",
+  champion: "/svg/champ.svg",
+  challenger: "/svg/challenge.svg",
+  ranks: "/svg/ranks.svg",
+  greenBet: "/svg/green-bets.svg",
+  winRate: "/svg/win-rate.svg",
+  blueWallet: "/svg/blue-wallet.svg",
+  polygon: "/svg/polygon.svg",
+  polygonWhite: "/svg/polygon-white.svg",
 } as const;
 
 // Type for icon keys to ensure type safety
