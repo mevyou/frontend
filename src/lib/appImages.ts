@@ -33,6 +33,9 @@ export const AppImages = {
   judgePills: "/image/judge-pill.png",
   casinoChip: "/image/chips.png",
   goldenCoins: "/image/goldenBall.png",
+
+  // games images
+  rocket: "/image/game-action.png",
 } as const;
 
 // Type for image keys to ensure type safety

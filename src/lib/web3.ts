@@ -1,6 +1,6 @@
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { baseSepolia } from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, sepolia } from 'wagmi/chains'
 import { QueryClient } from '@tanstack/react-query'
 
 // 1. Get projectId from https://cloud.walletconnect.com
@@ -14,7 +14,7 @@ const metadata = {
   icons: ['https://github.com/mevyou/frontend/blob/main/public/image/logo.png']
 }
 
-const chains = [baseSepolia] as const
+const chains = [sepolia, mainnet, polygon, arbitrum, sepolia] as const
 
 export const config = defaultWagmiConfig({
   chains,
