@@ -45,16 +45,16 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
         <div className="self-stretch h-36 relative rounded-tl-lg rounded-tr-lg flex flex-col justify-center items-center overflow-hidden" style={{ background: '#121214' }}>
           {/* Back Button */}
           <div className="absolute top-2 left-2 z-10">
-            <button 
-               onClick={onBackAction}
-               className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-             >
-               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
-                 <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-               </svg>
-             </button>
+            <button
+              onClick={onBackAction}
+              className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
-          
+
           {/* Gradient Circle */}
           <div className="w-12 h-12 bg-neutral-800 rounded-[129.25px] inline-flex justify-start items-center mb-2">
             <div className="w-12 h-12 relative">
@@ -64,13 +64,13 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
               </div>
             </div>
           </div>
-          
+
           {/* In-House Created Label */}
           <div className="inline-flex justify-center items-center gap-1 mb-1">
             <Image src={AppIcons.checkmark} alt="checkmark" width={16} height={16} className="text-cyan-400" />
             <div className="justify-center text-gray-400 text-sm font-medium font-['Inter'] leading-tight">In-House created</div>
           </div>
-          
+
           {/* USDT Badge */}
           <div className="pl-1 pr-2 py-1 rounded-[99px] shadow-[0px_1px_4px_-1px_rgba(32,32,32,0.02)] inline-flex justify-start items-center gap-2" style={{ background: '#121214', border: '0.5px solid #242429' }}>
             <div className="flex justify-start items-center gap-1">
@@ -79,7 +79,7 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
             </div>
           </div>
         </div>
-        
+
         {/* Content Section */}
         <div className="self-stretch px-3 flex flex-col justify-start items-start gap-3">
           {/* Question Title */}
@@ -88,7 +88,7 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
               {bet.description}
             </div>
           </div>
-          
+
           {/* Scrollable Betting Options */}
           <div className="self-stretch pb-3 flex flex-col justify-start items-start gap-2.5 overflow-hidden">
             <div className="self-stretch flex flex-col justify-start items-start gap-2">
@@ -120,7 +120,7 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
                         {option.percentage}
                       </div>
                       {(selectedOption === option.label || hoveredOption === option.label) && (
-                        <div 
+                        <div
                           className="px-2 py-1.5 bg-cyan-400 rounded-md flex justify-start items-center gap-2.5 cursor-pointer hover:bg-cyan-500 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -140,7 +140,7 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
           </div>
         </div>
       </div>
-      
+
       {/* Footer Section */}
       <div className="self-stretch px-3 inline-flex justify-between items-center">
         {/* Participants */}
@@ -151,7 +151,7 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
             <div className="self-stretch text-center justify-center text-gray-400 text-[10px] font-medium font-['Nunito_Sans'] leading-none">+104</div>
           </div>
         </div>
-        
+
         {/* Stats */}
         <div className="flex justify-start items-center gap-2">
           {/* Amount */}
@@ -161,10 +161,10 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
               ${formatWeiToEther(bet.amount)}k
             </div>
           </div>
-          
+
           {/* Divider */}
           <div className="w-[0.50px] h-2.5 relative bg-gray-400/25" />
-          
+
           {/* Deadline */}
           <div className="flex justify-start items-start">
             <div className="flex justify-start items-center gap-1">

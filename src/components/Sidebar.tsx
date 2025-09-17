@@ -94,12 +94,12 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
             className="bg-sidebar rounded-full p-1.5 border border-transparent hover:bg-gray-700 transition-colors"
           >
             <Image
-               src={AppIcons.sidebarLeft}
-               alt="Toggle"
-               width={20}
-               height={20}
-               className="text-gray-400 transition-transform duration-300"
-             />
+              src={AppIcons.sidebarLeft}
+              alt="Toggle"
+              width={20}
+              height={20}
+              className="text-gray-400 transition-transform duration-300"
+            />
           </button>
         )}
       </div>
@@ -169,12 +169,12 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
       {/* Bottom Section */}
       <div className="p-4 border-t border-transparent">
         {!isCollapsed ? (
-          <button 
+          <button
             onClick={onCreateBetClick}
             className="w-full text-white font-nunito-sans font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 cursor-pointer hover:opacity-80"
-            style={{ 
-              border: '1px solid var(--create-bet-border)', 
-              backgroundColor: 'var(--create-bet-fill)' 
+            style={{
+              border: '1px solid var(--create-bet-border)',
+              backgroundColor: 'var(--create-bet-fill)'
             }}
           >
             <Image
@@ -187,12 +187,12 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
             <span>Create Bet</span>
           </button>
         ) : (
-          <button 
+          <button
             onClick={onCreateBetClick}
             className="w-full text-white p-3 rounded-lg transition-colors duration-200 flex items-center justify-center cursor-pointer hover:opacity-80"
-            style={{ 
-              border: '1px solid var(--create-bet-border)', 
-              backgroundColor: 'var(--create-bet-fill)' 
+            style={{
+              border: '1px solid var(--create-bet-border)',
+              backgroundColor: 'var(--create-bet-fill)'
             }}
           >
             <Image
