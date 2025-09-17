@@ -2,18 +2,27 @@
 
 import Image from "next/image";
 import { AppIcons } from "@/lib/appIcons";
+import { CreateBetButton } from "./CreateBetButton";
+import { AppImages } from "@/lib/appImages";
 
 export function MarketPage() {
+  const handleCreateBetClick = () => {
+    // This will be handled by the existing modal system in MainLayout
+    // We can dispatch a custom event or use a global state
+    const event = new CustomEvent('openCreateBetModal');
+    window.dispatchEvent(event);
+  };
   return (
     <div className="w-full p-6 bg-zinc-900 rounded-lg flex flex-col justify-start items-start gap-12 overflow-hidden">
       <div className="w-full flex flex-col justify-start items-start gap-12">
         <div className="w-full flex justify-between items-center">
           <div className="text-white text-2xl font-semibold font-['Nunito_Sans'] leading-7">Topics</div>
-          <div className="pl-5 pr-6 py-3 bg-cyan-400/5 rounded-lg border border-cyan-400/50 flex justify-center items-center gap-1 overflow-hidden">
-            <div className="w-6 h-6 relative">
-              <div className="w-4 h-4 left-[4px] top-[4px] absolute border-2 border-white" />
-            </div>
-            <div className="text-center text-white text-base font-semibold font-['Nunito_Sans'] capitalize leading-none">Create bet</div>
+          <div className="w-1/6">
+            <CreateBetButton 
+              onClick={handleCreateBetClick} 
+              isCollapsed={false}
+              className="pl-5 pr-6 py-3 w-1/2 bg-cyan-400/5 rounded-lg border border-cyan-400/50"
+            />
           </div>
         </div>
         
@@ -22,7 +31,7 @@ export function MarketPage() {
             <div className="p-1 rounded-full shadow-[0px_0px_16px_0px_rgba(25,254,253,0.25)] border-2 border-cyan-400/60 flex justify-start items-center gap-2.5 overflow-hidden">
               <div className="w-52 h-52 p-16 relative bg-gradient-to-br from-cyan-100 to-lime-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
                 <div className="w-32 h-32 left-[44px] top-[44px] absolute">
-                  <Image className="w-32 h-32 left-0 top-0 absolute" src="https://placehold.co/128x128" alt="Sports" width={128} height={128} />
+                  <Image className="w-32 h-32 left-0 top-0 absolute" src={AppImages.goldenCoins} alt="Sports" width={128} height={128} />
                 </div>
               </div>
             </div>
@@ -32,8 +41,8 @@ export function MarketPage() {
           <div className="flex flex-col justify-center items-center gap-3">
             <div className="p-1 rounded-full border-2 border-gray-400/25 flex justify-start items-center gap-2.5">
               <div className="w-52 h-52 p-16 relative bg-gradient-to-br from-slate-400 to-rose-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <div className="w-32 h-32 left-[44px] top-[44px] absolute">
-                  <Image className="w-32 h-32 left-0 top-0 absolute" src="https://placehold.co/128x127" alt="Crypto" width={128} height={127} />
+                <div className="w-60 h-60 -left-[16px] -top-[2px] absolute">
+                  <Image className="w-full h-full left-0 top-0 absolute" src={AppImages.bitcoinGold} alt="Crypto" width={128} height={127} />
                 </div>
               </div>
             </div>
@@ -43,7 +52,7 @@ export function MarketPage() {
           <div className="flex flex-col justify-center items-center gap-3">
             <div className="p-1 rounded-full border-2 border-gray-400/25 flex justify-start items-center gap-2.5">
               <div className="w-52 h-52 p-16 relative bg-gradient-to-br from-rose-100 to-cyan-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <Image className="w-32 h-32 left-[44px] top-[44px] absolute" src="https://placehold.co/128x128" alt="Politics" width={128} height={128} />
+                <Image className="w-32 h-32 left-[44px] top-[44px] absolute" src={AppImages.judgePills} alt="Politics" width={128} height={128} />
               </div>
             </div>
             <div className="text-white text-xl font-bold font-['Nunito_Sans'] leading-7">Politics</div>
@@ -52,7 +61,7 @@ export function MarketPage() {
           <div className="flex flex-col justify-center items-center gap-3">
             <div className="p-1 rounded-full border-2 border-gray-400/25 flex justify-start items-center gap-2.5">
               <div className="w-52 h-52 p-16 relative bg-gradient-to-br from-rose-300 to-orange-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <Image className="w-20 h-32 left-[66px] top-[44px] absolute" src="https://placehold.co/85x128" alt="Gaming" width={85} height={128} />
+                <Image className="w-20 h-32 left-[66px] top-[44px] absolute" src={AppImages.casinoChip} alt="Gaming" width={85} height={128} />
               </div>
             </div>
             <div className="text-white text-xl font-bold font-['Nunito_Sans'] leading-7">Gaming</div>
@@ -61,7 +70,7 @@ export function MarketPage() {
           <div className="flex flex-col justify-center items-center gap-3">
             <div className="p-1 rounded-full border-2 border-gray-400/25 flex justify-start items-center gap-2.5">
               <div className="w-52 h-52 p-16 relative bg-gradient-to-br from-neutral-200 to-lime-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <Image className="w-32 h-32 left-[44px] top-[46px] absolute" src="https://placehold.co/128x125" alt="Economy" width={128} height={125} />
+                <Image className="w-32 h-32 left-[38px] top-[40px] absolute" src={AppIcons.dollarCoin} alt="Economy" width={128} height={125} />
               </div>
             </div>
             <div className="text-white text-xl font-bold font-['Nunito_Sans'] leading-7">Economy</div>
@@ -229,8 +238,8 @@ export function MarketPage() {
             
             <div className="w-full px-3 flex justify-between items-center">
               <div className="p-0.5 bg-zinc-900 rounded-full flex justify-end items-center">
-                <Image className="w-4 h-4 rounded-full border border-zinc-900" src="https://placehold.co/16x16" alt="User 1" width={16} height={16} />
-                <Image className="w-4 h-4 rounded-full border border-zinc-900" src="https://placehold.co/16x16" alt="User 2" width={16} height={16} />
+                <Image className="w-4 h-4 rounded-full border border-zinc-900" src={AppImages.img1} alt="User 1" width={16} height={16} />
+                <Image className="w-4 h-4 rounded-full border border-zinc-900" src={AppImages.img2} alt="User 2" width={16} height={16} />
                 <div className="h-4 pl-1.5 pr-1 flex flex-col justify-center items-center gap-2.5">
                   <div className="text-gray-400 text-[10px] font-medium font-['Nunito_Sans'] leading-none">+104</div>
                 </div>
@@ -270,7 +279,7 @@ export function MarketPage() {
                 </div>
                 <div className="left-[130px] top-[26px] absolute flex flex-col justify-start items-center gap-1">
                   <div className="w-12 h-12 bg-neutral-800 rounded-full flex justify-start items-center">
-                    <Image className="w-12 h-12 rounded-full" src="https://placehold.co/47x47" alt="User Avatar" width={47} height={47} />
+                    <Image className="w-12 h-12 rounded-full" src={AppImages.img1} alt="User Avatar" width={47} height={47} />
                   </div>
                   <div className="flex justify-center items-center gap-1">
                     <div className="text-gray-400 text-sm font-medium font-['Inter'] leading-tight">0x3B...CE2d4C</div>
@@ -316,8 +325,8 @@ export function MarketPage() {
             
             <div className="w-full px-3 flex justify-between items-center">
               <div className="p-0.5 bg-zinc-900 rounded-full flex justify-end items-center">
-                <Image className="w-4 h-4 rounded-full border border-zinc-900" src="https://placehold.co/16x16" alt="User 1" width={16} height={16} />
-                <Image className="w-4 h-4 rounded-full border border-zinc-900" src="https://placehold.co/16x16" alt="User 2" width={16} height={16} />
+                <Image className="w-4 h-4 rounded-full border border-zinc-900" src={AppImages.img1} alt="User 1" width={16} height={16} />
+                <Image className="w-4 h-4 rounded-full border border-zinc-900" src={AppImages.img2} alt="User 2" width={16} height={16} />
                 <div className="h-4 pl-1.5 pr-1 flex flex-col justify-center items-center gap-2.5">
                   <div className="text-gray-400 text-[10px] font-medium font-['Nunito_Sans'] leading-none">+104</div>
                 </div>

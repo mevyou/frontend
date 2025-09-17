@@ -1,5 +1,7 @@
 "use client";
 
+import { AppIcons } from "@/lib/appIcons";
+import { AppImages } from "@/lib/appImages";
 import Image from "next/image";
 
 export function MarketPageMobile() {
@@ -21,7 +23,7 @@ export function MarketPageMobile() {
             <div className="p-[1.71px] rounded-full border border-cyan-400/50 flex justify-start items-center gap-1">
               <div className="w-24 h-24 p-7 relative bg-gradient-to-br from-cyan-200 to-lime-300 rounded-full flex flex-col justify-start items-start overflow-hidden">
                 <div className="w-14 h-14 left-[18.86px] top-[18.86px] absolute">
-                  <Image className="w-14 h-14 left-0 top-0 absolute" src="https://placehold.co/55x55" alt="Sports" width={55} height={55} />
+                  <Image className="w-14 h-14 left-0 top-0 absolute" src={AppImages.goldenCoins} alt="Sports" width={55} height={55} />
                 </div>
               </div>
             </div>
@@ -32,7 +34,7 @@ export function MarketPageMobile() {
             <div className="p-[1.71px] rounded-full border border-gray-400/25 flex justify-start items-center gap-1">
               <div className="w-24 h-24 p-7 relative bg-gradient-to-br from-slate-400 to-rose-300 rounded-full flex flex-col justify-start items-start overflow-hidden">
                 <div className="w-14 h-14 left-[18.86px] top-[18.86px] absolute">
-                  <Image className="w-14 h-14 left-[0.43px] top-[0.43px] absolute" src="https://placehold.co/55x54" alt="Crypto" width={55} height={54} />
+                  <Image className="w-14 h-14 left-[0.43px] top-[0.43px] absolute" src={AppImages.bitcoinGold} alt="Crypto" width={55} height={54} />
                 </div>
               </div>
             </div>
@@ -42,7 +44,7 @@ export function MarketPageMobile() {
           <div className="flex flex-col justify-center items-center gap-2">
             <div className="p-[1.71px] rounded-full border border-gray-400/25 flex justify-start items-center gap-1">
               <div className="w-24 h-24 p-7 relative bg-gradient-to-br from-cyan-400 to-lime-300 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <Image className="w-14 h-14 left-[18.86px] top-[18.86px] absolute" src="https://placehold.co/55x55" alt="Politics" width={55} height={55} />
+                <Image className="w-14 h-14 left-[18.86px] top-[18.86px] absolute" src={AppImages.judgePills} alt="Politics" width={55} height={55} />
               </div>
             </div>
             <div className="text-white text-base font-bold font-['Nunito_Sans'] leading-none">Politics</div>
@@ -51,7 +53,7 @@ export function MarketPageMobile() {
           <div className="flex flex-col justify-center items-center gap-2">
             <div className="p-[1.71px] rounded-full border border-gray-400/25 flex justify-start items-center gap-1">
               <div className="w-24 h-24 p-7 relative bg-gradient-to-br from-rose-300 to-orange-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <Image className="w-9 h-14 left-[28.36px] top-[18.86px] absolute" src="https://placehold.co/36x55" alt="Gaming" width={36} height={55} />
+                <Image className="w-9 h-14 left-[28.36px] top-[18.86px] absolute" src={AppImages.casinoChip} alt="Gaming" width={36} height={55} />
               </div>
             </div>
             <div className="text-white text-base font-bold font-['Nunito_Sans'] leading-none">Gaming</div>
@@ -60,7 +62,7 @@ export function MarketPageMobile() {
           <div className="flex flex-col justify-center items-center gap-2">
             <div className="p-[1.71px] rounded-full border border-gray-400/25 flex justify-start items-center gap-1">
               <div className="w-24 h-24 p-7 relative bg-gradient-to-br from-rose-300 to-orange-100 rounded-full flex flex-col justify-start items-start overflow-hidden">
-                <Image className="w-9 h-14 left-[28.36px] top-[18.86px] absolute" src="https://placehold.co/36x55" alt="Economy" width={36} height={55} />
+                <Image className="w-9 h-14 left-[28.36px] top-[18.86px] absolute" src={AppIcons.dollarCoin} alt="Economy" width={36} height={55} />
               </div>
             </div>
             <div className="text-white text-base font-bold font-['Nunito_Sans'] leading-none">Economy</div>
@@ -159,8 +161,8 @@ export function MarketPageMobile() {
             
             <div className="w-full px-3 flex justify-between items-center">
               <div className="p-0.5 bg-zinc-900 rounded-full flex justify-end items-center">
-                <Image className="w-4 h-4 rounded-full border border-zinc-900" src="https://placehold.co/16x16" alt="User 1" width={16} height={16} />
-                <Image className="w-4 h-4 rounded-full border border-zinc-900" src="https://placehold.co/16x16" alt="User 2" width={16} height={16} />
+                <Image className="w-4 h-4 rounded-full border border-zinc-900" src={AppImages.img1} alt="User 1" width={16} height={16} />
+                <Image className="w-4 h-4 rounded-full border border-zinc-900" src={AppImages.img2} alt="User 2" width={16} height={16} />
                 <div className="h-4 pl-1.5 pr-1 flex flex-col justify-center items-center gap-2.5">
                   <div className="text-gray-400 text-[10px] font-medium font-['Nunito_Sans'] leading-none">+104</div>
                 </div>
