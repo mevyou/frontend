@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useAccount } from "wagmi";
 import { MainLayout } from "@/components/MainLayout";
-import { BetCard } from "@/components/BetCard";
+import { BettingCard } from "@/components/BettingCard";
 import { Filter, TrendingUp, Clock, Trophy, TrendingDown } from "lucide-react";
 import { BetStatus } from "@/lib/contracts/BettingContract";
 import { cn } from "@/lib/utils";
@@ -198,7 +198,7 @@ export default function MyBetsPage() {
         {filteredBets.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredBets.map((bet) => (
-              <BetCard key={bet.id.toString()} bet={bet} onUpdate={refetch} />
+              <BettingCard key={bet.id.toString()} bet={bet} onUpdateAction={refetch} />
             ))}
           </div>
         ) : (

@@ -1,8 +1,9 @@
 'use client'
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseEther } from 'viem'
-import { BETTING_CONTRACT_ABI, BETTING_CONTRACT_ADDRESS, Bet } from '@/lib/contracts/BettingContract'
+import { Abi, parseEther } from 'viem'
+import { Bet } from '@/lib/contracts/BettingContract'
+import { hubAddress, hubABI } from '../contract/contract'
 import { toast } from 'react-hot-toast'
 
 export function useCreateBet() {
@@ -13,10 +14,10 @@ export function useCreateBet() {
     try {
       const deadlineTimestamp = BigInt(Math.floor(deadline / 1000))
       const amountWei = parseEther(amount)
-      
+
       writeContract({
-        address: BETTING_CONTRACT_ADDRESS as `0x${string}`,
-        abi: BETTING_CONTRACT_ABI,
+        address: hubAddress as `0x${string}`,
+        abi: hubABI as Abi,
         functionName: 'createBet',
         args: [description, amountWei, deadlineTimestamp],
         value: amountWei,
@@ -42,8 +43,8 @@ export function useJoinBet() {
   const joinBet = async (betId: bigint, amount: bigint) => {
     try {
       writeContract({
-        address: BETTING_CONTRACT_ADDRESS as `0x${string}`,
-        abi: BETTING_CONTRACT_ABI,
+        address: hubAddress as `0x${string}`,
+        abi: hubABI as Abi,
         functionName: 'joinBet',
         args: [betId],
         value: amount,
@@ -69,8 +70,8 @@ export function useResolveBet() {
   const resolveBet = async (betId: bigint, winner: string) => {
     try {
       writeContract({
-        address: BETTING_CONTRACT_ADDRESS as `0x${string}`,
-        abi: BETTING_CONTRACT_ABI,
+        address: hubAddress as `0x${string}`,
+        abi: hubABI as Abi,
         functionName: 'resolveBet',
         args: [betId, winner as `0x${string}`],
       })
@@ -90,8 +91,8 @@ export function useResolveBet() {
 
 export function useGetBet(betId: bigint) {
   const { data, isLoading, error, refetch } = useReadContract({
-    address: BETTING_CONTRACT_ADDRESS as `0x${string}`,
-    abi: BETTING_CONTRACT_ABI,
+    address: hubAddress as `0x${string}`,
+    abi: hubABI as Abi,
     functionName: 'getBet',
     args: [betId],
   })
@@ -106,8 +107,8 @@ export function useGetBet(betId: bigint) {
 
 export function useGetAllBets() {
   const { data, isLoading, error, refetch } = useReadContract({
-    address: BETTING_CONTRACT_ADDRESS as `0x${string}`,
-    abi: BETTING_CONTRACT_ABI,
+    address: hubAddress as `0x${string}`,
+    abi: hubABI as Abi,
     functionName: 'getAllBets',
   })
 
@@ -126,8 +127,8 @@ export function useCancelBet() {
   const cancelBet = async (betId: bigint) => {
     try {
       writeContract({
-        address: BETTING_CONTRACT_ADDRESS as `0x${string}`,
-        abi: BETTING_CONTRACT_ABI,
+        address: hubAddress as `0x${string}`,
+        abi: hubABI as Abi,
         functionName: 'cancelBet',
         args: [betId],
       })

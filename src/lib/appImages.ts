@@ -16,17 +16,23 @@ export const AppImages = {
   banner4: "/image/banner4.png",
 
   // General Images
-  img: "/image/img.png",
+  defaultAvatar: "/image/img.png",
   img1: "/image/img1.jpg",
   img2: "/image/img2.jpg",
 
   // Type/Category Images
-  type: "/image/type.png",
+  goldenBall: "/image/type.png",
   type1: "/image/type1.png",
-  type2: "/image/type2.png",
-  type3: "/image/type3.png",
-  type4: "/image/type4.png",
-  type5: "/image/type5.png",
+  bitcoin: "/image/type2.png",
+  judgePill: "/image/type3.png",
+  casinoChips: "/image/type4.png",
+  goldenCoin: "/image/type5.png",
+
+  // Market Images
+  bitcoinGold: "/image/bitcoin-gold.png",
+  judgePills: "/image/judge-pill.png",
+  casinoChip: "/image/chips.png",
+  goldenCoins: "/image/goldenBall.png",
 } as const;
 
 // Type for image keys to ensure type safety
@@ -67,16 +73,16 @@ export const getBannerImage = (isMobile: boolean = false): string => {
 export const getTypeImage = (typeNumber: number): string => {
   switch (typeNumber) {
     case 1:
-      return AppImages.type1;
+      return AppImages.goldenBall;
     case 2:
-      return AppImages.type2;
+      return AppImages.bitcoin;
     case 3:
-      return AppImages.type3;
+      return AppImages.judgePill;
     case 4:
-      return AppImages.type4;
+      return AppImages.casinoChips;
     case 5:
-      return AppImages.type5;
+      return AppImages.goldenCoin;
     default:
-      return AppImages.type;
+      return AppImages.goldenBall;
   }
 };

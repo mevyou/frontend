@@ -1,6 +1,6 @@
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { arbitrum, mainnet, polygon, sepolia } from 'wagmi/chains'
+import { baseSepolia } from 'wagmi/chains'
 import { QueryClient } from '@tanstack/react-query'
 
 // 1. Get projectId from https://cloud.walletconnect.com
@@ -11,10 +11,10 @@ const metadata = {
   name: 'MevYou P2P Betting',
   description: 'Decentralized Peer-to-Peer Betting Platform',
   url: 'https://mevyou.com',
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
+  icons: ['https://github.com/mevyou/frontend/blob/main/public/image/logo.png']
 }
 
-const chains = [mainnet, polygon, arbitrum, sepolia] as const
+const chains = [baseSepolia] as const
 
 export const config = defaultWagmiConfig({
   chains,

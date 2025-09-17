@@ -5,44 +5,52 @@ import { usePathname } from "next/navigation";
 import { AppIcons } from "@/lib/assets";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { CreateBetButton } from "./CreateBetButton";
 
 interface SidebarProps {
   isCollapsed: boolean;
   onToggleAction: () => void;
+  onCreateBetClick?: () => void;
 }
 
-export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
+export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: SidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
     {
       name: "Home",
-      icon: AppIcons.home,
+      activeIcon: AppIcons.homeActive,
+      inactiveIcon: AppIcons.homeInactive,
       path: "/",
     },
     {
       name: "Market",
-      icon: AppIcons.analytics,
+      activeIcon: AppIcons.marketActive,
+      inactiveIcon: AppIcons.marketInactive,
       path: "/market",
     },
     {
       name: "Games",
-      icon: AppIcons.game,
+      activeIcon: AppIcons.gameActive,
+      inactiveIcon: AppIcons.gameInactive,
       path: "/games",
     },
     {
       name: "My Bets",
-      icon: AppIcons.coins,
+      activeIcon: AppIcons.betActive,
+      inactiveIcon: AppIcons.betInactive,
       path: "/my-bets",
     },
     {
       name: "Earn",
-      icon: AppIcons.gift,
+      activeIcon: AppIcons.giftActive,
+      inactiveIcon: AppIcons.earnInactive,
       path: "/earn",
     },
     {
       name: "Wallet",
-      icon: AppIcons.wallet,
+      activeIcon: AppIcons.walletActive,
+      inactiveIcon: AppIcons.walletInactive,
       path: "/wallet",
     },
   ];
@@ -50,20 +58,23 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
   return (
     <div
       className={cn(
-        "flex flex-col bg-gray-900 dark:bg-black border-r border-transparent transition-all duration-300 h-full relative",
+        "flex flex-col bg-sidebar border-r border-transparent h-full relative",
         isCollapsed ? "w-16" : "w-64"
       )}
+      style={{
+        transition: 'width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }}
     >
       {/* Logo Section */}
       <div className="flex items-center justify-between p-6 border-b border-transparent">
         {!isCollapsed && (
-          <div className="flex justify-start w-full">
+          <div className="flex justify-start w-full transition-all duration-300 ease-in-out">
             <Image
               src={AppIcons.logo}
               alt="Logo"
               width={56}
               height={56}
-              className="text-primary"
+              className="text-primary transition-all duration-300 ease-in-out"
             />
           </div>
         )}
@@ -72,30 +83,26 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
             <Image
               src={AppIcons.logo}
               alt="Logo"
-              width={40}
-              height={40}
+              width={48}
+              height={48}
               className="text-primary"
             />
           </div>
         )}
-        <button
-          onClick={onToggleAction}
-          className={cn(
-            "absolute -right-3 top-8 bg-gray-800 dark:bg-gray-700 rounded-full p-1.5 border border-transparent hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors z-10",
-            isCollapsed && "-right-3"
-          )}
-        >
-          <Image
-            src={AppIcons.sidebarLeft}
-            alt="Toggle"
-            width={16}
-            height={16}
-            className={cn(
-              "text-gray-400 transition-transform duration-300",
-              isCollapsed && "rotate-180"
-            )}
-          />
-        </button>
+        {!isCollapsed && (
+          <button
+            onClick={onToggleAction}
+            className="bg-sidebar rounded-full p-1.5 border border-transparent hover:bg-gray-700 transition-colors"
+          >
+            <Image
+              src={AppIcons.sidebarLeft}
+              alt="Toggle"
+              width={20}
+              height={20}
+              className="text-gray-400 transition-transform duration-300"
+            />
+          </button>
+        )}
       </div>
 
       {/* Navigation Menu */}
@@ -110,13 +117,26 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
                   className={cn(
                     "flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 group",
                     isActive
-                      ? "bg-gray-600 text-white"
-                      : "text-gray-400 hover:bg-gray-800 dark:hover:bg-gray-700 hover:text-white",
-                    isCollapsed && "justify-center px-2"
+                      ? "text-white"
+                      : "text-gray-400 hover:text-white",
+                    isCollapsed && "justify-end px-2"
                   )}
+                  style={{
+                    backgroundColor: isActive ? '#242429' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = '#242429';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
                   <Image
-                    src={item.icon}
+                    src={isActive ? (item as { activeIcon: string }).activeIcon : (item as { inactiveIcon: string }).inactiveIcon}
                     alt={item.name}
                     width={20}
                     height={20}
@@ -130,10 +150,11 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
                   {!isCollapsed && (
                     <span
                       className={cn(
-                        "font-nunito-sans",
+                        "font-nunito-sans transition-all duration-300 ease-in-out",
                         isActive
                           ? "text-white font-bold"
-                          : "text-gray-400 group-hover:text-white"
+                          : "text-gray-400 group-hover:text-white",
+                        !isCollapsed ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
                       )}
                     >
                       {item.name}
@@ -148,30 +169,10 @@ export function Sidebar({ isCollapsed, onToggleAction }: SidebarProps) {
 
       {/* Bottom Section */}
       <div className="p-4 border-t border-transparent">
-        {!isCollapsed ? (
-          <button className="w-full bg-primary hover:bg-primary/90 text-black font-nunito-sans font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
-            <Image
-              src={AppIcons.plusSign}
-              alt="Plus"
-              width={16}
-              height={16}
-              className="text-black"
-            />
-            <span>Create Bet</span>
-          </button>
-        ) : (
-          <div className="w-full bg-gradient-to-r from-primary to-primary-light p-[2px] rounded-lg">
-            <button className="w-full bg-gray-900 hover:bg-gray-800 text-primary p-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-              <Image
-                src={AppIcons.plusSign}
-                alt="Plus"
-                width={20}
-                height={20}
-                className="text-primary"
-              />
-            </button>
-          </div>
-        )}
+        <CreateBetButton
+          onClick={onCreateBetClick || (() => { })}
+          isCollapsed={isCollapsed}
+        />
       </div>
     </div>
   );

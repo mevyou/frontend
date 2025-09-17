@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/providers/Web3Provider";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
 
 const nunitoSans = Nunito_Sans({
@@ -25,22 +25,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${nunitoSans.variable} font-nunito-sans antialiased bg-gray-100 dark:bg-black text-gray-900 dark:text-white transition-colors`}
+        className={`${nunitoSans.variable} font-nunito-sans antialiased text-white transition-colors`}
+        style={{ backgroundColor: '#121214' }}
       >
-        <ThemeProvider>
-          <Web3Provider>
+        <Web3Provider>
+          <QueryProvider>
             {children}
             <Toaster
               position="top-right"
               toastOptions={{
-                className:
-                  "dark:bg-gray-800 dark:text-white bg-white text-gray-900",
+                className: "bg-gray-800 text-white",
               }}
             />
-          </Web3Provider>
-        </ThemeProvider>
+          </QueryProvider>
+        </Web3Provider>
       </body>
     </html>
   );

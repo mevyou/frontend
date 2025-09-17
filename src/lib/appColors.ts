@@ -1,5 +1,5 @@
 /**
- * Centralized Color Palette Management
+ * Centralized Color Palette Management - Dark Theme Only
  * Similar to Flutter's AppColors, this file contains all color definitions
  * Usage: import { AppColors } from '@/lib/appColors'
  * Example: <div style={{ backgroundColor: AppColors.primary }}>
@@ -10,6 +10,7 @@ export const AppColors = {
   primary: "#02FEFE", // Main brand color
   primaryBackground: "#02FEFE0D", // Primary with opacity
   primaryLight: "#22FEFE26", // Light variant with opacity
+  teal: "#20B2AA", // Teal accent color for modal elements
 
   // Success Colors
   success: "#22C55E", // Success green
@@ -19,27 +20,33 @@ export const AppColors = {
   error: "#EF4444", // Error red
   errorLight: "#F87171", // Light error red
 
+  // Dark Theme Background Colors
+  darkPrimary: "#121214", // Main dark background (blackish)
+  darkSecondary: "#1A1A1E", // Secondary dark background (greyish)
+  divider: "#1F1F23", // Divider line color
+  modalBackground: "#121214", // Modal background fill color
+
   // Common Colors
   white: "#FFFFFF",
   black: "#000000",
   transparent: "transparent",
 
-  // Gray Scale (you can extend these as needed)
+  // Dark Theme Gray Scale
   gray: {
-    50: "#F9FAFB",
-    100: "#F3F4F6",
-    200: "#E5E7EB",
-    300: "#D1D5DB",
-    400: "#9CA3AF",
-    500: "#6B7280",
-    600: "#4B5563",
-    700: "#374151",
-    800: "#1F2937",
-    900: "#111827",
+    50: "#F9FAFB", // Keep for text contrast
+    100: "#F3F4F6", // Keep for text contrast
+    200: "#E5E7EB", // Keep for borders
+    300: "#D1D5DB", // Keep for muted text
+    400: "#9CA3AF", // Keep for placeholder text
+    500: "#6B7280", // Keep for secondary text
+    600: "#4B5563", // Dark card backgrounds
+    700: "#374151", // Darker card backgrounds
+    800: "#1F2937", // Very dark backgrounds
+    900: "#111827", // Darkest backgrounds
   },
 } as const;
 
-// Color categories for easier organization
+// Color categories for easier organization - Dark Theme Only
 export const ColorCategories = {
   primary: {
     main: AppColors.primary,
@@ -53,6 +60,10 @@ export const ColorCategories = {
   error: {
     main: AppColors.error,
     light: AppColors.errorLight,
+  },
+  dark: {
+    primary: AppColors.darkPrimary,
+    secondary: AppColors.darkSecondary,
   },
   neutral: {
     white: AppColors.white,

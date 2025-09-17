@@ -14,7 +14,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { WalletConnect } from "./WalletConnect";
-import { ThemeToggle } from "./ThemeToggle";
+
 import { formatWeiToEther, formatAddress, cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -108,9 +109,6 @@ export function Header() {
 
           {/* Desktop Wallet & Profile */}
           <div className="hidden md:flex items-center gap-4">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {isConnected && address ? (
               <div className="flex items-center gap-4">
                 {/* Balance Display */}
@@ -146,7 +144,7 @@ export function Header() {
 
                   {/* Profile Dropdown */}
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+                    <div className="absolute right-0 mt-2 w-64 bg-gray-800 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
                       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -253,14 +251,8 @@ export function Header() {
               );
             })}
 
-            {/* Theme Toggle */}
-            <div className="flex items-center justify-between py-2">
-              <span className="text-gray-600 dark:text-gray-400">Theme:</span>
-              <ThemeToggle />
-            </div>
-
             {/* Wallet Section */}
-            <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="pt-3 border-t bg-gray-800 border-gray-200 dark:border-gray-700">
               {isConnected && address ? (
                 <div className="space-y-3">
                   {/* Balance */}
@@ -322,5 +314,15 @@ export function Header() {
         />
       )}
     </header>
+  );
+}
+
+// Mount the onboarding modal at the end to avoid layout shifts
+export default function HeaderWithOnboarding() {
+  return (
+    <>
+      <Header />
+      {/* The actual modal is controlled inside Header via state */}
+    </>
   );
 }
