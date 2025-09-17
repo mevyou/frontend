@@ -5,24 +5,24 @@
     /* Dark theme only - using specified colors */
     --background: #121214; /* Sidebar and header background */
     --foreground: #ffffff;
-    --main-layout: #1A1A1E; /* Main layout background */
+    --main-layout: #1a1a1e; /* Main layout background */
     --search-input: #242429; /* Search bar and explore market button */
     --news-ticker-bg: #242429; /* News ticker background */
     --news-ticker-border: #363636; /* News ticker border */
-    --selected-state: #1A1A1E; /* Selected state in sidebar */
-    --create-bet-border: #02FEFE80; /* Create bet border with opacity */
-    --create-bet-fill: #02FEFE1A; /* Create bet fill with reduced opacity */
+    --selected-state: #1a1a1e; /* Selected state in sidebar */
+    --create-bet-border: #02fefe80; /* Create bet border with opacity */
+    --create-bet-fill: #02fefe1a; /* Create bet fill with reduced opacity */
 
     /* App colors */
     --color-primary: #02fefe;
     --color-primary-foreground: #ffffff;
-    --color-secondary: #1A1A1E;
+    --color-secondary: #1a1a1e;
     --color-secondary-foreground: #ffffff;
     --color-muted: #363636;
     --color-muted-foreground: #9ca3af;
     --color-accent: #02fefe;
     --color-accent-foreground: #ffffff;
-    --color-card: #1A1A1E;
+    --color-card: #1a1a1e;
     --color-card-foreground: #ffffff;
     --color-border: #374151;
     --color-input: #242429;
@@ -70,7 +70,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1A1A1E;
+  background: #1a1a1e;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -85,5 +85,57 @@ body {
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #363636 #1A1A1E;
+  scrollbar-color: #363636 #1a1a1e;
+}
+
+/* Enhanced drag animations */
+@keyframes dragHover {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.drag-hover {
+  animation: dragHover 0.3s ease-in-out;
+}
+
+/* Smooth drag transitions */
+.drag-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fade in animation for confirmation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Mobile modal slide-up animation */
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
 }

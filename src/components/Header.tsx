@@ -14,7 +14,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { WalletConnect } from "./WalletConnect";
-import { ThemeToggle } from "./ThemeToggle";
+
 import { formatWeiToEther, formatAddress, cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -108,9 +108,6 @@ export function Header() {
 
           {/* Desktop Wallet & Profile */}
           <div className="hidden md:flex items-center gap-4">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {isConnected && address ? (
               <div className="flex items-center gap-4">
                 {/* Balance Display */}
@@ -252,12 +249,6 @@ export function Header() {
                 </Link>
               );
             })}
-
-            {/* Theme Toggle */}
-            <div className="flex items-center justify-between py-2">
-              <span className="text-gray-600 dark:text-gray-400">Theme:</span>
-              <ThemeToggle />
-            </div>
 
             {/* Wallet Section */}
             <div className="pt-3 border-t border-gray-200 dark:border-gray-700">

@@ -45,6 +45,7 @@ export const AppIcons = {
   checkmark: "/svg/checkmark.svg",
   checkmarkCircle: "/svg/checkmark-circle.svg",
   createBet: "/svg/create-bet.svg",
+  bet: "/svg/bet.svg",
   informationCircle: "/svg/information-circle.svg",
   calendar: "/svg/calendar.svg",
   userLock: "/svg/user-lock.svg",
@@ -125,21 +126,24 @@ export const hasIcon = (iconName: string): iconName is AppIconKey => {
  * @param color - The color to apply (hex, rgb, or named color)
  * @returns Promise<string> - Data URL of the colored SVG
  */
-export const getColoredIcon = async (iconName: AppIconKey, color: string): Promise<string> => {
+export const getColoredIcon = async (
+  iconName: AppIconKey,
+  color: string
+): Promise<string> => {
   try {
     const response = await fetch(AppIcons[iconName]);
     const svgText = await response.text();
-    
+
     // Replace stroke and fill colors in the SVG
     const coloredSvg = svgText
       .replace(/stroke="[^"]*"/g, `stroke="${color}"`)
       .replace(/fill="[^"]*"/g, `fill="${color}"`);
-    
+
     // Create data URL
     const dataUrl = `data:image/svg+xml;base64,${btoa(coloredSvg)}`;
     return dataUrl;
   } catch (error) {
-    console.error('Error creating colored icon:', error);
+    console.error("Error creating colored icon:", error);
     return AppIcons[iconName]; // Fallback to original
   }
 };
@@ -153,17 +157,20 @@ export const getColoredIcon = async (iconName: AppIconKey, color: string): Promi
 export const getIconWithColor = (iconName: AppIconKey, color: string) => {
   // Convert hex color to CSS filter for black
   const getFilterForColor = (hexColor: string) => {
-    if (hexColor.toLowerCase() === '#000000' || hexColor.toLowerCase() === 'black') {
-      return 'brightness(0) saturate(100%)';
+    if (
+      hexColor.toLowerCase() === "#000000" ||
+      hexColor.toLowerCase() === "black"
+    ) {
+      return "brightness(0) saturate(100%)";
     }
     // For other colors, return empty filter (use original color)
-    return '';
+    return "";
   };
 
   return {
-     src: AppIcons[iconName],
-     style: {
-       filter: getFilterForColor(color)
-     }
-   };
- };
+    src: AppIcons[iconName],
+    style: {
+      filter: getFilterForColor(color),
+    },
+  };
+};
