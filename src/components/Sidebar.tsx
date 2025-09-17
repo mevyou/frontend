@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AppIcons } from "@/lib/assets";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { CreateBetButton } from "./CreateBetButton";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -168,42 +169,10 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
 
       {/* Bottom Section */}
       <div className="p-4 border-t border-transparent">
-        {!isCollapsed ? (
-          <button
-            onClick={onCreateBetClick}
-            className="w-full text-white font-nunito-sans font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 cursor-pointer hover:opacity-80"
-            style={{
-              border: '1px solid var(--create-bet-border)',
-              backgroundColor: 'var(--create-bet-fill)'
-            }}
-          >
-            <Image
-              src={AppIcons.plusSign}
-              alt="Create Bet"
-              width={24}
-              height={24}
-              className="text-white"
-            />
-            <span>Create Bet</span>
-          </button>
-        ) : (
-          <button
-            onClick={onCreateBetClick}
-            className="w-full text-white p-3 rounded-lg transition-colors duration-200 flex items-center justify-center cursor-pointer hover:opacity-80"
-            style={{
-              border: '1px solid var(--create-bet-border)',
-              backgroundColor: 'var(--create-bet-fill)'
-            }}
-          >
-            <Image
-              src={AppIcons.plusSign}
-              alt="Create Bet"
-              width={24}
-              height={24}
-              className="text-white"
-            />
-          </button>
-        )}
+        <CreateBetButton 
+          onClick={onCreateBetClick || (() => {})} 
+          isCollapsed={isCollapsed}
+        />
       </div>
     </div>
   );

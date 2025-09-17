@@ -27,6 +27,19 @@ export function MainLayout({ children }: MainLayoutProps) {
     if (isConnected && isFirstTime) setShowOnboarding(true);
   }, [isConnected, isFirstTime]);
 
+  // Listen for custom create bet modal events
+  React.useEffect(() => {
+    const handleOpenCreateBetModal = () => {
+      setIsCreateBetModalOpen(true);
+    };
+
+    window.addEventListener('openCreateBetModal', handleOpenCreateBetModal);
+    
+    return () => {
+      window.removeEventListener('openCreateBetModal', handleOpenCreateBetModal);
+    };
+  }, []);
+
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
