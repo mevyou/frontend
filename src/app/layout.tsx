@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Web3Provider } from "@/components/providers/Web3Provider";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
 
 const nunitoSans = Nunito_Sans({
@@ -30,13 +31,15 @@ export default function RootLayout({
         style={{ backgroundColor: '#121214' }}
       >
         <Web3Provider>
-          {children}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              className: "bg-gray-800 text-white",
-            }}
-          />
+          <QueryProvider>
+            {children}
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                className: "bg-gray-800 text-white",
+              }}
+            />
+          </QueryProvider>
         </Web3Provider>
       </body>
     </html>
