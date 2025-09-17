@@ -3,27 +3,35 @@
  * Similar to Flutter's AppIcons, this file contains all SVG icon paths
  * Usage: import { AppIcons } from '@/lib/appIcons'
  * Example: <Image src={AppIcons.logo} alt="Logo" />
- */
+*/
 
 export const AppIcons = {
   // Navigation & UI Icons
   logo: "/svg/logo.svg",
-  home: "/svg/home.svg",
+  homeActive: "/svg/home.svg",
+  homeInactive: "/svg/homeInactive.svg",
   home1: "/svg/home1.svg",
   homebg: "/svg/homebg.svg",
   sidebarLeft: "/svg/sidebar-left.svg",
   gridView: "/svg/grid-view.svg",
   list: "/svg/list.svg",
-  filter: "/svg/filter.svg",
+  marketInactive: "/svg/filter.svg",
+  marketActive: "/svg/frame.svg",
   filters: "/svg/filters.svg",
+  betInactive: "/svg/bet.svg",
+  betActive: "/svg/frame1.svg",
   search: "/svg/search.svg",
+  gameInactive: "/svg/game.svg",
+  gameActive: "/svg/gameActive.svg",
+  walletInactive: "/svg/wallet.svg",
+  walletActive: "/svg/mail-active.svg",
   refresh: "/svg/refresh.svg",
-
+  
   // User & Account Icons
   user: "/svg/user.svg",
   addUser: "/svg/add-user.svg",
   gamer: "/svg/gamer.svg",
-
+  
   // Wallet & Finance Icons
   wallet: "/svg/wallet.svg",
   wallet05: "/svg/wallet-05.svg",
@@ -45,7 +53,6 @@ export const AppIcons = {
   checkmark: "/svg/checkmark.svg",
   checkmarkCircle: "/svg/checkmark-circle.svg",
   createBet: "/svg/create-bet.svg",
-  bet: "/svg/bet.svg",
   informationCircle: "/svg/information-circle.svg",
   calendar: "/svg/calendar.svg",
   userLock: "/svg/user-lock.svg",
@@ -53,8 +60,8 @@ export const AppIcons = {
   stake: "/svg/stake.svg",
 
   // Arrow Icons
-  arrowDown: "/svg/arrow-down.svg",
-  arrowDown1: "/svg/arrow-down1.svg",
+  arrowUp: "/svg/arrow-down.svg",
+  arrowDown: "/svg/arrow-down1.svg",
   arrowRight: "/svg/arrow-right.svg",
 
   // Communication Icons
@@ -63,7 +70,6 @@ export const AppIcons = {
   share: "/svg/share1.svg",
 
   // Game & Competition Icons
-  game: "/svg/game.svg",
   fire: "/svg/fire.svg",
   magic: "/svg/magic.svg",
   trophy: "/svg/trophy.svg", // Note: Add trophy.svg if available
@@ -84,17 +90,15 @@ export const AppIcons = {
   legendNode3: "/svg/LegendNode3.svg",
 
   // Gift & Rewards
-  gift: "/svg/gift.svg",
+  giftInactive: "/svg/gift.svg",
   giftActive: "/svg/gift-active.svg",
 
   // Background & Decorative
   bg: "/svg/bg.svg",
-  frame: "/svg/frame.svg",
-  frame1: "/svg/frame1.svg",
 
   // Document & File Icons
   file: "/svg/file.svg",
-  invoice: "/svg/invoice.svg",
+  earnInactive: "/svg/invoice.svg",
   transactionHistory: "/svg/transaction-history.svg",
 } as const;
 

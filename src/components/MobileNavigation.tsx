@@ -8,12 +8,13 @@ import Image from "next/image";
 
 interface TabProps {
   name: string;
-  icon: string;
+  activeIcon: string;
+  inactiveIcon: string;
   path: string;
   isActive: boolean;
 }
 
-function Tab({ name, icon, path, isActive }: TabProps) {
+function Tab({ name, activeIcon, inactiveIcon, path, isActive }: TabProps) {
   return (
     <Link
       href={path}
@@ -21,7 +22,7 @@ function Tab({ name, icon, path, isActive }: TabProps) {
     >
       <div className="absolute aspect-[24/24] bottom-[41.25%] top-[-1.25%] translate-x-[-50%]" style={{ left: "calc(50% - 0.25px)" }}>
         <Image
-          src={icon}
+          src={isActive ? activeIcon : inactiveIcon}
           alt={name}
           width={24}
           height={24}
@@ -51,32 +52,38 @@ export function MobileNavigation() {
   const menuItems = [
     {
       name: "Home",
-      icon: AppIcons.home,
+      activeIcon: AppIcons.homeActive,
+      inactiveIcon: AppIcons.homeInactive,
       path: "/",
     },
     {
       name: "Market",
-      icon: AppIcons.analytics,
+      activeIcon: AppIcons.marketActive,
+      inactiveIcon: AppIcons.marketInactive,
       path: "/market",
     },
     {
       name: "Games",
-      icon: AppIcons.game,
+      activeIcon: AppIcons.gameActive,
+      inactiveIcon: AppIcons.gameInactive,
       path: "/games",
     },
     {
       name: "My bets",
-      icon: AppIcons.coins,
+      activeIcon: AppIcons.betActive,
+      inactiveIcon: AppIcons.betInactive,
       path: "/my-bets",
     },
     {
       name: "Earn",
-      icon: AppIcons.gift,
+      activeIcon: AppIcons.giftActive,
+      inactiveIcon: AppIcons.earnInactive,
       path: "/earn",
     },
     {
       name: "Wallet",
-      icon: AppIcons.wallet,
+      activeIcon: AppIcons.walletActive,
+      inactiveIcon: AppIcons.walletInactive,
       path: "/wallet",
     },
   ];
@@ -91,7 +98,8 @@ export function MobileNavigation() {
               <Tab
                 key={item.name}
                 name={item.name}
-                icon={item.icon}
+                activeIcon={item.activeIcon}
+                inactiveIcon={item.inactiveIcon}
                 path={item.path}
                 isActive={isActive}
               />

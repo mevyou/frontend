@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
 import { NewsTicker } from "./NewsTicker";
@@ -8,6 +8,8 @@ import { MobileNavigation } from "./MobileNavigation";
 import CreateBetModal from "./CreateBetModal";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { OnboardingModal } from "./OnboardingModal";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -17,6 +19,13 @@ export function MainLayout({ children }: MainLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isCreateBetModalOpen, setIsCreateBetModalOpen] = useState(false);
+  const { isFirstTime, isConnected } = useAuth();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Show onboarding when connected and first time
+  React.useEffect(() => {
+    if (isConnected && isFirstTime) setShowOnboarding(true);
+  }, [isConnected, isFirstTime]);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -103,6 +112,9 @@ export function MainLayout({ children }: MainLayoutProps) {
         onClose={handleCloseCreateBetModal}
         onCreateBet={handleCreateBet}
       />
+
+      {/* Onboarding Modal */}
+      <OnboardingModal open={showOnboarding} onClose={() => setShowOnboarding(false)} />
     </SearchProvider>
   );
 }

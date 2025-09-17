@@ -14,6 +14,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { WalletConnect } from "./WalletConnect";
+import { useAuth } from "@/hooks/useAuth";
+import { OnboardingModal } from "./OnboardingModal";
 
 import { formatWeiToEther, formatAddress, cn } from "@/lib/utils";
 import Link from "next/link";
@@ -28,6 +30,14 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const { isFirstTime } = useAuth();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (isConnected && isFirstTime) {
+      setShowOnboarding(true);
+    }
+  }, [isConnected, isFirstTime]);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -313,5 +323,15 @@ export function Header() {
         />
       )}
     </header>
+  );
+}
+
+// Mount the onboarding modal at the end to avoid layout shifts
+export default function HeaderWithOnboarding() {
+  return (
+    <>
+      <Header />
+      {/* The actual modal is controlled inside Header via state */}
+    </>
   );
 }

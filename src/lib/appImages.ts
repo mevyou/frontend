@@ -16,7 +16,7 @@ export const AppImages = {
   banner4: "/image/banner4.png",
 
   // General Images
-  img: "/image/img.png",
+  defaultAvatar: "/image/img.png",
   img1: "/image/img1.jpg",
   img2: "/image/img2.jpg",
 

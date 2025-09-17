@@ -215,7 +215,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                       betType: betTypeUint8,
                       name: topic || 'Untitled Bet',
                       description: topic || 'Untitled Bet',
-                      image: AppIcons.bet,
+                      image: AppIcons.betInactive,
                       link: 'https://mevyou.com',
                       owner: address as `0x${string}` | undefined,
                       result: selectedOption,
@@ -228,7 +228,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   idleLabel={
                     <span className="flex items-center gap-2">
                       <Image
-                        src={AppIcons.bet}
+                        src={AppIcons.betInactive}
                         alt="Create"
                         className="w-4 h-4"
                         style={{ filter: "brightness(0) saturate(100%) invert(100%)" }}
@@ -264,7 +264,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   style={{ backgroundColor: "#242429" }}
                 >
                   <Image
-                    src={AppIcons.bet}
+                    src={AppIcons.betInactive}
                     alt="Markets"
                     className="w-4 h-4"
                     style={{

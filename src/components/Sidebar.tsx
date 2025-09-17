@@ -18,32 +18,38 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
   const menuItems = [
     {
       name: "Home",
-      icon: AppIcons.home,
+      activeIcon: AppIcons.homeActive,
+      inactiveIcon: AppIcons.homeInactive,
       path: "/",
     },
     {
       name: "Market",
-      icon: AppIcons.analytics,
+      activeIcon: AppIcons.marketActive,
+      inactiveIcon: AppIcons.marketInactive,
       path: "/market",
     },
     {
       name: "Games",
-      icon: AppIcons.game,
+      activeIcon: AppIcons.gameActive,
+      inactiveIcon: AppIcons.gameInactive,
       path: "/games",
     },
     {
       name: "My Bets",
-      icon: AppIcons.coins,
+      activeIcon: AppIcons.betActive,
+      inactiveIcon: AppIcons.betInactive,
       path: "/my-bets",
     },
     {
       name: "Earn",
-      icon: AppIcons.gift,
+      activeIcon: AppIcons.giftActive,
+      inactiveIcon: AppIcons.earnInactive,
       path: "/earn",
     },
     {
       name: "Wallet",
-      icon: AppIcons.wallet,
+      activeIcon: AppIcons.walletActive,
+      inactiveIcon: AppIcons.walletInactive,
       path: "/wallet",
     },
   ];
@@ -129,7 +135,7 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
                   }}
                 >
                   <Image
-                    src={item.icon}
+                    src={isActive ? (item as any).activeIcon : (item as any).inactiveIcon}
                     alt={item.name}
                     width={20}
                     height={20}
