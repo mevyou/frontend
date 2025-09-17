@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { SearchResult, SearchSuggestion, formatSearchQuery, isAddress, isUsername } from '@/lib/search';
+import { SearchResult, SearchSuggestion } from '@/lib/search';
 import { formatAddress, formatTimestamp } from '@/lib/utils';
-import { Users, Trophy, User, Calendar, Hash, ExternalLink } from 'lucide-react';
+import { Users, Trophy, User, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { AppIcons } from '@/lib/assets';
 
 interface SearchSuggestionsProps {
   query: string;
@@ -206,7 +204,7 @@ export function SearchSuggestions({ query, isOpen, onClose, onSelect, className 
                         </span>
                         {result.timestamp && (
                           <span className="text-xs text-gray-500">
-                            {formatTimestamp(result.timestamp)}
+                            {formatTimestamp(BigInt(Math.floor(Number(result.timestamp))))}
                           </span>
                         )}
                       </div>
@@ -278,7 +276,7 @@ export function SearchSuggestions({ query, isOpen, onClose, onSelect, className 
           {results.length === 0 && suggestions.length === 0 && !isLoading && (
             <div className="p-4 text-center text-gray-400">
               <Users className="h-8 w-8 mx-auto mb-2 text-gray-600" />
-              <p>No results found for "{query}"</p>
+              <p>No results found for &quot;{query}&quot;</p>
               <p className="text-sm mt-1">Try searching for users, bets, or addresses</p>
             </div>
           )}

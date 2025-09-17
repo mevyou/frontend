@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PinataSDK } from "pinata";
-
-const pinata = new PinataSDK({
-  pinataJwt: process.env.PINATA_JWT!,
-  pinataGateway: process.env.PINATA_GATEWAY || 'https://gateway.pinata.cloud'
-});
 
 
 // try {

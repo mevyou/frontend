@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useAccount } from "wagmi";
 import { TxButton } from "@/components/TxButton";
 import { registryABI, registryAddress } from "@/contract/contract";
-import { uploadToIPFS, dataURLtoFile, getIPFSUrl } from "@/lib/ipfs";
+import { uploadToIPFS } from "@/lib/ipfs";
 import type { Abi } from "viem";
 
 interface OnboardingModalProps {
@@ -48,14 +48,14 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     // First, set the local image for preview
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") setImage(reader.result);
     };
     reader.readAsDataURL(file);
-    
+
     // Upload to IPFS
     setIsUploadingImage(true);
     try {
@@ -73,6 +73,15 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
   const createProfileData = () => {
     if (!address) return null;
     const now = Math.floor(Date.now() / 1000); // Convert to seconds
+    //   {
+    //     address user;
+    //     string name;
+    //     string username;
+    //     string description;
+    //     string image;
+    //     uint256 createdAt;
+    //     uint256 timestamp;
+    // }
     return {
       user: address,
       name: name.trim() || "New User",
@@ -124,7 +133,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
 
         <div className="p-6">
           <h2 className="text-xl font-semibold text-white mb-1">Welcome!</h2>
-          <p className="text-gray-400 text-sm mb-4">Let's set up your profile.</p>
+          <p className="text-gray-400 text-sm mb-4">Let&apos;s set up your profile.</p>
 
           <form onSubmit={onSubmit} className="space-y-5">
             {/* Avatar */}

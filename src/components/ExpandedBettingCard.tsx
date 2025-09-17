@@ -145,8 +145,8 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
       <div className="self-stretch px-3 inline-flex justify-between items-center">
         {/* Participants */}
         <div className="p-0.5 bg-zinc-900 rounded-[99px] flex justify-end items-center">
-          <Image src={AppImages.img} alt="user" width={16} height={16} className="rounded-full border-[1.40px] border-zinc-900" />
-          <Image src={AppImages.img} alt="user" width={16} height={16} className="rounded-full border-[1.40px] border-zinc-900" />
+          <Image src={AppImages.img1} alt="user" width={16} height={16} className="rounded-full border-[1.40px] border-zinc-900" />
+          <Image src={AppImages.img2} alt="user" width={16} height={16} className="rounded-full border-[1.40px] border-zinc-900" />
           <div className="h-4 pl-1.5 pr-1 inline-flex flex-col justify-center items-center gap-2.5">
             <div className="self-stretch text-center justify-center text-gray-400 text-[10px] font-medium font-['Nunito_Sans'] leading-none">+104</div>
           </div>

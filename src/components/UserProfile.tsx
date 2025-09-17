@@ -1,28 +1,21 @@
 "use client";
 
 import { useMemo } from "react";
-import { useAccount, useBalance } from "wagmi";
-import { Trophy, TrendingUp, TrendingDown, Clock, DollarSign, User, Copy, ExternalLink, InfoIcon } from "lucide-react";
+import { useAccount } from "wagmi";
+import { User, ExternalLink, InfoIcon } from "lucide-react";
 import { AppImages } from "@/lib/appImages";
-import { BetStatus } from "@/lib/contracts/BettingContract";
 import {
   formatWeiToEther,
   formatAddress,
-  getBetStatusText,
-  getBetStatusColor,
-  cn,
-  truncateText,
 } from "@/lib/utils";
 import { toast } from "react-hot-toast";
-import { dummyBets, getUserStats } from "@/lib/dummyData";
+import { getUserStats } from "@/lib/dummyData";
 import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import { AppIcons } from "@/lib/appIcons";
 
 export function UserProfile() {
   const { address, isConnected } = useAccount();
-  const { data: balance } = useBalance({ address });
-  const isLoading = false;
   const { profile } = useAuth();
 
   const userStats = useMemo(() => {
@@ -40,16 +33,6 @@ export function UserProfile() {
     return getUserStats(address);
   }, [address]);
 
-  const userBets = useMemo(() => {
-    if (!address) return [];
-    return dummyBets
-      .filter(
-        (bet) =>
-          bet.creator.toLowerCase() === address.toLowerCase() ||
-          bet.opponent.toLowerCase() === address.toLowerCase()
-      )
-      .sort((a, b) => Number(b.id) - Number(a.id));
-  }, [address]);
 
   const copyAddress = () => {
     if (address) {
@@ -89,8 +72,8 @@ export function UserProfile() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-white">Profile</h1>
-          <button 
-            onClick={copyAddress} 
+          <button
+            onClick={copyAddress}
             className="px-4 py-2 bg-cyan-400/10 rounded-full flex items-center gap-2 text-white text-sm font-medium hover:bg-cyan-400/20 transition-colors"
           >
             <span>Share profile link</span>
@@ -123,7 +106,7 @@ export function UserProfile() {
             <div className="text-gray-400 text-sm font-medium text-center">Points</div>
             <div className="text-white text-2xl font-bold">2.5k pts</div>
           </div>
-          
+
           <div className="bg-neutral-800 rounded-2xl p-6 flex flex-col items-center justify-center">
             <div className="w-24 h-16 mb-2 flex items-center justify-center">
               <Image src={AppIcons.dollarCoin} alt="Points" width={24} height={24} className="w-full h-full" />
@@ -131,7 +114,7 @@ export function UserProfile() {
             <div className="text-gray-400 text-sm font-medium text-center">Total Profit/Loss</div>
             <div className="text-green-400 text-2xl font-bold">+ $9,353.25</div>
           </div>
-          
+
           <div className="bg-neutral-800 rounded-2xl p-6 flex flex-col items-center justify-center">
             <div className="w-24 h-16 mb-2 flex items-center justify-center">
               <Image src={AppIcons.ranks} alt="Points" width={64} height={64} className="w-44 h-44" />
@@ -165,7 +148,7 @@ export function UserProfile() {
               </div>
               <div className="text-white text-xl font-bold">{userStats.totalBets}</div>
             </div>
-            
+
             <div className="rounded-xl p-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center">
@@ -175,7 +158,7 @@ export function UserProfile() {
               </div>
               <div className="text-white text-xl font-bold">{formatWeiToEther(userStats.totalStaked)} ETH</div>
             </div>
-            
+
             <div className="rounded-xl p-4">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center">
@@ -251,7 +234,7 @@ export function UserProfile() {
                 <div className="self-stretch inline-flex justify-start items-start gap-4">
                   <div className="w-4 h-4 relative">
                     <div className="w-3.5 h-3.5 left-[1.33px] top-[1.33px] rounded-full absolute bg-gray-400" />
-                      <InfoIcon size={16} className="text-black" />
+                    <InfoIcon size={16} className="text-black" />
                     {/* <div className="w-0 h-[3px] left-[8px] top-[7.67px] absolute" />
                     <div className="w-0 h-[0.01px] left-[8px] top-[5.34px] absolute" /> */}
                   </div>
@@ -263,8 +246,8 @@ export function UserProfile() {
         </div>
       </div>
 
-        {/* Betting history (kept) */}
-        {/* <div className="bg-card border border-border rounded-xl p-6 shadow-sm w-full">
+      {/* Betting history (kept) */}
+      {/* <div className="bg-card border border-border rounded-xl p-6 shadow-sm w-full">
           <h2 className="text-xl font-bold text-card-foreground mb-4">Your Betting History</h2>
           {isLoading ? (
             <div className="space-y-3">
@@ -276,12 +259,12 @@ export function UserProfile() {
                 </div>
               ))}
             </div>
-          ) : userBets.length > 0 ? (
+          ) : (
             <div className="space-y-3">
-              {userBets.map((bet) => {
-                const isCreator = bet.creator.toLowerCase() === ensuredAddress.toLowerCase();
-                const isWinner = bet.winner.toLowerCase() === ensuredAddress.toLowerCase();
-                const isResolved = bet.status === BetStatus.RESOLVED;
+              {[].map((bet: any) => {
+                const isCreator = bet.creator?.toLowerCase() === ensuredAddress.toLowerCase();
+                const isWinner = bet.winner?.toLowerCase() === ensuredAddress.toLowerCase();
+                const isResolved = bet.status === 2; // RESOLVED status
 
                 return (
                   <div key={bet.id.toString()} className="bg-muted border border-border rounded-lg p-4 shadow-sm">
@@ -314,6 +297,6 @@ export function UserProfile() {
         </div> */}
 
 
-      </div>
+    </div>
   );
 }

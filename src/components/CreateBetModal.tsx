@@ -23,6 +23,9 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
   onCreateBet,
 }) => {
   const [topic, setTopic] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [link, setLink] = useState("");
   const [outcomeType, setOutcomeType] = useState("multi-choice");
   const [outcomes, setOutcomes] = useState([
     "≥30M To <40M",
@@ -30,23 +33,44 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
     "≥40M To <50M",
     "≥50M To <60M",
   ]);
+  const [odds, setOdds] = useState<string[]>([]);
   const { address } = useAccount();
   const [selectedTopic, setSelectedTopic] = useState("Sport");
   const [isTopicDropdownOpen, setIsTopicDropdownOpen] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [amountEth, setAmountEth] = useState<string>("0.001");
   const [deadlineHours, setDeadlineHours] = useState<string>("24");
+  const [privateBet, setPrivateBet] = useState(false);
 
   // Drag and Drop functionality - moved before early return
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // Reset confirmation state when modal closes
+  // Reset form when modal closes
   useEffect(() => {
     if (!isOpen) {
       setShowConfirmation(false);
+      // Reset all form fields
+      setTopic("");
+      setDescription("");
+      setImage("");
+      setLink("");
+      setOutcomes(["≥30M To <40M", "<30M", "≥40M To <50M", "≥50M To <60M"]);
+      setOdds([]);
+      setOutcomeType("multi-choice");
+      setAmountEth("0.001");
+      setDeadlineHours("24");
+      setPrivateBet(false);
     }
   }, [isOpen]);
+
+  // Initialize odds when outcomes change
+  useEffect(() => {
+    if (odds.length !== outcomes.length) {
+      const newOdds = outcomes.map((_, index) => odds[index] || "1.0");
+      setOdds(newOdds);
+    }
+  }, [outcomes, odds]);
 
   const topics = [
     {
@@ -79,6 +103,32 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
   if (!isOpen) return null;
 
   const handleSubmit = () => {
+    // Validate required fields
+    if (!topic.trim()) {
+      alert("Please enter a topic for your bet");
+      return;
+    }
+
+    if (outcomes.length < 2) {
+      alert("Please add at least 2 outcomes for your bet");
+      return;
+    }
+
+    if (outcomes.some(outcome => !outcome.trim())) {
+      alert("Please fill in all outcome fields");
+      return;
+    }
+
+    if (!amountEth || Number(amountEth) <= 0) {
+      alert("Please enter a valid stake amount");
+      return;
+    }
+
+    if (!deadlineHours || Number(deadlineHours) <= 0) {
+      alert("Please enter a valid deadline");
+      return;
+    }
+
     if (!showConfirmation) {
       setShowConfirmation(true);
     }
@@ -86,6 +136,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
 
   const addOutcome = () => {
     setOutcomes([...outcomes, ""]);
+    setOdds([...odds, "1.0"]); // Default odds of 1.0
   };
 
   // removeOutcome was unused; removed to satisfy linter
@@ -94,6 +145,19 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
     const newOutcomes = [...outcomes];
     newOutcomes[index] = value;
     setOutcomes(newOutcomes);
+  };
+
+  const updateOdds = (index: number, value: string) => {
+    const newOdds = [...odds];
+    newOdds[index] = value;
+    setOdds(newOdds);
+  };
+
+  const removeOutcome = (index: number) => {
+    const newOutcomes = outcomes.filter((_, i) => i !== index);
+    const newOdds = odds.filter((_, i) => i !== index);
+    setOutcomes(newOutcomes);
+    setOdds(newOdds);
   };
 
   // Drag and Drop event handlers
@@ -117,15 +181,20 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
     if (draggedIndex === null) return;
 
     const newOutcomes = [...outcomes];
-    const draggedItem = newOutcomes[draggedIndex];
+    const newOdds = [...odds];
+    const draggedOutcome = newOutcomes[draggedIndex];
+    const draggedOdds = newOdds[draggedIndex];
 
-    // Remove dragged item
+    // Remove dragged items
     newOutcomes.splice(draggedIndex, 1);
+    newOdds.splice(draggedIndex, 1);
 
     // Insert at new position
-    newOutcomes.splice(dropIndex, 0, draggedItem);
+    newOutcomes.splice(dropIndex, 0, draggedOutcome);
+    newOdds.splice(dropIndex, 0, draggedOdds);
 
     setOutcomes(newOutcomes);
+    setOdds(newOdds);
     setDraggedIndex(null);
     setDragOverIndex(null);
   };
@@ -199,30 +268,35 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   abi={gameABI as Abi}
                   functionName="createBet"
                   args={(() => {
-                    const safeAmount = amountEth && Number(amountEth) > 0 ? amountEth : "0.001"
-                    const selectedOption = outcomes && outcomes.length > 0 ? outcomes[0] : 'Option A'
-                    // Map enums to uint8 values expected by the contract
-                    const betTypeUint8 = 0 // Single
-                    const statusUint8 = 0 // Open
+                    // Create options array with proper structure
+                    const options = outcomes.map((outcome, index) => ({
+                      option: outcome || `Option ${index + 1}`,
+                      odds: parseEther(odds[index] || "1.0"),
+                    }));
+
+                    // Map outcome type to bet type
+                    const betTypeUint8 = outcomeType === "yes-no" ? 0 : 1; // 0 = Single, 1 = Multi
+                    const statusUint8 = 0; // Open
+
+                    // Calculate bet duration in seconds
+                    const deadlineSeconds = parseInt(deadlineHours) * 3600;
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const betDuration = currentTime + deadlineSeconds;
+
                     return [{
-                      id: 0,
-                      options: [
-                        {
-                          option: selectedOption,
-                          odds: parseEther(safeAmount),
-                        },
-                      ],
+                      options: options,
                       betType: betTypeUint8,
                       name: topic || 'Untitled Bet',
-                      description: topic || 'Untitled Bet',
-                      image: AppIcons.betInactive,
-                      link: 'https://mevyou.com',
+                      description: description || topic || 'Untitled Bet',
+                      image: image || '',
+                      link: link || '',
                       owner: address as `0x${string}` | undefined,
-                      result: selectedOption,
+                      result: '', // Empty initially, will be set when bet is resolved
                       status: statusUint8,
-                      createdAt: new Date().toISOString(),
-                      updatedAt: new Date().toISOString(),
-                      privateBet: false,
+                      createdAt: currentTime,
+                      updatedAt: currentTime,
+                      betDuration: betDuration,
+                      privateBet: privateBet,
                     }] as const
                   })()}
                   idleLabel={
@@ -247,7 +321,19 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   cancelToastMessage="Transaction canceled"
                   className="w-full"
                   onReceiptSuccess={() => {
-                    const betData = { topic, outcomeType, outcomes, selectedTopic };
+                    const betData = {
+                      topic,
+                      description,
+                      image,
+                      link,
+                      outcomeType,
+                      outcomes,
+                      odds,
+                      selectedTopic,
+                      amountEth,
+                      deadlineHours,
+                      privateBet
+                    };
                     onCreateBet(betData);
                     setShowConfirmation(false);
                     onClose();
@@ -255,7 +341,19 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                 />
                 <button
                   onClick={() => {
-                    const betData = { topic, outcomeType, outcomes, selectedTopic };
+                    const betData = {
+                      topic,
+                      description,
+                      image,
+                      link,
+                      outcomeType,
+                      outcomes,
+                      odds,
+                      selectedTopic,
+                      amountEth,
+                      deadlineHours,
+                      privateBet
+                    };
                     onCreateBet(betData);
                     setShowConfirmation(false);
                     onClose();
@@ -305,6 +403,26 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   className="w-full bg-transparent text-gray-300 placeholder-gray-500 outline-none text-base"
+                />
+              </div>
+
+              {/* Bottom Divider - Full Width */}
+              <div className="h-px bg-[#1F1F23] w-full"></div>
+            </div>
+
+            {/* Description Section */}
+            <div className="mb-6">
+              {/* Top Divider - Full Width */}
+              <div className="h-px bg-[#1F1F23] w-full"></div>
+
+              {/* Description Content */}
+              <div className="px-4 md:px-8 py-4">
+                <textarea
+                  placeholder="Enter description..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 outline-none text-base resize-none min-h-[80px]"
+                  rows={3}
                 />
               </div>
 
@@ -466,7 +584,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                             />
                           </div>
                           <div
-                            className="flex-1 rounded-xl px-3 md:px-6 py-2.5 md:py-4 shadow-lg relative overflow-hidden min-h-[44px] flex items-center transition-all duration-300 ease-in-out hover:shadow-xl"
+                            className="flex-1 rounded-xl px-3 md:px-6 py-2.5 md:py-4 shadow-lg relative overflow-hidden min-h-[44px] flex items-center gap-3 transition-all duration-300 ease-in-out hover:shadow-xl"
                             style={cardStyles[index % 4]}
                           >
                             <input
@@ -475,9 +593,29 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                               onChange={(e) =>
                                 updateOutcome(index, e.target.value)
                               }
-                              className="w-full bg-transparent text-white outline-none font-medium placeholder-white/70 text-sm md:text-base"
+                              className="flex-1 bg-transparent text-white outline-none font-medium placeholder-white/70 text-sm md:text-base"
                               placeholder="Enter outcome"
                             />
+                            <div className="flex items-center gap-2">
+                              <span className="text-white/70 text-sm">Odds:</span>
+                              <input
+                                type="number"
+                                min="0.1"
+                                step="0.1"
+                                value={odds[index] || "1.0"}
+                                onChange={(e) =>
+                                  updateOdds(index, e.target.value)
+                                }
+                                className="w-16 bg-white/10 text-white outline-none rounded px-2 py-1 text-sm"
+                                placeholder="1.0"
+                              />
+                            </div>
+                            <button
+                              onClick={() => removeOutcome(index)}
+                              className="text-white/70 hover:text-white transition-colors p-1"
+                            >
+                              <X size={16} />
+                            </button>
                           </div>
                         </div>
                       );
@@ -520,6 +658,50 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                     className="w-full bg-transparent text-white outline-none"
                     placeholder="24"
                   />
+                </div>
+              </div>
+
+              {/* Image and Link Inputs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div className="border border-[#1F1F23] rounded-xl p-4">
+                  <label className="block text-sm text-gray-400 mb-2">Image URL (optional)</label>
+                  <input
+                    type="url"
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                    className="w-full bg-transparent text-white outline-none"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+                <div className="border border-[#1F1F23] rounded-xl p-4">
+                  <label className="block text-sm text-gray-400 mb-2">Link URL (optional)</label>
+                  <input
+                    type="url"
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                    className="w-full bg-transparent text-white outline-none"
+                    placeholder="https://example.com"
+                  />
+                </div>
+              </div>
+
+              {/* Private Bet Toggle */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between p-4 border border-[#1F1F23] rounded-xl">
+                  <div>
+                    <h3 className="text-white font-medium mb-1">Private Bet</h3>
+                    <p className="text-gray-400 text-sm">Only you and invited participants can see this bet</p>
+                  </div>
+                  <button
+                    onClick={() => setPrivateBet(!privateBet)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${privateBet ? 'bg-teal-600' : 'bg-gray-600'
+                      }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${privateBet ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                    />
+                  </button>
                 </div>
               </div>
 

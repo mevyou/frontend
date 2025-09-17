@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { AppImages } from "@/lib/appImages";
 
 export function GamePage() {
   return (
@@ -45,14 +44,14 @@ export function GamePage() {
                 <div className="w-2 h-3.5 bg-black" />
               </div>
             </div>
-              <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 2" width={300} height={300} />
+            <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 2" width={300} height={300} />
             <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 3" width={300} height={300} />
             <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 4" width={300} height={300} />
             <Image className="w-72 h-72 rounded-3xl" src="https://placehold.co/300x300" alt="Game 5" width={300} height={300} />
           </div>
         </div>
       </div>
-      
+
       <div className="w-full flex flex-col justify-start items-start gap-3">
         <div className="text-white text-2xl font-semibold font-['Nunito_Sans'] leading-7">My Bets</div>
         <div className="w-full flex flex-wrap justify-start items-start gap-3">
@@ -63,7 +62,7 @@ export function GamePage() {
           <Image className="w-72 h-72 rounded-[32px]" src="https://placehold.co/300x300" alt="My Bet 5" width={300} height={300} />
         </div>
       </div>
-      
+
       <div className="w-full flex flex-col justify-start items-start gap-3">
         <div className="text-white text-2xl font-semibold font-['Nunito_Sans'] leading-7">Recent Games</div>
         <div className="w-full flex flex-wrap justify-start items-start gap-3">

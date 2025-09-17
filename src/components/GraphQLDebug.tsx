@@ -5,7 +5,7 @@ import { apolloClient } from '@/lib/graphql';
 import { GET_SIMPLE_TEST, GET_DASHBOARD_DATA } from '@/lib/graphql';
 
 export function GraphQLDebug() {
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,10 +28,10 @@ export function GraphQLDebug() {
       });
 
       console.log('Simple query response:', response);
-      setResult(response);
-    } catch (err: any) {
+      setResult(response as unknown as Record<string, unknown>);
+    } catch (err: unknown) {
       console.error('Simple query failed:', err);
-      setError(err.message || 'Unknown error');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -51,10 +51,10 @@ export function GraphQLDebug() {
       });
 
       console.log('Full query response:', response);
-      setResult(response);
-    } catch (err: any) {
+      setResult(response as unknown as Record<string, unknown>);
+    } catch (err: unknown) {
       console.error('Full query failed:', err);
-      setError(err.message || 'Unknown error');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -98,10 +98,10 @@ export function GraphQLDebug() {
 
       const data = await response.json();
       console.log('Direct fetch response:', data);
-      setResult({ directFetch: data, status: response.status });
-    } catch (err: any) {
+      setResult({ directFetch: data, status: response.status } as Record<string, unknown>);
+    } catch (err: unknown) {
       console.error('Direct fetch failed:', err);
-      setError(err.message || 'Unknown error');
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
