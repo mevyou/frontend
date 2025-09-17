@@ -185,7 +185,7 @@ export function TxButton(props: TxButtonProps) {
         type="button"
         onClick={handleClick}
         disabled={Boolean(isDisabled)}
-        className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed pointer-events-auto"
+        className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium bg-white w-full hover:bg-white/70 text-black disabled:opacity-50 disabled:cursor-not-allowed pointer-events-auto"
       >
         {label}
       </button>
@@ -193,7 +193,7 @@ export function TxButton(props: TxButtonProps) {
         <button
           type="button"
           onClick={handleCancel}
-          className="ml-2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium bg-gray-200 text-gray-900"
+          className="ml-2 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium bg-gray-200 w-full text-gray-900"
         >
           {cancelLabel}
         </button>

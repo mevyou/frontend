@@ -321,7 +321,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
               </button>
 
               {isProfileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-xl shadow-xl py-2 z-50" style={{ backgroundColor: '#121214', border: '1px solid #2d2d33' }}>
+                <div className="absolute bg-black right-0 mt-2 w-64 rounded-xl shadow-xl py-2 z-50" style={{ backgroundColor: '#121214', border: '1px solid #2d2d33' }}>
                   <div className="px-4 py-3 border-b border-gray-700">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
@@ -350,7 +350,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
                         router.push('/profile');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors font-nunito-sans"
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 cursor-pointer hover:text-white transition-colors font-nunito-sans"
                     >
                       <Image
                         src={profile?.image || AppImages.defaultAvatar}

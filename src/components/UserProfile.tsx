@@ -102,7 +102,7 @@ export function UserProfile() {
           {/* Left: Profile card (spans 2) */}
           <div className="lg:col-span-2 bg-neutral-900 rounded-2xl p-6 flex items-center gap-6">
             <div className="w-20 h-20 bg-neutral-800 rounded-full overflow-hidden shrink-0">
-              <img className="w-full h-full object-cover" src={profile?.image || AppImages.defaultAvatar} alt="avatar" />
+              <Image className="w-full h-full object-cover" src={profile?.image || AppImages.defaultAvatar} alt="avatar" width={80} height={80} />
             </div>
             <div className="flex flex-col gap-2 min-w-0">
               <div className="text-white text-2xl font-bold leading-normal truncate">{profile?.name || profile?.username || 'Your Profile'}</div>
