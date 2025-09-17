@@ -5,13 +5,15 @@ import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { WalletConnect } from "./WalletConnect";
 import { formatWeiToEther, formatAddress, cn } from "@/lib/utils";
 import { AppIcons } from "@/lib/assets";
-import { useSearch } from "@/contexts/SearchContext";
+// Removed unused search context import
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
 import { AppImages } from "@/lib/appImages";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { SearchSuggestions } from "./SearchSuggestions";
+import { useSearch as useSearchHook } from "@/hooks/useSearch";
 
 interface TopHeaderProps {
   onMenuToggle?: () => void;
@@ -31,7 +33,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
   const { data: usdtBalance } = useBalance({ address, token: USDT_ADDRESS });
   const { data: usdcBalance } = useBalance({ address, token: USDC_ADDRESS });
   const { disconnect } = useDisconnect();
-  const { searchQuery, setSearchQuery } = useSearch();
+  // Removed old search context - now using custom search hook
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isTokenMenuOpen, setIsTokenMenuOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<"USDT" | "USDC">("USDT");
@@ -39,6 +41,28 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
   const tokenRef = useRef<HTMLDivElement>(null);
   const { profile } = useAuth();
   const router = useRouter();
+
+  // Search functionality
+  const {
+    query: searchInput,
+    setQuery: setSearchInput,
+    isOpen: isSearchOpen,
+    setIsOpen: setIsSearchOpen,
+    searchRef,
+    performSearch,
+    handleSelect,
+    handleKeyDown,
+  } = useSearchHook();
+  // Debounced search effect
+  useEffect(() => {
+    if (searchInput && searchInput.length >= 2) {
+      const timeoutId = setTimeout(() => {
+        performSearch(searchInput);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [searchInput, performSearch]);
+
   // Close profile dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -94,8 +118,8 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
             </button>
           )}
           {!hideSearch && (
-            <div className="relative flex items-center space-x-2">
-              <div className="relative">
+            <div ref={searchRef} className="relative flex items-center space-x-2">
+              <div className="relative w-64 lg:w-80">
                 <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                   <Image
                     src={AppIcons.search}
@@ -107,11 +131,19 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
                 </div>
                 <input
                   type="text"
-                  placeholder="Search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="border-0 rounded-lg pl-10 pr-4 py-2 h-10 text-white placeholder-gray-400 focus:outline-none focus:ring-0 w-64 lg:w-80 font-nunito-sans"
+                  placeholder="Search users, bets, addresses..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => searchInput.length >= 2 && setIsSearchOpen(true)}
+                  className="border-0 rounded-lg pl-10 pr-4 py-2 h-10 text-white placeholder-gray-400 focus:outline-none focus:ring-0 w-full font-nunito-sans"
                   style={{ backgroundColor: '#242429' }}
+                />
+                <SearchSuggestions
+                  query={searchInput}
+                  isOpen={isSearchOpen}
+                  onClose={() => setIsSearchOpen(false)}
+                  onSelect={handleSelect}
                 />
               </div>
             </div>
@@ -514,7 +546,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
         <div className="flex items-center space-x-3">
           {/* Search Bar */}
           {!hideSearch && (
-            <div className="flex-1 relative">
+            <div ref={searchRef} className="flex-1 relative">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <Image
                   src={AppIcons.search}
@@ -526,31 +558,41 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
               </div>
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search users, bets, addresses..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={() => searchInput.length >= 2 && setIsSearchOpen(true)}
                 className="w-full border-0 rounded-lg pl-10 pr-4 py-2 h-10 text-white placeholder-gray-400 focus:outline-none focus:ring-0 font-nunito-sans"
                 style={{ backgroundColor: '#242429' }}
+              />
+              <SearchSuggestions
+                query={searchInput}
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
+                onSelect={handleSelect}
               />
             </div>
           )}
 
           {/* Plus Icon Container */}
           {!hideSearch && (
-          <button
-            onClick={onCreateBetClick}
-            className="text-white p-2 h-10 w-10 rounded-lg transition-colors duration-200 flex items-center justify-center hover:opacity-80"
-            style={{
-              border: '1px solid var(--create-bet-border)',
-              backgroundColor: 'var(--create-bet-fill)'
-            }}
-          >
-            <Image
-              src={AppIcons.plusSign}
-              alt="Create Bet"
-              width={24}
-              height={24}
-              className="text-white"
-            />
-          </button>
+            <button
+              onClick={onCreateBetClick}
+              className="text-white p-2 h-10 w-10 rounded-lg transition-colors duration-200 flex items-center justify-center hover:opacity-80"
+              style={{
+                border: '1px solid var(--create-bet-border)',
+                backgroundColor: 'var(--create-bet-fill)'
+              }}
+            >
+              <Image
+                src={AppIcons.plusSign}
+                alt="Create Bet"
+                width={24}
+                height={24}
+                className="text-white"
+              />
+            </button>
           )}
         </div>
       </div>
