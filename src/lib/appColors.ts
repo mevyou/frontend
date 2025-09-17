@@ -10,6 +10,7 @@ export const AppColors = {
   primary: "#02FEFE", // Main brand color
   primaryBackground: "#02FEFE0D", // Primary with opacity
   primaryLight: "#22FEFE26", // Light variant with opacity
+  teal: "#20B2AA", // Teal accent color for modal elements
 
   // Success Colors
   success: "#22C55E", // Success green
@@ -22,6 +23,8 @@ export const AppColors = {
   // Dark Theme Background Colors
   darkPrimary: "#121214", // Main dark background (blackish)
   darkSecondary: "#1A1A1E", // Secondary dark background (greyish)
+  divider: "#1F1F23", // Divider line color
+  modalBackground: "#121214", // Modal background fill color
 
   // Common Colors
   white: "#FFFFFF",
