@@ -64,12 +64,12 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
               className="bg-sidebar rounded-full p-1.5 border border-transparent hover:bg-gray-700 transition-colors"
             >
               <Image
-                 src={AppIcons.sidebarLeft}
-                 alt="Toggle"
-                 width={20}
-                 height={20}
-                 className="text-gray-400 transition-transform duration-300 rotate-180"
-               />
+                src={AppIcons.sidebarLeft}
+                alt="Toggle"
+                width={20}
+                height={20}
+                className="text-gray-400 transition-transform duration-300 rotate-180"
+              />
             </button>
           )}
           {/* Search Bar */}
@@ -118,120 +118,129 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
           {!isConnected ? (
             <WalletConnect />
           ) : (
-            <div ref={profileRef} className="relative">
-              <button
-                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                className="flex items-center space-x-2 bg-search-input hover:bg-search-input/80 text-white rounded-lg px-4 py-2 transition-colors font-nunito-sans font-medium"
-              >
-                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                  <Image
-                    src={AppIcons.user}
-                    alt="User"
-                    width={14}
-                    height={14}
-                    className="text-white"
-                  />
-                </div>
-                <span className="hidden sm:inline">
+            // <div ref={profileRef} className="relative">
+            //   <button
+            //     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+            //     className="flex items-center space-x-2 bg-search-input hover:bg-search-input/80 text-white rounded-lg px-4 py-2 transition-colors font-nunito-sans font-medium"
+            //   >
+            //     <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+            //       <Image
+            //         src={AppIcons.user}
+            //         alt="User"
+            //         width={14}
+            //         height={14}
+            //         className="text-white"
+            //       />
+            //     </div>
+            //     <span className="hidden sm:inline">
+            //       {address && formatAddress(address)}
+            //     </span>
+            //     <svg
+            //       className={cn(
+            //         "w-4 h-4 transition-transform duration-200",
+            //         isProfileMenuOpen && "rotate-180"
+            //       )}
+            //       fill="none"
+            //       stroke="currentColor"
+            //       viewBox="0 0 24 24"
+            //     >
+            //       <path
+            //         strokeLinecap="round"
+            //         strokeLinejoin="round"
+            //         strokeWidth={2}
+            //         d="M19 9l-7 7-7-7"
+            //       />
+            //     </svg>
+            //   </button>
+
+            //   {/* Profile Dropdown */}
+            //   {isProfileMenuOpen && (
+            //     <div className="absolute right-0 mt-2 w-64 bg-search-input border border-gray-700 rounded-xl shadow-xl py-2 z-50">
+            //       {/* User Info */}
+            //       <div className="px-4 py-3 border-b border-gray-700">
+            //         <div className="flex items-center space-x-3">
+            //           <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+            //             <Image
+            //               src={AppIcons.user}
+            //               alt="User"
+            //               width={20}
+            //               height={20}
+            //               className="text-primary"
+            //             />
+            //           </div>
+            //           <div>
+            //             <p className="text-white font-nunito-sans font-medium">
+            //               {address && formatAddress(address)}
+            //             </p>
+            //             {balance && (
+            //               <p className="text-gray-400 text-sm font-nunito-sans">
+            //                 {formatWeiToEther(balance.value)} ETH
+            //               </p>
+            //             )}
+            //           </div>
+            //         </div>
+            //       </div>
+
+            //       {/* Menu Items */}
+            //       <div className="py-2">
+            //         <button
+            //           onClick={copyAddress}
+            //           className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors font-nunito-sans"
+            //         >
+            //           <Image
+            //             src={AppIcons.file}
+            //             alt="Copy"
+            //             width={16}
+            //             height={16}
+            //             className="text-gray-400"
+            //           />
+            //           <span>Copy Address</span>
+            //         </button>
+
+            //         <a
+            //           href={`https://etherscan.io/address/${address}`}
+            //           target="_blank"
+            //           rel="noopener noreferrer"
+            //           className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors font-nunito-sans"
+            //         >
+            //           <Image
+            //             src={AppIcons.share}
+            //             alt="External"
+            //             width={16}
+            //             height={16}
+            //             className="text-gray-400"
+            //           />
+            //           <span>View on Etherscan</span>
+            //         </a>
+            //       </div>
+
+            //       {/* Disconnect Button */}
+            //       <div className="border-t border-gray-700 pt-2">
+            //         <button
+            //           onClick={handleDisconnect}
+            //           className="w-full flex items-center space-x-3 px-4 py-2 text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors font-nunito-sans"
+            //         >
+            //           <Image
+            //             src={AppIcons.cancelCircle}
+            //             alt="Disconnect"
+            //             width={24}
+            //             height={24}
+            //             className="text-red-400"
+            //           />
+            //           <span>Disconnect Wallet</span>
+            //         </button>
+            //       </div>
+            //     </div>
+            //   )}
+            // </div>
+            <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-4 py-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-card-foreground font-medium">
+                  {/* {formatAddress(address)} */}
                   {address && formatAddress(address)}
                 </span>
-                <svg
-                  className={cn(
-                    "w-4 h-4 transition-transform duration-200",
-                    isProfileMenuOpen && "rotate-180"
-                  )}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {/* Profile Dropdown */}
-              {isProfileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-search-input border border-gray-700 rounded-xl shadow-xl py-2 z-50">
-                  {/* User Info */}
-                  <div className="px-4 py-3 border-b border-gray-700">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                        <Image
-                          src={AppIcons.user}
-                          alt="User"
-                          width={20}
-                          height={20}
-                          className="text-primary"
-                        />
-                      </div>
-                      <div>
-                        <p className="text-white font-nunito-sans font-medium">
-                          {address && formatAddress(address)}
-                        </p>
-                        {balance && (
-                          <p className="text-gray-400 text-sm font-nunito-sans">
-                            {formatWeiToEther(balance.value)} ETH
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Menu Items */}
-                  <div className="py-2">
-                    <button
-                      onClick={copyAddress}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors font-nunito-sans"
-                    >
-                      <Image
-                        src={AppIcons.file}
-                        alt="Copy"
-                        width={16}
-                        height={16}
-                        className="text-gray-400"
-                      />
-                      <span>Copy Address</span>
-                    </button>
-
-                    <a
-                      href={`https://etherscan.io/address/${address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors font-nunito-sans"
-                    >
-                      <Image
-                        src={AppIcons.share}
-                        alt="External"
-                        width={16}
-                        height={16}
-                        className="text-gray-400"
-                      />
-                      <span>View on Etherscan</span>
-                    </a>
-                  </div>
-
-                  {/* Disconnect Button */}
-                  <div className="border-t border-gray-700 pt-2">
-                    <button
-                      onClick={handleDisconnect}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors font-nunito-sans"
-                    >
-                      <Image
-                        src={AppIcons.cancelCircle}
-                        alt="Disconnect"
-                        width={24}
-                        height={24}
-                        className="text-red-400"
-                      />
-                      <span>Disconnect Wallet</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
         </div>
@@ -372,14 +381,14 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
               style={{ backgroundColor: '#242429' }}
             />
           </div>
-          
+
           {/* Plus Icon Container */}
-          <button 
+          <button
             onClick={onCreateBetClick}
             className="text-white p-2 h-10 w-10 rounded-lg transition-colors duration-200 flex items-center justify-center hover:opacity-80"
-            style={{ 
-              border: '1px solid var(--create-bet-border)', 
-              backgroundColor: 'var(--create-bet-fill)' 
+            style={{
+              border: '1px solid var(--create-bet-border)',
+              backgroundColor: 'var(--create-bet-fill)'
             }}
           >
             <Image

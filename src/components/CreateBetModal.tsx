@@ -3,13 +3,18 @@ import { X, ChevronDown, Plus, GripVertical } from "lucide-react";
 import { AppIcons } from "../lib/appIcons";
 import { AppImages } from "../lib/appImages";
 import { AppColors } from "../lib/appColors";
-import { PredictionCard } from "./PredictionCard";
-import { Bet } from "../lib/contracts/BettingContract";
+import { gameABI, gameAddress } from "../contract/contract";
+import TxButton from "./TxButton";
+import { parseEther } from "viem";
+import Image from "next/image";
+import { Abi } from "viem";
+import { formatAddress } from "@/lib/utils";
+import { useAccount } from "wagmi";
 
 interface CreateBetModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateBet: (betData: any) => void;
+  onCreateBet: (betData: unknown) => void;
 }
 
 const CreateBetModal: React.FC<CreateBetModalProps> = ({
@@ -25,9 +30,12 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
     "≥40M To <50M",
     "≥50M To <60M",
   ]);
+  const { address } = useAccount();
   const [selectedTopic, setSelectedTopic] = useState("Sport");
   const [isTopicDropdownOpen, setIsTopicDropdownOpen] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [amountEth, setAmountEth] = useState<string>("0.001");
+  const [deadlineHours, setDeadlineHours] = useState<string>("24");
 
   // Drag and Drop functionality - moved before early return
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -72,12 +80,6 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
 
   const handleSubmit = () => {
     if (!showConfirmation) {
-      const betData = {
-        topic,
-        outcomeType,
-        outcomes,
-        selectedTopic,
-      };
       setShowConfirmation(true);
     }
   };
@@ -86,11 +88,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
     setOutcomes([...outcomes, ""]);
   };
 
-  const removeOutcome = (index: number) => {
-    if (outcomes.length > 2) {
-      setOutcomes(outcomes.filter((_, i) => i !== index));
-    }
-  };
+  // removeOutcome was unused; removed to satisfy linter
 
   const updateOutcome = (index: number, value: string) => {
     const newOutcomes = [...outcomes];
@@ -149,9 +147,8 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
       {/* Mobile: Bottom Sheet | Desktop: Centered Modal */}
       <div
         className={`bg-[#121214] w-full max-h-[90vh] overflow-y-auto
-        md:rounded-2xl ${
-          showConfirmation ? "md:max-w-[480px] animate-fade-in" : "md:max-w-[720px]"
-        }
+        md:rounded-2xl ${showConfirmation ? "md:max-w-[480px] animate-fade-in" : "md:max-w-[720px]"
+          }
         fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:left-auto md:right-auto
         rounded-t-3xl md:rounded-b-2xl
         ${isOpen ? "animate-slide-up" : ""} md:animate-none`}
@@ -170,13 +167,15 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
             {showConfirmation ? (
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-b from-purple-600 to-pink-500 flex items-center justify-center"></div>
             ) : (
-              <img
+              <Image
                 src={AppIcons.createBet}
                 alt="Create Bet"
                 className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16"
                 style={{
                   filter: `brightness(0) saturate(100%) invert(34%) sepia(87%) saturate(584%) hue-rotate(145deg) brightness(99%) contrast(99%)`,
                 }}
+                width={64}
+                height={64}
               />
             )}
           </div>
@@ -185,8 +184,8 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
           {showConfirmation ? (
             <>
               {/* Wallet Address */}
-              <p className="text-gray-400 text-sm mb-4">0x3B...CE2d4C</p>
-              
+              <p className="text-gray-400 text-sm mb-4">{address && formatAddress(address)}</p>
+
               <h2 className="text-white text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">
                 {topic || "Will Jerome powell leave the Fed chair in 2025?"}
               </h2>
@@ -194,15 +193,69 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                 Your suggested market is undergoing review. If accepted, you
                 will be notified and attributed as the creator
               </p>
-              <div className="px-4 md:px-8">
+              <div className="px-4 md:px-8 space-y-3">
+                <TxButton
+                  address={gameAddress as `0x${string}`}
+                  abi={gameABI as Abi}
+                  functionName="createBet"
+                  args={(() => {
+                    const safeAmount = amountEth && Number(amountEth) > 0 ? amountEth : "0.001"
+                    const selectedOption = outcomes && outcomes.length > 0 ? outcomes[0] : 'Option A'
+                    // Map enums to uint8 values expected by the contract
+                    const betTypeUint8 = 0 // Single
+                    const statusUint8 = 0 // Open
+                    return [{
+                      id: 0,
+                      options: [
+                        {
+                          option: selectedOption,
+                          odds: parseEther(safeAmount),
+                        },
+                      ],
+                      betType: betTypeUint8,
+                      name: topic || 'Untitled Bet',
+                      description: topic || 'Untitled Bet',
+                      image: AppIcons.bet,
+                      link: 'https://mevyou.com',
+                      owner: address as `0x${string}` | undefined,
+                      result: selectedOption,
+                      status: statusUint8,
+                      createdAt: new Date().toISOString(),
+                      updatedAt: new Date().toISOString(),
+                      privateBet: false,
+                    }] as const
+                  })()}
+                  idleLabel={
+                    <span className="flex items-center gap-2">
+                      <Image
+                        src={AppIcons.bet}
+                        alt="Create"
+                        className="w-4 h-4"
+                        style={{ filter: "brightness(0) saturate(100%) invert(100%)" }}
+                        width={16}
+                        height={16}
+                      />
+                      {`Create on-chain (${amountEth || '0.001'} ETH)`}
+                    </span>
+                  }
+                  confirmingLabel="Confirm in wallet…"
+                  pendingLabel="Submitting…"
+                  successLabel="Created!"
+                  errorLabel="Retry"
+                  successToastMessage="Bet created successfully"
+                  errorToastMessage="Failed to create bet"
+                  cancelToastMessage="Transaction canceled"
+                  className="w-full"
+                  onReceiptSuccess={() => {
+                    const betData = { topic, outcomeType, outcomes, selectedTopic };
+                    onCreateBet(betData);
+                    setShowConfirmation(false);
+                    onClose();
+                  }}
+                />
                 <button
                   onClick={() => {
-                    const betData = {
-                      topic,
-                      outcomeType,
-                      outcomes,
-                      selectedTopic,
-                    };
+                    const betData = { topic, outcomeType, outcomes, selectedTopic };
                     onCreateBet(betData);
                     setShowConfirmation(false);
                     onClose();
@@ -210,15 +263,17 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   className="flex items-center justify-center gap-2 w-full px-6 py-3 text-white rounded-lg hover:opacity-80 transition-colors"
                   style={{ backgroundColor: "#242429" }}
                 >
-                  <img
+                  <Image
                     src={AppIcons.bet}
                     alt="Markets"
                     className="w-4 h-4"
                     style={{
                       filter: "brightness(0) saturate(100%) invert(100%)",
                     }}
+                    width={16}
+                    height={16}
                   />
-                  Go to Markets
+                  Skip on-chain for now
                 </button>
               </div>
             </>
@@ -270,32 +325,30 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                 <div className="grid grid-cols-1 gap-3 md:gap-4">
                   {/* Yes/No Option */}
                   <div
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                      outcomeType === "yes-no"
-                        ? ""
-                        : "border-gray-700 bg-[#2a2a2a] hover:border-gray-600"
-                    }`}
+                    className={`p-4 rounded-xl border cursor-pointer transition-all ${outcomeType === "yes-no"
+                      ? ""
+                      : "border-gray-700 bg-[#2a2a2a] hover:border-gray-600"
+                      }`}
                     style={
                       outcomeType === "yes-no"
                         ? {
-                            borderColor: AppColors.teal,
-                            backgroundColor: AppColors.teal + "1A",
-                          }
+                          borderColor: AppColors.teal,
+                          backgroundColor: AppColors.teal + "1A",
+                        }
                         : {}
                     }
                     onClick={() => setOutcomeType("yes-no")}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-5 h-5 rounded-full border-2 mt-1 flex items-center justify-center ${
-                          outcomeType === "yes-no" ? "" : "border-gray-500"
-                        }`}
+                        className={`w-5 h-5 rounded-full border-2 mt-1 flex items-center justify-center ${outcomeType === "yes-no" ? "" : "border-gray-500"
+                          }`}
                         style={
                           outcomeType === "yes-no"
                             ? {
-                                borderColor: AppColors.teal,
-                                backgroundColor: AppColors.teal,
-                              }
+                              borderColor: AppColors.teal,
+                              backgroundColor: AppColors.teal,
+                            }
                             : {}
                         }
                       >
@@ -324,34 +377,32 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
 
                   {/* Multi-choice Option */}
                   <div
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                      outcomeType === "multi-choice"
-                        ? ""
-                        : "border-gray-700 bg-[#2a2a2a] hover:border-gray-600"
-                    }`}
+                    className={`p-4 rounded-xl border cursor-pointer transition-all ${outcomeType === "multi-choice"
+                      ? ""
+                      : "border-gray-700 bg-[#2a2a2a] hover:border-gray-600"
+                      }`}
                     style={
                       outcomeType === "multi-choice"
                         ? {
-                            borderColor: AppColors.teal,
-                            backgroundColor: AppColors.teal + "1A",
-                          }
+                          borderColor: AppColors.teal,
+                          backgroundColor: AppColors.teal + "1A",
+                        }
                         : {}
                     }
                     onClick={() => setOutcomeType("multi-choice")}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-5 h-5 rounded-full border-2 mt-1 flex items-center justify-center ${
-                          outcomeType === "multi-choice"
-                            ? ""
-                            : "border-gray-500"
-                        }`}
+                        className={`w-5 h-5 rounded-full border-2 mt-1 flex items-center justify-center ${outcomeType === "multi-choice"
+                          ? ""
+                          : "border-gray-500"
+                          }`}
                         style={
                           outcomeType === "multi-choice"
                             ? {
-                                borderColor: AppColors.teal,
-                                backgroundColor: AppColors.teal,
-                              }
+                              borderColor: AppColors.teal,
+                              backgroundColor: AppColors.teal,
+                            }
                             : {}
                         }
                       >
@@ -394,15 +445,13 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                       return (
                         <div
                           key={index}
-                          className={`flex items-center gap-2 md:gap-4 group transition-all duration-300 ease-in-out ${
-                            draggedIndex === index
-                              ? "opacity-60 scale-95 rotate-1 shadow-2xl z-10"
-                              : "opacity-100 scale-100 rotate-0"
-                          } ${
-                            dragOverIndex === index
+                          className={`flex items-center gap-2 md:gap-4 group transition-all duration-300 ease-in-out ${draggedIndex === index
+                            ? "opacity-60 scale-95 rotate-1 shadow-2xl z-10"
+                            : "opacity-100 scale-100 rotate-0"
+                            } ${dragOverIndex === index
                               ? "transform translate-y-2 scale-105 shadow-lg"
                               : "transform translate-y-0 scale-100"
-                          }`}
+                            }`}
                           draggable
                           onDragStart={(e) => handleDragStart(e, index)}
                           onDragOver={(e) => handleDragOver(e, index)}
@@ -446,6 +495,34 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                 </div>
               )}
 
+              {/* Amount and Deadline Inputs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div className="border border-[#1F1F23] rounded-xl p-4">
+                  <label className="block text-sm text-gray-400 mb-2">Stake amount (ETH)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.0001"
+                    value={amountEth}
+                    onChange={(e) => setAmountEth(e.target.value)}
+                    className="w-full bg-transparent text-white outline-none"
+                    placeholder="0.001"
+                  />
+                </div>
+                <div className="border border-[#1F1F23] rounded-xl p-4">
+                  <label className="block text-sm text-gray-400 mb-2">Deadline (hours from now)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value={deadlineHours}
+                    onChange={(e) => setDeadlineHours(e.target.value)}
+                    className="w-full bg-transparent text-white outline-none"
+                    placeholder="24"
+                  />
+                </div>
+              </div>
+
               {/* Divider */}
               <div className="-mx-4 md:-mx-8 border-t border-[#19191C]"></div>
 
@@ -464,19 +541,20 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                       return (
                         <>
                           <div className="w-6 h-6 rounded-full overflow-hidden">
-                            <img
+                            <Image
                               src={currentTopic.icon}
                               alt={currentTopic.name}
                               className="w-full h-full object-cover"
+                              width={24}
+                              height={24}
                             />
                           </div>
                           <span className="text-white font-medium flex-1">
                             {currentTopic.name}
                           </span>
                           <ChevronDown
-                            className={`text-gray-400 transition-transform ${
-                              isTopicDropdownOpen ? "rotate-180" : ""
-                            }`}
+                            className={`text-gray-400 transition-transform ${isTopicDropdownOpen ? "rotate-180" : ""
+                              }`}
                             size={16}
                           />
                         </>
@@ -497,10 +575,12 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                           }}
                         >
                           <div className="w-6 h-6 rounded-full overflow-hidden">
-                            <img
+                            <Image
                               src={topicItem.icon}
                               alt={topicItem.name}
                               className="w-full h-full object-cover"
+                              width={24}
+                              height={24}
                             />
                           </div>
                           <span className="text-white font-medium">

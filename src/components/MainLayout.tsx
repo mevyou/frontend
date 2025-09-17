@@ -34,7 +34,7 @@ export function MainLayout({ children }: MainLayoutProps) {
     setIsCreateBetModalOpen(false);
   };
 
-  const handleCreateBet = (betData: any) => {
+  const handleCreateBet = (betData: unknown) => {
     // TODO: Implement bet creation logic
     console.log("Creating bet:", betData);
     setIsCreateBetModalOpen(false);
