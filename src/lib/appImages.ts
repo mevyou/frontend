@@ -11,6 +11,7 @@ export const AppImages = {
 
   // Banner Images
   banner: "/image/banner.png",
+  bannerPinkMobile: "/image/bannerPinkMobile.png",
   bannerMobile: "/image/banner-mobile.png",
   banner2: "/image/banner2.png",
   banner4: "/image/banner4.png",

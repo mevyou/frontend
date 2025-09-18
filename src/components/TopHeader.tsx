@@ -41,6 +41,11 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
   const tokenRef = useRef<HTMLDivElement>(null);
   const { profile } = useAuth();
   const router = useRouter();
+  // Avoid hydration mismatch for wallet-dependent UI
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Search functionality
   const {
@@ -153,7 +158,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
         {/* Right Section - Balance & Wallet */}
         <div className="flex items-center space-x-4">
           {/* Token Balance with dropdown */}
-          {isConnected && !hideTokenBalance && (
+          {mounted && isConnected && !hideTokenBalance && (
             <div ref={tokenRef} className="relative hidden sm:flex">
               <button
                 onClick={() => setIsTokenMenuOpen(!isTokenMenuOpen)}
@@ -199,7 +204,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
           )}
 
           {/* Wallet Connection */}
-          {!isConnected ? (
+          {!mounted ? null : !isConnected ? (
             <WalletConnect />
           ) : (
             // <div ref={profileRef} className="relative">
@@ -481,7 +486,7 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
 
                 {/* Profile Dropdown */}
                 {isProfileMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-search-input border border-gray-700 rounded-xl shadow-xl py-2 z-50">
+                  <div className="absolute right-0 mt-2 w-64 rounded-xl shadow-xl py-2 z-50" style={{ backgroundColor: '#121214', border: '1px solid #2d2d33' }}>
                     {/* User Info */}
                     <div className="px-4 py-3 border-b border-gray-700">
                       <div className="flex items-center space-x-3">

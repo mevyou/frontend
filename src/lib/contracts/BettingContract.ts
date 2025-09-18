@@ -128,6 +128,12 @@ export interface Options {
 }
 
 export interface Bet {
+  id: bigint;
+  creator: string;
+  opponent: string;
+  amount: bigint;
+  deadline: bigint;
+  winner: string;
   options: Options[];
   betType: BetType;
   name: string;
