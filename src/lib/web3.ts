@@ -10,7 +10,7 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'your-proj
 const metadata = {
   name: 'MevYou P2P Betting',
   description: 'Decentralized Peer-to-Peer Betting Platform',
-  url: 'https://mevyou.com',
+  url: 'https://mevyou.io',
   icons: ['https://github.com/mevyou/frontend/blob/main/public/image/logo.png']
 }
 
