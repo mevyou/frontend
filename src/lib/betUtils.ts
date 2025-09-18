@@ -23,7 +23,7 @@ export interface TransformedBet {
 export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet {
   // Decode bet options which may be stored as JSON or ABI-encoded bytes via subgraph
   console.log("options", betCreated.bet_options);
-  // const options: Options[] = decodeBetOptionsField(betCreated.bet_options);
+  const options: Options[] | string[] = betCreated.bet_options;
 
   // Convert timestamps to numbers
   const createdAt = parseInt(betCreated.bet_createdAt) || Math.floor(Date.now() / 1000);
@@ -47,7 +47,7 @@ export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet
   return {
     id: Number(betCreated.id),
     betId: betCreated.betId,
-    options: betCreated.bet_options as Options[] | string[],
+    options: options,
     betType: betTypeMap[betCreated.bet_betType] || BetType.SINGLE,
     name: betCreated.bet_name,
     description: betCreated.bet_description || betCreated.bet_name,
@@ -89,100 +89,7 @@ export function formatBetTime(timestamp: number): string {
 // 1) JSON string of [{ option, odds|totalStaked }]
 // 2) JSON string of ["0x..."] where each element encodes (string,uint256)
 // 3) Single hex string "0x..." encoding tuple(string,uint256)[]
-function decodeBetOptionsField(raw: string | string[] | null | undefined): Options[] {
-  if (!raw) {
-    return [{ option: 'Default Option', totalStaked: BigInt(0) }];
-  }
 
-  // Helper to coerce any number-like to bigint
-  const toBigInt = (value: unknown): bigint => {
-    try {
-      if (typeof value === 'bigint') return value;
-      if (typeof value === 'number') return BigInt(Math.trunc(value));
-      if (typeof value === 'string') return BigInt(value);
-    } catch { }
-    return BigInt(0);
-  };
-
-  // Direct array of hex strings
-  if (Array.isArray(raw)) {
-    const arr = raw.filter((h): h is string => typeof h === 'string');
-    const decoded = arr
-      .filter((h) => h.startsWith('0x'))
-      .map((h) => safeDecodeTuple(h as Hex))
-      .filter((x) => x.option !== '' || x.totalStaked !== BigInt(0));
-    if (decoded.length > 0) return decoded;
-    return [{ option: 'Default Option', totalStaked: BigInt(0) }];
-  }
-
-  // Case 1: JSON array/object string
-  try {
-    const parsed = JSON.parse(raw);
-
-    // Case 1a: Array of objects with option + odds/totalStaked
-    if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'object' && parsed[0] !== null) {
-      return parsed.map((opt: { option?: string; odds?: unknown; totalStaked?: unknown }) => ({
-        option: String(opt.option ?? ''),
-        totalStaked: toBigInt(opt.totalStaked ?? opt.odds ?? 0),
-      }));
-    }
-
-    // Case 2: Array of hex strings, each encodes (string,uint256)
-    if (Array.isArray(parsed) && (parsed.length === 0 || typeof parsed[0] === 'string')) {
-      const arr = parsed as string[];
-      const decoded = arr
-        .filter((h) => typeof h === 'string' && h.startsWith('0x'))
-        .map((h) => safeDecodeTuple(h as Hex));
-      if (decoded.length > 0) return decoded;
-    }
-  } catch {
-    // Not JSON; fall through to hex handling
-  }
-
-  // Case 3: Single hex that encodes tuple[]
-  if (typeof raw === 'string' && raw.startsWith('0x')) {
-    try {
-      const [tuples] = decodeAbiParameters(
-        [
-          {
-            type: 'tuple[]',
-            components: [
-              { name: 'option', type: 'string' },
-              { name: 'totalStaked', type: 'uint256' },
-            ],
-          },
-        ],
-        raw as Hex,
-      ) as unknown as [Array<{ option: string; totalStaked: bigint } | undefined>];
-
-      if (Array.isArray(tuples)) {
-        return tuples.map((t) => ({ option: t ? t.option : '', totalStaked: toBigInt(t ? t.totalStaked : 0) }));
-      }
-    } catch (e) {
-      console.error('Failed to decode bet options hex array (tuple[]):', e);
-    }
-  }
-
-  // Fallback
-  return [{ option: 'Default Option', totalStaked: BigInt(0) }];
-}
-
-function safeDecodeTuple(hex: Hex): Options {
-  try {
-    const [opt, amount] = decodeAbiParameters(
-      [
-        { type: 'string' },
-        { type: 'uint256' },
-      ],
-      hex,
-    ) as unknown as [string, bigint];
-
-    return { option: opt, totalStaked: amount };
-  } catch (e) {
-    console.error('Failed to decode bet option tuple hex (string,uint256):', e, hex);
-    return { option: '', totalStaked: BigInt(0) };
-  }
-}
 
 // (Compact fallback removed to strictly honor (string,uint256) tuple decoding)
 

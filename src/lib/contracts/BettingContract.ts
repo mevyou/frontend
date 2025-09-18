@@ -195,50 +195,5 @@ export async function getBetFromContract(betId: bigint): Promise<ContractBet> {
   });
   console.log("Result", result);
 
-  // result comes as a tuple matching the ABI order
-  const [
-    options,
-    betType,
-    name,
-    description,
-    image,
-    link,
-    owner,
-    resultIndex,
-    status,
-    createdAt,
-    updatedAt,
-    betDuration,
-    privateBet,
-  ] = result as unknown as [
-    Array<{ option: string; totalStaked: bigint }>,
-    number,
-    string,
-    string,
-    string,
-    string,
-    `0x${string}`,
-    bigint,
-    number,
-    bigint,
-    bigint,
-    bigint,
-    boolean
-  ];
-
-  return {
-    options: options.map(o => ({ option: o.option, totalStaked: o.totalStaked })),
-    betType,
-    name,
-    description,
-    image,
-    link,
-    owner,
-    result: resultIndex,
-    status,
-    createdAt,
-    updatedAt,
-    betDuration,
-    privateBet,
-  };
+  return result as ContractBet;
 }

@@ -5,7 +5,6 @@ import { Bet } from "@/lib/contracts/BettingContract";
 import { AppIcons, AppImages } from "@/lib/assets";
 import Image from "next/image";
 import {
-  formatWeiToEther,
   getTimeUntilDeadline,
   truncateText,
 } from "@/lib/utils";

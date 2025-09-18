@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AppIcons } from "@/lib/appIcons";
-import { cn } from "@/lib/utils";
+import { cn, formatWeiToEther } from "@/lib/utils";
 import { SearchResult } from "@/lib/search";
 import { useBetCreateds } from "@/hooks/useGraphData";
 import { transformBetCreatedToBet } from "@/lib/betUtils";
@@ -15,6 +15,7 @@ import TxButton from "@/components/TxButton";
 import { gameABI, gameAddress } from "@/contract/contract";
 import type { Abi } from "viem";
 import { parseEther } from "viem";
+import { AppImages } from "@/lib/appImages";
 
 type FilterType = "all" | "open" | "matched" | "resolved";
 type ViewType = "grid" | "list";
@@ -102,7 +103,9 @@ export function MyBetsPage() {
       }
       setIsLoadingContractBet(true);
       try {
+        console.log('betBigId', betBigId);
         const res = await getBetFromContract(betBigId);
+        console.log('res', res);
         const _totalStaked = await getTotalStaked(betBigId);
         setTotalStaked(Number(_totalStaked));
         const total = res.options.reduce((sum, o) => sum + (o.totalStaked ?? BigInt(0)), BigInt(0));
@@ -161,8 +164,8 @@ export function MyBetsPage() {
         position: "-",
         positionDetails: "-",
         status: mapBetStatusToString(b.status),
-        user: { name: "You", image: "https://placehold.co/40x40" },
-        opponent: { name: "-", image: "https://placehold.co/40x40" },
+        user: { name: "You", image: `${AppImages.defaultAvatar}` },
+        opponent: { name: "-", image: `${AppImages.defaultAvatar2}` },
         moderator: "pending",
         createdAt: new Date(b.createdAt * 1000).toLocaleDateString(undefined, { month: 'short', day: '2-digit' }),
         totalStaked: totalStakedBig.toString(),
@@ -762,7 +765,14 @@ export function MyBetsPage() {
                     </div>
                     <div>
                       <div className="text-gray-400 text-sm mb-1">Staked</div>
-                      <div className="text-white text-sm">${totalStaked}</div>
+                      <div className="text-white text-sm">
+                        {formatWeiToEther(BigInt(totalStaked))} ETH
+                        {ethUsd && (
+                          <span className="ml-1 text-gray-400">
+                            (${(parseFloat(formatWeiToEther(BigInt(totalStaked))) * ethUsd).toFixed(2)})
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -807,7 +817,14 @@ export function MyBetsPage() {
                               <div key={idx} className="flex items-center justify-between bg-neutral-700/50 rounded-lg p-2">
                                 <div className="flex items-center gap-2">
                                   <span className="text-white text-sm font-medium">{opt.option}</span>
-                                  <span className="text-gray-400 text-xs">Staked: {String(contractBet?.options[idx]?.totalStaked ?? 0)}</span>
+                                  <span className="text-gray-400 text-xs">
+                                    Staked: {formatWeiToEther(contractBet?.options[idx]?.totalStaked ?? BigInt(0))} ETH
+                                    {ethUsd && (
+                                      <span className="ml-1">
+                                        (${(parseFloat(formatWeiToEther(contractBet?.options[idx]?.totalStaked ?? BigInt(0))) * ethUsd).toFixed(2)})
+                                      </span>
+                                    )}
+                                  </span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <div>

@@ -9,7 +9,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatWeiToEther(wei: bigint): string {
-  return formatEther(wei)
+  const ether = formatEther(wei)
+  // Remove trailing zeros and unnecessary decimal places
+  return parseFloat(ether).toString()
 }
 
 export function parseEtherToWei(ether: string): bigint {

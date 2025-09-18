@@ -18,6 +18,7 @@ export const AppImages = {
 
   // General Images
   defaultAvatar: "/image/img.png",
+  defaultAvatar2: "/svg/Avatar2.svg",
   img1: "/image/img1.jpg",
   img2: "/image/img2.jpg",
 
