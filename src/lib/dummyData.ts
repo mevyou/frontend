@@ -6,6 +6,7 @@ const nowSec = BigInt(Math.floor(Date.now() / 1000))
 export const dummyBets: Bet[] = [
   {
     id: BigInt(1),
+    betId: BigInt(1),
     creator: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
     opponent: '0x0000000000000000000000000000000000000000',
     amount: BigInt('1000000000000000000'), // 1 ETH
@@ -27,6 +28,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(2),
+    betId: BigInt(2),
     creator: '0x8ba1f109551bD432803012645Hac136c9c1495bf',
     opponent: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
     amount: BigInt('500000000000000000'), // 0.5 ETH
@@ -48,6 +50,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(3),
+    betId: BigInt(3),
     creator: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
     opponent: '0x1234567890123456789012345678901234567890',
     amount: BigInt('2000000000000000000'), // 2 ETH
@@ -69,6 +72,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(4),
+    betId: BigInt(4),
     creator: '0x9876543210987654321098765432109876543210',
     opponent: '0x0000000000000000000000000000000000000000',
     amount: BigInt('750000000000000000'), // 0.75 ETH
@@ -90,6 +94,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(5),
+    betId: BigInt(5),
     creator: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
     opponent: '0x5555555555555555555555555555555555555555',
     amount: BigInt('300000000000000000'), // 0.3 ETH
@@ -111,6 +116,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(6),
+    betId: BigInt(6),
     creator: '0x1111111111111111111111111111111111111111',
     opponent: '0x0000000000000000000000000000000000000000',
     amount: BigInt('1500000000000000000'), // 1.5 ETH
@@ -132,6 +138,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(7),
+    betId: BigInt(7),
     creator: '0x2222222222222222222222222222222222222222',
     opponent: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
     amount: BigInt('800000000000000000'), // 0.8 ETH
@@ -153,6 +160,7 @@ export const dummyBets: Bet[] = [
   },
   {
     id: BigInt(8),
+    betId: BigInt(8),
     creator: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
     opponent: '0x0000000000000000000000000000000000000000',
     amount: BigInt('400000000000000000'), // 0.4 ETH
@@ -188,7 +196,7 @@ export const dummyUserStats = {
 // Function to get user's bets
 export function getUserBets(userAddress: string): Bet[] {
   return dummyBets.filter(
-    bet => 
+    bet =>
       bet.creator.toLowerCase() === userAddress.toLowerCase() ||
       bet.opponent.toLowerCase() === userAddress.toLowerCase()
   )
@@ -208,29 +216,29 @@ export function getOpenBets(): Bet[] {
 // Function to get user's bet statistics
 export function getUserStats(userAddress: string) {
   const userBets = getUserBets(userAddress)
-  const wonBets = userBets.filter(bet => 
-    bet.status === BetStatus.RESOLVED && 
+  const wonBets = userBets.filter(bet =>
+    bet.status === BetStatus.RESOLVED &&
     bet.winner.toLowerCase() === userAddress.toLowerCase()
   )
-  const lostBets = userBets.filter(bet => 
-    bet.status === BetStatus.RESOLVED && 
+  const lostBets = userBets.filter(bet =>
+    bet.status === BetStatus.RESOLVED &&
     bet.winner.toLowerCase() !== userAddress.toLowerCase() &&
     bet.winner !== '0x0000000000000000000000000000000000000000'
   )
-  const activeBets = userBets.filter(bet => 
+  const activeBets = userBets.filter(bet =>
     bet.status === BetStatus.OPEN || bet.status === BetStatus.MATCHED
   )
-  
+
   const totalStaked = userBets.reduce((sum, bet) => {
     if (bet.creator.toLowerCase() === userAddress.toLowerCase()) {
       return sum + bet.amount
     }
     return sum
   }, BigInt(0))
-  
+
   const totalWinnings = wonBets.reduce((sum, bet) => sum + bet.amount * BigInt(2), BigInt(0))
   const winRate = wonBets.length > 0 ? (wonBets.length / (wonBets.length + lostBets.length)) * 100 : 0
-  
+
   return {
     totalBets: userBets.length,
     activeBets: activeBets.length,

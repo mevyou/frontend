@@ -40,7 +40,7 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
       }
     };
     run();
-  }, [bet.betId]);
+  }, [bet.betId, onchainBet]);
 
   // Fetch ETH/USD price
   useEffect(() => {

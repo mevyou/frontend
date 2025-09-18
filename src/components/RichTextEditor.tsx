@@ -46,7 +46,7 @@ export function RichTextEditor({ value, onChange, placeholder = "Describe the ru
     return () => {
       mounted = false;
     };
-  }, [placeholder, onChange]);
+  }, [placeholder, onChange, value]);
 
   // Sync external value → editor
   useEffect(() => {
