@@ -271,7 +271,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                     // Create options array with proper structure
                     const options = outcomes.map((outcome, index) => ({
                       option: outcome || `Option ${index + 1}`,
-                      odds: parseEther(odds[index] || "1.0"),
+                      totalStaked: parseEther(odds[index] || "0"),
                     }));
 
                     // Map outcome type to bet type
@@ -291,11 +291,11 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                       image: image || '',
                       link: link || '',
                       owner: address as `0x${string}` | undefined,
-                      result: '', // Empty initially, will be set when bet is resolved
+                      result: BigInt(0), // -1 for no result initially
                       status: statusUint8,
-                      createdAt: currentTime,
-                      updatedAt: currentTime,
-                      betDuration: betDuration,
+                      createdAt: BigInt(currentTime),
+                      updatedAt: BigInt(currentTime),
+                      betDuration: BigInt(betDuration),
                       privateBet: privateBet,
                     }] as const
                   })()}

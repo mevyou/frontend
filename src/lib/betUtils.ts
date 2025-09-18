@@ -1,45 +1,43 @@
 import { BetCreated } from '@/hooks/useGraphData';
-import { BetStatus } from '@/lib/contracts/BettingContract';
+import { BetStatus, BetType, Options } from '@/lib/contracts/BettingContract';
 
 export interface TransformedBet {
   id: string;
-  creator: string;
-  opponent: string;
-  description: string;
-  amount: string;
-  deadline: number;
-  status: BetStatus;
-  winner: string;
+  options: Options[];
+  betType: BetType;
   name: string;
+  description: string;
+  image: string;
   link: string;
-  image?: string;
-  privateBet: boolean;
-  betType: number;
-  options: Array<{
-    option: string;
-    odds: string;
-  }>;
+  owner: string;
+  result: number; // result should be index of the option. 0 indexed. and -1 for no result.
+  status: BetStatus;
   createdAt: number;
   updatedAt: number;
-  result: string;
+  betDuration: number;
+  privateBet: boolean;
 }
 
 export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet {
   // Parse the options JSON string
-  let options: Array<{ option: string; odds: string }> = [];
+  let options: Options[] = [];
   try {
     if (betCreated.bet_options) {
-      options = JSON.parse(betCreated.bet_options);
+      const parsedOptions = JSON.parse(betCreated.bet_options);
+      options = parsedOptions.map((opt: { option: string; odds: string }) => ({
+        option: opt.option,
+        odds: BigInt(opt.odds || '0')
+      }));
     }
   } catch (error) {
     console.error('Error parsing bet options:', error);
-    options = [{ option: 'Default Option', odds: '1.0' }];
+    options = [{ option: 'Default Option', odds: BigInt(0) }];
   }
 
   // Convert timestamps to numbers
   const createdAt = parseInt(betCreated.bet_createdAt) || Math.floor(Date.now() / 1000);
   const updatedAt = parseInt(betCreated.bet_updatedAt) || createdAt;
-  const deadline = parseInt(betCreated.bet_betDuration) || createdAt + 86400; // Default to 24 hours
+  const betDuration = parseInt(betCreated.bet_betDuration) || createdAt + 86400; // Default to 24 hours
 
   // Map bet status
   const statusMap: Record<string, BetStatus> = {
@@ -49,23 +47,27 @@ export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet
     '3': BetStatus.CANCELLED,
   };
 
+  // Map bet type
+  const betTypeMap: Record<string, BetType> = {
+    '0': BetType.SINGLE,
+    '1': BetType.MULTI,
+  };
+
   return {
     id: betCreated.id,
-    creator: betCreated.bet_owner,
-    opponent: '', // Not available in GraphQL data
-    description: betCreated.bet_description || betCreated.bet_name,
-    amount: '0.001', // Default amount since it's not in the GraphQL data
-    deadline,
-    status: statusMap[betCreated.bet_status] || BetStatus.OPEN,
-    winner: betCreated.bet_result || '',
-    name: betCreated.bet_name,
-    link: betCreated.bet_link,
-    privateBet: betCreated.bet_privateBet,
-    betType: parseInt(betCreated.bet_betType) || 0,
     options,
+    betType: betTypeMap[betCreated.bet_betType] || BetType.SINGLE,
+    name: betCreated.bet_name,
+    description: betCreated.bet_description || betCreated.bet_name,
+    image: betCreated.bet_image || '',
+    link: betCreated.bet_link || '',
+    owner: betCreated.bet_owner,
+    result: parseInt(betCreated.bet_result) || -1, // -1 for no result
+    status: statusMap[betCreated.bet_status] || BetStatus.OPEN,
     createdAt,
     updatedAt,
-    result: betCreated.bet_result || '',
+    betDuration,
+    privateBet: betCreated.bet_privateBet,
   };
 }
 
