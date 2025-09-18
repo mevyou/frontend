@@ -23,10 +23,15 @@ export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet
   let options: Options[] = [];
   try {
     if (betCreated.bet_options) {
-      const parsedOptions = JSON.parse(betCreated.bet_options);
-      options = parsedOptions.map((opt: { option: string; odds: string }) => ({
-        option: opt.option,
-        odds: BigInt(opt.odds || '0')
+      // Sanitize malformed JSON by extracting the bracketed array
+      const raw = String(betCreated.bet_options);
+      const start = raw.indexOf('[');
+      const end = raw.lastIndexOf(']');
+      const slice = start !== -1 && end !== -1 ? raw.slice(start, end + 1) : raw;
+      const parsedOptions = JSON.parse(slice);
+      options = parsedOptions.map((opt: { option: string; odds: string | number | bigint }) => ({
+        option: String(opt.option ?? ''),
+        odds: BigInt(String(opt.odds ?? '0'))
       }));
     }
   } catch (error) {
