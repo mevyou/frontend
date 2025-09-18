@@ -441,12 +441,14 @@ export function HomeDashboard() {
                     onClick={() => handleBetClick(bet)}
                   />
                 ) : (
-                  <PredictionCard
-                    bet={bet}
-                    onUpdateAction={() => { }}
-                    onClick={() => handleBetClick(bet)}
-                  />
+                  // <PredictionCard
+                  //   bet={bet}
+                  //   onUpdateAction={() => { }}
+                  //   onClick={() => handleBetClick(bet)}
+                  // />
+                  <></>
                 )}
+
               </div>
             ))}
           </div>
