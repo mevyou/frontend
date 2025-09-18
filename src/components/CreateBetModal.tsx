@@ -7,6 +7,7 @@ import { gameABI, gameAddress } from "../contract/contract";
 import TxButton from "./TxButton";
 import { parseEther } from "viem";
 import Image from "next/image";
+import { RichTextEditor } from "./RichTextEditor";
 import { Abi } from "viem";
 import { formatAddress } from "@/lib/utils";
 import { useAccount } from "wagmi";
@@ -27,12 +28,15 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
   const [image, setImage] = useState("");
   const [link, setLink] = useState("");
   const [outcomeType, setOutcomeType] = useState("multi-choice");
+  const [binaryType, setBinaryType] = useState<"yesno" | "custom">("yesno");
+  const [customBinary, setCustomBinary] = useState({ option1: "", option2: "" });
   const [outcomes, setOutcomes] = useState([
     "≥30M To <40M",
     "<30M",
     "≥40M To <50M",
     "≥50M To <60M",
   ]);
+  const [rules, setRules] = useState("");
   const [odds, setOdds] = useState<string[]>([]);
   const { address } = useAccount();
   const [selectedTopic, setSelectedTopic] = useState("Sport");
@@ -58,6 +62,9 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
       setOutcomes(["≥30M To <40M", "<30M", "≥40M To <50M", "≥50M To <60M"]);
       setOdds([]);
       setOutcomeType("multi-choice");
+      setBinaryType("yesno");
+      setCustomBinary({ option1: "", option2: "" });
+      setRules("");
       setAmountEth("0.001");
       setDeadlineHours("24");
       setPrivateBet(false);
@@ -215,15 +222,14 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
     >
       {/* Mobile: Bottom Sheet | Desktop: Centered Modal */}
       <div
-        className={`bg-[#121214] w-full max-h-[90vh] overflow-y-auto
-        md:rounded-2xl ${showConfirmation ? "md:max-w-[480px] animate-fade-in" : "md:max-w-[720px]"
-          }
+        className={`w-full max-h-[90vh] overflow-y-auto bg-neutral-900
+        md:rounded-2xl ${showConfirmation ? "md:max-w-[560px] animate-fade-in" : "md:max-w-[1067px]"}
         fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:left-auto md:right-auto
-        rounded-t-3xl md:rounded-b-2xl
+        rounded-t-3xl md:rounded-b-2xl outline outline-neutral-900 shadow-[0px_0px_10px_0px_rgba(32,32,32,0.04)] md:shadow-[0px_10px_20px_0px_rgba(32,32,32,0.04)]
         ${isOpen ? "animate-slide-up" : ""} md:animate-none`}
       >
         {/* Modal Header */}
-        <div className="relative px-4 md:px-8 py-4 md:py-10 text-center">
+        <div className="relative px-4 md:px-8 py-6 md:py-10 text-center border-b border-neutral-800">
           <button
             onClick={onClose}
             className="absolute top-4 sm:top-6 right-4 sm:right-6 text-gray-400 hover:text-white transition-colors"
@@ -233,20 +239,14 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
 
           {/* Create Bet Icon */}
           <div className="mx-auto mb-6 sm:mb-8 flex items-center justify-center">
-            {showConfirmation ? (
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-b from-purple-600 to-pink-500 flex items-center justify-center"></div>
-            ) : (
-              <Image
-                src={AppIcons.createBet}
-                alt="Create Bet"
-                className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16"
-                style={{
-                  filter: `brightness(0) saturate(100%) invert(34%) sepia(87%) saturate(584%) hue-rotate(145deg) brightness(99%) contrast(99%)`,
-                }}
-                width={64}
-                height={64}
-              />
-            )}
+            <div className="w-12 h-12 bg-cyan-400/40 rounded-full outline outline-cyan-400/10 inline-flex justify-center items-center">
+              <div className="w-6 h-6 relative">
+                <div className="w-3 h-1 left-[2px] top-[2px] absolute border border-cyan-400" />
+                <div className="w-3 h-3 left-[9px] top-[9px] absolute border border-cyan-400" />
+                <div className="w-1.5 h-1.5 left-[12.5px] top-[12px] absolute border border-cyan-400" />
+                <div className="w-3 h-2.5 left-[2px] top-[4px] absolute border border-cyan-400" />
+              </div>
+            </div>
           </div>
 
           {/* Title */}
@@ -271,7 +271,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                     // Create options array with proper structure
                     const options = outcomes.map((outcome, index) => ({
                       option: outcome || `Option ${index + 1}`,
-                      odds: parseEther(odds[index] || "1.0"),
+                      totalStaked: parseEther(odds[index] || "0"),
                     }));
 
                     // Map outcome type to bet type
@@ -291,11 +291,11 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                       image: image || '',
                       link: link || '',
                       owner: address as `0x${string}` | undefined,
-                      result: '', // Empty initially, will be set when bet is resolved
+                      result: BigInt(0), // -1 for no result initially
                       status: statusUint8,
-                      createdAt: currentTime,
-                      updatedAt: currentTime,
-                      betDuration: betDuration,
+                      createdAt: BigInt(currentTime),
+                      updatedAt: BigInt(currentTime),
+                      betDuration: BigInt(betDuration),
                       privateBet: privateBet,
                     }] as const
                   })()}
@@ -377,60 +377,38 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
             </>
           ) : (
             <>
-              <h2 className="text-white text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">
-                Suggest market
-              </h2>
-              <p className="text-gray-400 text-sm sm:text-base">
-                Create public market
-              </p>
+              <h2 className="text-white text-base font-bold">Create Market</h2>
+              <p className="text-gray-400 text-xs">Create public market</p>
             </>
           )}
         </div>
 
         {/* Content */}
         {!showConfirmation && (
-          <div className="px-0">
-            {/* Topic Section with Full Width Dividers */}
-            <div className="mb-6">
-              {/* Top Divider - Full Width */}
+          <div className="px-0 md:grid md:grid-cols-2 md:gap-0">
+            {/* Top row: Topic + Description side-by-side */}
+            <div className="md:col-span-2">
               <div className="h-px bg-[#1F1F23] w-full"></div>
-
-              {/* Topic Content */}
-              <div className="px-4 md:px-8 py-4">
+              <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <input
                   type="text"
                   placeholder="Enter topic..."
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
-                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 outline-none text-base"
+                  className="w-full bg-transparent text-white/90 placeholder-white/25 outline-none text-base"
                 />
-              </div>
-
-              {/* Bottom Divider - Full Width */}
-              <div className="h-px bg-[#1F1F23] w-full"></div>
-            </div>
-
-            {/* Description Section */}
-            <div className="mb-6">
-              {/* Top Divider - Full Width */}
-              <div className="h-px bg-[#1F1F23] w-full"></div>
-
-              {/* Description Content */}
-              <div className="px-4 md:px-8 py-4">
                 <textarea
                   placeholder="Enter description..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 outline-none text-base resize-none min-h-[80px]"
-                  rows={3}
+                  className="w-full bg-transparent text-white/80 placeholder-white/25 outline-none text-base resize-none min-h-[48px]"
+                  rows={2}
                 />
               </div>
-
-              {/* Bottom Divider - Full Width */}
               <div className="h-px bg-[#1F1F23] w-full"></div>
             </div>
 
-            <div className="px-4 md:px-8">
+            <div className="px-4 md:px-8 md:col-span-1">
               {/* Outcome Type */}
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-6">
@@ -487,10 +465,58 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                           </span>
                         </div>
                         <p className="text-gray-400 text-sm">
-                          Only two possible outcomes, Yes or No.
+                          Binary outcomes. Default is Yes/No. You can set custom labels.
                         </p>
                       </div>
                     </div>
+                    {/* Custom Binary Controls */}
+                    {outcomeType === "yes-no" && (
+                      <div className="mt-3 space-y-3">
+                        <div className="flex items-center gap-4">
+                          <label className="flex items-center gap-2 text-sm text-gray-300">
+                            <input
+                              type="radio"
+                              checked={binaryType === "yesno"}
+                              onChange={() => {
+                                setBinaryType("yesno");
+                                setOutcomes(["Yes", "No"]);
+                              }}
+                            />
+                            Yes / No
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-gray-300">
+                            <input
+                              type="radio"
+                              checked={binaryType === "custom"}
+                              onChange={() => {
+                                setBinaryType("custom");
+                                setCustomBinary({ option1: customBinary.option1 || "Up", option2: customBinary.option2 || "Down" });
+                                setOutcomes([customBinary.option1 || "Up", customBinary.option2 || "Down"]);
+                              }}
+                            />
+                            Custom
+                          </label>
+                        </div>
+                        {binaryType === "custom" && (
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              type="text"
+                              value={customBinary.option1}
+                              onChange={(e) => { const v = e.target.value; setCustomBinary({ ...customBinary, option1: v }); setOutcomes([v || "", outcomes[1] || ""]); }}
+                              className="px-3 py-2 bg-[#1A1A1E] rounded-lg text-white outline-none"
+                              placeholder="Option 1"
+                            />
+                            <input
+                              type="text"
+                              value={customBinary.option2}
+                              onChange={(e) => { const v = e.target.value; setCustomBinary({ ...customBinary, option2: v }); setOutcomes([outcomes[0] || "", v || ""]); }}
+                              className="px-3 py-2 bg-[#1A1A1E] rounded-lg text-white outline-none"
+                              placeholder="Option 2"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Multi-choice Option */}
@@ -633,8 +659,14 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                 </div>
               )}
 
+              {/* Rules - Rich Text Editor */}
+              <div className="mb-8 md:col-span-1 px-4 md:px-8">
+                <h3 className="text-white font-semibold text-lg mb-3">Rules</h3>
+                <RichTextEditor value={rules} onChange={setRules} placeholder="Describe the rules..." />
+              </div>
+
               {/* Amount and Deadline Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 md:col-span-1 px-4 md:px-8">
                 <div className="border border-[#1F1F23] rounded-xl p-4">
                   <label className="block text-sm text-gray-400 mb-2">Stake amount (ETH)</label>
                   <input
@@ -662,7 +694,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
               </div>
 
               {/* Image and Link Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 md:col-span-1 px-4 md:px-8">
                 <div className="border border-[#1F1F23] rounded-xl p-4">
                   <label className="block text-sm text-gray-400 mb-2">Image URL (optional)</label>
                   <input
@@ -686,7 +718,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
               </div>
 
               {/* Private Bet Toggle */}
-              <div className="mb-8">
+              <div className="mb-8 md:col-span-1 px-4 md:px-8">
                 <div className="flex items-center justify-between p-4 border border-[#1F1F23] rounded-xl">
                   <div>
                     <h3 className="text-white font-medium mb-1">Private Bet</h3>
@@ -706,7 +738,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
               </div>
 
               {/* Divider */}
-              <div className="-mx-4 md:-mx-8 border-t border-[#19191C]"></div>
+              <div className="md:col-span-2 -mx-4 md:-mx-8 border-t border-[#19191C]"></div>
 
               {/* Footer with Topic and Buttons */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-4 md:pt-6 pb-4 md:pb-6">
@@ -774,6 +806,7 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   )}
                 </div>
 
+              </div>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                   <button
                     onClick={onClose}
@@ -788,6 +821,62 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
                   >
                     Stake & List Bet
                   </button>
+                </div>
+            </div>
+
+            {/* Extended Preview (Right column on desktop) */}
+            <div className="hidden md:block md:col-span-1 pr-6">
+              <div className="sticky top-6">
+                <div className="bg-neutral-900 rounded-2xl border border-[#1F1F23] overflow-hidden">
+                  {/* Preview header */}
+                  <div className="h-36 relative flex flex-col items-center justify-center bg-neutral-900">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-b from-purple-600 to-pink-500 mb-2 flex items-center justify-center">
+                      <Image src={AppIcons.gameActive} alt="icon" width={22} height={22} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Image src={AppIcons.checkmark} alt="verified" width={16} height={16} />
+                      <span className="text-gray-300 text-sm">In-House created</span>
+                    </div>
+                    <div className="mt-2 px-3 py-1 rounded-[99px] border border-neutral-700 text-gray-300 text-xs">All Tokens</div>
+                  </div>
+
+                  {/* Preview body */}
+                  <div className="px-4 pb-4 bg-[#101013]">
+                    <div className="text-white text-xl font-extrabold mb-3 leading-snug">
+                      {topic || "Will Oscar Piastri win the F1 Drivers Championship 2025?"}
+                    </div>
+
+                    {outcomeType === 'yes-no' ? (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-4">
+                          <button className="h-14 rounded-xl border border-green-500/50 bg-green-500/10 text-green-400 font-bold">{outcomes[0] || 'Yes'}</button>
+                          <button className="h-14 rounded-xl border border-rose-500/50 bg-rose-500/10 text-rose-400 font-bold">{outcomes[1] || 'No'}</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        {outcomes.map((o, i) => (
+                          <div key={i} className="flex items-center justify-between gap-2 bg-neutral-800 rounded-lg p-2">
+                            <div className="px-3 py-1 rounded-lg bg-white/10 text-white text-sm font-bold">{o || `Outcome ${i+1}`}</div>
+                            <button className="px-3 py-1.5 bg-cyan-400 rounded-md text-zinc-900 text-sm font-semibold">Stake</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Footer stats + Actions */}
+                    <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center gap-2" />
+                      <div className="hidden md:flex gap-2">
+                      <div className="flex items-center gap-4 text-gray-300 text-sm">
+                        <div className="flex items-center gap-1">
+                          <Image src={AppIcons.timer} alt="date" width={14} height={14} />
+                          <span>{new Date().toLocaleString('en-US', { month: 'short', day: 'numeric' })}</span>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

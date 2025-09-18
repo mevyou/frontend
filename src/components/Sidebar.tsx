@@ -44,7 +44,7 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
     {
       name: "Earn",
       activeIcon: AppIcons.giftActive,
-      inactiveIcon: AppIcons.earnInactive,
+      inactiveIcon: AppIcons.giftInactive,
       path: "/earn",
     },
     {
@@ -52,6 +52,12 @@ export function Sidebar({ isCollapsed, onToggleAction, onCreateBetClick }: Sideb
       activeIcon: AppIcons.walletActive,
       inactiveIcon: AppIcons.walletInactive,
       path: "/wallet",
+    },
+    {
+      name: "Invites",
+      activeIcon: AppIcons.checkmark,
+      inactiveIcon: AppIcons.checkmarkCircle,
+      path: "/invites",
     },
   ];
 

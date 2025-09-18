@@ -1,12 +1,14 @@
 "use client";
 
 import { MainLayout } from "@/components/MainLayout";
-import { MyBetsPage } from "@/components/MyBetsPage";
+import { InvitesPage } from "@/components/InvitesPage";
 
-export default function MyBetsPageRoute() {
+export default function InvitesRoute() {
   return (
     <MainLayout>
-      <MyBetsPage />
+      <InvitesPage />
     </MainLayout>
   );
 }
+
+

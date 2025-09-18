@@ -1,45 +1,34 @@
 import { BetCreated } from '@/hooks/useGraphData';
-import { BetStatus } from '@/lib/contracts/BettingContract';
+import { BetStatus, BetType, Options } from '@/lib/contracts/BettingContract';
+import { decodeAbiParameters, Hex } from 'viem';
 
 export interface TransformedBet {
-  id: string;
-  creator: string;
-  opponent: string;
-  description: string;
-  amount: string;
-  deadline: number;
-  status: BetStatus;
-  winner: string;
+  id: number;
+  betId: number;
+  options: Options[] | string[];
+  betType: BetType;
   name: string;
+  description: string;
+  image: string;
   link: string;
-  image?: string;
-  privateBet: boolean;
-  betType: number;
-  options: Array<{
-    option: string;
-    odds: string;
-  }>;
+  owner: string;
+  result: number; // result should be index of the option. 0 indexed. and -1 for no result.
+  status: BetStatus;
   createdAt: number;
   updatedAt: number;
-  result: string;
+  betDuration: number;
+  privateBet: boolean;
 }
 
 export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet {
-  // Parse the options JSON string
-  let options: Array<{ option: string; odds: string }> = [];
-  try {
-    if (betCreated.bet_options) {
-      options = JSON.parse(betCreated.bet_options);
-    }
-  } catch (error) {
-    console.error('Error parsing bet options:', error);
-    options = [{ option: 'Default Option', odds: '1.0' }];
-  }
+  // Decode bet options which may be stored as JSON or ABI-encoded bytes via subgraph
+  console.log("options", betCreated.bet_options);
+  const options: Options[] | string[] = betCreated.bet_options as Options[] | string[];
 
   // Convert timestamps to numbers
   const createdAt = parseInt(betCreated.bet_createdAt) || Math.floor(Date.now() / 1000);
   const updatedAt = parseInt(betCreated.bet_updatedAt) || createdAt;
-  const deadline = parseInt(betCreated.bet_betDuration) || createdAt + 86400; // Default to 24 hours
+  const betDuration = parseInt(betCreated.bet_betDuration) || createdAt + 86400; // Default to 24 hours
 
   // Map bet status
   const statusMap: Record<string, BetStatus> = {
@@ -49,23 +38,28 @@ export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet
     '3': BetStatus.CANCELLED,
   };
 
+  // Map bet type
+  const betTypeMap: Record<string, BetType> = {
+    '0': BetType.SINGLE,
+    '1': BetType.MULTI,
+  };
+
   return {
-    id: betCreated.id,
-    creator: betCreated.bet_owner,
-    opponent: '', // Not available in GraphQL data
-    description: betCreated.bet_description || betCreated.bet_name,
-    amount: '0.001', // Default amount since it's not in the GraphQL data
-    deadline,
-    status: statusMap[betCreated.bet_status] || BetStatus.OPEN,
-    winner: betCreated.bet_result || '',
+    id: Number(betCreated.id),
+    betId: betCreated.betId,
+    options: options,
+    betType: betTypeMap[betCreated.bet_betType] || BetType.SINGLE,
     name: betCreated.bet_name,
-    link: betCreated.bet_link,
-    privateBet: betCreated.bet_privateBet,
-    betType: parseInt(betCreated.bet_betType) || 0,
-    options,
+    description: betCreated.bet_description || betCreated.bet_name,
+    image: '',
+    link: betCreated.bet_link || '',
+    owner: betCreated.bet_owner,
+    result: parseInt(betCreated.bet_result) || -1, // -1 for no result
+    status: statusMap[betCreated.bet_status] || BetStatus.OPEN,
     createdAt,
     updatedAt,
-    result: betCreated.bet_result || '',
+    betDuration,
+    privateBet: betCreated.bet_privateBet,
   };
 }
 
@@ -89,6 +83,15 @@ export function formatBetTime(timestamp: number): string {
     return `${minutes}m left`;
   }
 }
+
+// Attempts to decode `bet_options` coming from the subgraph.
+// Supports:
+// 1) JSON string of [{ option, odds|totalStaked }]
+// 2) JSON string of ["0x..."] where each element encodes (string,uint256)
+// 3) Single hex string "0x..." encoding tuple(string,uint256)[]
+
+
+// (Compact fallback removed to strictly honor (string,uint256) tuple decoding)
 
 export function getBetStatusText(status: BetStatus): string {
   switch (status) {

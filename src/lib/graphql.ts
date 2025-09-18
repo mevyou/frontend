@@ -85,6 +85,7 @@ export const GET_BET_CREATEDS = gql`
   query GetBetCreateds($first: Int = 5) {
     betCreateds(first: $first, orderBy: blockTimestamp, orderDirection: desc) {
       id
+      betId
       bet_name
       bet_link
       bet_description
@@ -134,6 +135,7 @@ export const GET_DASHBOARD_DATA = gql`
     }
     betCreateds(first: $first, orderBy: blockTimestamp, orderDirection: desc) {
       id
+      betId
       bet_name
       bet_link
       bet_description

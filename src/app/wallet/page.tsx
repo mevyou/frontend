@@ -1,12 +1,14 @@
 "use client";
 
 import { MainLayout } from "@/components/MainLayout";
-import { MyBetsPage } from "@/components/MyBetsPage";
+import { WalletPage } from "@/components/WalletPage";
 
-export default function MyBetsPageRoute() {
+export default function WalletRoute() {
   return (
     <MainLayout>
-      <MyBetsPage />
+      <WalletPage />
     </MainLayout>
   );
 }
+
+

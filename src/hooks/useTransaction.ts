@@ -85,7 +85,7 @@ export function useTransaction(options: UseTransactionOptions = {}) {
       clearTimeout(timeoutId);
       setTimeoutId(null);
     }
-  }, [txHash, isSuccess, isError, receiptError, isMining, timeoutMs, onSuccess, successMessage]);
+  }, [txHash, isSuccess, isError, receiptError, isMining, timeoutMs, onSuccess, successMessage, timeoutId]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -94,7 +94,7 @@ export function useTransaction(options: UseTransactionOptions = {}) {
         clearTimeout(timeoutId);
       }
     };
-  }, []);
+  }, [timeoutId]);
 
   const executeTransaction = useCallback(async (params: {
     address: `0x${string}`;

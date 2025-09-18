@@ -39,7 +39,8 @@ export interface UserCreated {
 }
 
 export interface BetCreated {
-  id: string;
+  id: number;
+  betId: number;
   bet_name: string;
   bet_link: string;
   bet_description: string;
@@ -51,7 +52,7 @@ export interface BetCreated {
   bet_createdAt: string;
   bet_updatedAt: string;
   bet_betType: string;
-  bet_options: string;
+  bet_options: string | string[];
   user: string;
   requestId: string;
 }
@@ -155,6 +156,64 @@ export function useDashboardData(first: number = 5) {
       console.log('Retry attempt:', failureCount, error);
       return failureCount < 3;
     },
+  });
+}
+
+// Invites (notifications)
+export interface InviteItem {
+  id: string;
+  invitee: string; // user being invited
+  inviter: string; // who invited
+  betId: string;
+  bet_name?: string;
+  bet_description?: string;
+  bet_options?: string;
+  createdAt: string;
+  status?: string;
+}
+
+/**
+ * Fetch invites for a particular wallet address. Polls by default.
+ * The Graph schema assumed fields: inviteCreateds with fields (id, invitee, inviter, betId, bet_name, bet_description, bet_options, blockTimestamp)
+ */
+export function useInvites(address?: string, pollMs: number = 15000) {
+  return useQuery({
+    queryKey: ['invites', (address || '').toLowerCase()],
+    queryFn: async () => {
+      if (!address) return [] as InviteItem[];
+      const query = /* GraphQL */ `
+        query Invites($invitee: String!) {
+          inviteCreateds(where: { invitee: $invitee }, orderBy: blockTimestamp, orderDirection: desc, first: 50) {
+            id
+            invitee
+            inviter
+            betId
+            bet_name
+            bet_description
+            bet_options
+            blockTimestamp
+          }
+        }
+      `;
+      const { data } = await apolloClient.query({
+        query: (await import('@apollo/client')).gql(query),
+        variables: { invitee: address.toLowerCase() },
+        fetchPolicy: 'network-only',
+      });
+      const items = (data as { inviteCreateds?: unknown[] })?.inviteCreateds || [];
+      return items.map((it: any) => ({
+        id: it.id,
+        invitee: it.invitee,
+        inviter: it.inviter,
+        betId: it.betId,
+        bet_name: it.bet_name,
+        bet_description: it.bet_description,
+        bet_options: it.bet_options,
+        createdAt: it.blockTimestamp,
+      })) as InviteItem[];
+    },
+    staleTime: 5000,
+    refetchInterval: pollMs,
   });
 }
 
