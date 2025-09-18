@@ -6,6 +6,7 @@ import { ChevronDown, GripVertical } from "lucide-react";
 import { AppIcons } from "@/lib/appIcons";
 import { AppImages } from "@/lib/appImages";
 import { cn } from "@/lib/utils";
+import { RichTextEditor } from "./RichTextEditor";
 
 interface GameDescriptionPageProps {
   gameId: string;
@@ -330,38 +331,7 @@ export function GameDescriptionPage({ gameId }: GameDescriptionPageProps) {
           {/* Rules Section with Rich Text Editor */}
           <div className="space-y-3">
             <h3 className="text-white text-lg font-semibold">Rules</h3>
-            
-            {/* Rich Text Editor Toolbar */}
-            <div className="flex items-center gap-2 p-2 bg-neutral-800 rounded-lg">
-              <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                <span className="font-bold text-sm">B</span>
-              </button>
-              <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                <span className="italic text-sm">I</span>
-              </button>
-              <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                <span className="underline text-sm">U</span>
-              </button>
-              <div className="w-px h-4 bg-neutral-600"></div>
-              <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                <span className="text-sm">A</span>
-              </button>
-              <div className="w-px h-4 bg-neutral-600"></div>
-              <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                <span className="text-sm">•</span>
-              </button>
-              <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                <span className="text-sm">1.</span>
-              </button>
-            </div>
-
-            {/* Rules Text Area */}
-            <textarea
-              value={rules}
-              onChange={(e) => setRules(e.target.value)}
-              placeholder="Enter detailed rules for this market..."
-              className="w-full h-48 px-4 py-3 bg-neutral-800 rounded-lg text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-400"
-            />
+            <RichTextEditor value={rules} onChange={setRules} placeholder="Describe the rules..." />
 
             {/* Topic Selector */}
             <div className="flex items-center gap-4 relative">

@@ -3,8 +3,9 @@ import { BetStatus, BetType, Options } from '@/lib/contracts/BettingContract';
 import { decodeAbiParameters, Hex } from 'viem';
 
 export interface TransformedBet {
-  id: string;
-  options: Options[];
+  id: number;
+  betId: number;
+  options: Options[] | string[];
   betType: BetType;
   name: string;
   description: string;
@@ -22,7 +23,7 @@ export interface TransformedBet {
 export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet {
   // Decode bet options which may be stored as JSON or ABI-encoded bytes via subgraph
   console.log("options", betCreated.bet_options);
-  const options: Options[] = decodeBetOptionsField(betCreated.bet_options);
+  // const options: Options[] = decodeBetOptionsField(betCreated.bet_options);
 
   // Convert timestamps to numbers
   const createdAt = parseInt(betCreated.bet_createdAt) || Math.floor(Date.now() / 1000);
@@ -44,8 +45,9 @@ export function transformBetCreatedToBet(betCreated: BetCreated): TransformedBet
   };
 
   return {
-    id: betCreated.id,
-    options,
+    id: Number(betCreated.id),
+    betId: betCreated.betId,
+    options: betCreated.bet_options as Options[] | string[],
     betType: betTypeMap[betCreated.bet_betType] || BetType.SINGLE,
     name: betCreated.bet_name,
     description: betCreated.bet_description || betCreated.bet_name,

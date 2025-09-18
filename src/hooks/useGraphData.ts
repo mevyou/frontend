@@ -39,7 +39,8 @@ export interface UserCreated {
 }
 
 export interface BetCreated {
-  id: string;
+  id: number;
+  betId: number;
   bet_name: string;
   bet_link: string;
   bet_description: string;

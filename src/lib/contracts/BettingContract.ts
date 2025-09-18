@@ -149,4 +149,95 @@ export interface Bet {
   privateBet: boolean;
 }
 
-export const BETTING_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BETTING_CONTRACT_ADDRESS || '0x';
+// export const BETTING_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BETTING_CONTRACT_ADDRESS || '0x';
+
+// ===== On-chain read helpers for Game.getBet(id) =====
+import { readContract } from 'wagmi/actions';
+import { config } from '@/lib/web3';
+import { gameABI, gameAddress } from '@/contract/contract';
+
+export interface ContractBetOption {
+  option: string;
+  totalStaked: bigint;
+}
+
+export interface ContractBet {
+  options: ContractBetOption[];
+  betType: number;
+  name: string;
+  description: string;
+  image: string;
+  link: string;
+  owner: `0x${string}`;
+  result: bigint;
+  status: number;
+  createdAt: bigint;
+  updatedAt: bigint;
+  betDuration: bigint;
+  privateBet: boolean;
+}
+export async function getTotalStaked(betId: bigint): Promise<bigint> {
+  const result = await readContract(config, {
+    address: gameAddress as `0x${string}`,
+    abi: gameABI,
+    functionName: 'totalBalance',
+    args: [betId],
+  });
+  return result as bigint;
+}
+export async function getBetFromContract(betId: bigint): Promise<ContractBet> {
+  const result = await readContract(config, {
+    address: gameAddress as `0x${string}`,
+    abi: gameABI,
+    functionName: 'getBet',
+    args: [betId],
+  });
+  console.log("Result", result);
+
+  // result comes as a tuple matching the ABI order
+  const [
+    options,
+    betType,
+    name,
+    description,
+    image,
+    link,
+    owner,
+    resultIndex,
+    status,
+    createdAt,
+    updatedAt,
+    betDuration,
+    privateBet,
+  ] = result as unknown as [
+    Array<{ option: string; totalStaked: bigint }>,
+    number,
+    string,
+    string,
+    string,
+    string,
+    `0x${string}`,
+    bigint,
+    number,
+    bigint,
+    bigint,
+    bigint,
+    boolean
+  ];
+
+  return {
+    options: options.map(o => ({ option: o.option, totalStaked: o.totalStaked })),
+    betType,
+    name,
+    description,
+    image,
+    link,
+    owner,
+    result: resultIndex,
+    status,
+    createdAt,
+    updatedAt,
+    betDuration,
+    privateBet,
+  };
+}
