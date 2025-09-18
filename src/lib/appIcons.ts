@@ -63,6 +63,7 @@ export const AppIcons = {
   arrowUp: "/svg/arrow-down.svg",
   arrowDown: "/svg/arrow-down1.svg",
   arrowRight: "/svg/arrow-right.svg",
+  chevronDown: "/svg/chevron-down.svg",
 
   // Communication Icons
   bubbleChat: "/svg/bubble-chat.svg",
@@ -72,7 +73,6 @@ export const AppIcons = {
   // Game & Competition Icons
   fire: "/svg/fire.svg",
   magic: "/svg/magic.svg",
-  trophy: "/svg/trophy.svg", // Note: Add trophy.svg if available
   smiley: "/svg/smiley.svg",
 
   // Analytics & Charts
@@ -82,6 +82,7 @@ export const AppIcons = {
   // Time & Status Icons
   timer: "/svg/timer.svg",
   hourglass: "/svg/hourglass.svg",
+  trophy: "/svg/trophy.svg",
 
   // Legend & Node Icons
   legendNode: "/svg/LegendNode.svg",

@@ -396,13 +396,13 @@ const CreateBetModal: React.FC<CreateBetModalProps> = ({
               <div className="h-px bg-[#1F1F23] w-full"></div>
 
               {/* Topic Content */}
-              <div className="px-4 md:px-8 py-4">
+              <div className="px-4 py-4 bg-green-500 w-1/2 scale-90">
                 <input
                   type="text"
                   placeholder="Enter topic..."
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
-                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 outline-none text-base"
+                  className="w-1/2 bg-transparent text-gray-300 placeholder-gray-500 outline-none text-base"
                 />
               </div>
 
