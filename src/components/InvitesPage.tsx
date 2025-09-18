@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { Abi } from "viem";
 import { gameABI, gameAddress, hubABI, hubAddress } from "@/contract/contract";
+import { TxButton } from "@/components/TxButton";
 
 export function InvitesPage() {
   const { address } = useAccount();
@@ -24,36 +25,6 @@ export function InvitesPage() {
 
   const { writeContract, data: txHash } = useWriteContract();
   const { isLoading: isConfirming } = useWaitForTransactionReceipt({ hash: txHash });
-
-  const handleRespond = (inviteId: string, accept: boolean) => {
-    // Example hub function names; adjust as per actual contract
-    writeContract({
-      address: hubAddress as `0x${string}`,
-      abi: hubABI as Abi,
-      functionName: accept ? 'acceptInvite' : 'rejectInvite',
-      args: [inviteId],
-    });
-  };
-
-  const handleAcceptUserInvitation = (invitationId: string, betId: string) => {
-    // Accept user invitation - you may need to adjust the function name and args based on your contract
-    writeContract({
-      address: gameAddress as `0x${string}`,
-      abi: gameABI as Abi,
-      functionName: 'acceptInvitation', // Adjust function name as needed
-      args: [Number(betId)],
-    });
-  };
-
-  const handleRejectUserInvitation = (invitationId: string, betId: string) => {
-    // Reject user invitation - you may need to adjust the function name and args based on your contract
-    writeContract({
-      address: gameAddress as `0x${string}`,
-      abi: gameABI as Abi,
-      functionName: 'rejectInvitation', // Adjust function name as needed
-      args: [Number(betId)],
-    });
-  };
 
   const handleSetResult = async (betId: string, betName: string) => {
     setSelectedBetForResult({ betId, betName });
@@ -99,6 +70,7 @@ export function InvitesPage() {
     setBetDetails(null);
     setIsLoadingBetDetails(false);
   };
+
 
   // Get accepted bet IDs for filtering
   const acceptedBetIds = new Set(acceptedInvites?.map(invite => invite.betId) || []);
@@ -166,6 +138,14 @@ export function InvitesPage() {
                     <span className="px-3 py-1 rounded-lg bg-green-500 text-white text-sm font-semibold">
                       Accepted
                     </span>
+                    <TxButton
+                      address={gameAddress as `0x${string}`}
+                      abi={gameABI as Abi}
+                      functionName="claimReward"
+                      args={[Number(invitation.betId)]}
+                      idleLabel="Claim"
+                      className="px-3 py-1 rounded-lg text-black text-sm font-semibold transition-colors"
+                    />
                     {isModerator && (
                       <button
                         onClick={() => handleSetResult(invitation.betId, `Bet ${invitation.betId}`)}
@@ -213,20 +193,22 @@ export function InvitesPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      disabled={isConfirming}
-                      onClick={() => handleAcceptUserInvitation(invitation.id, invitation.betId)}
-                      className="px-3 py-2 rounded-lg bg-emerald-500 text-black font-semibold disabled:opacity-60 hover:bg-emerald-600 transition-colors text-sm"
-                    >
-                      {isConfirming ? 'Accepting...' : 'Accept'}
-                    </button>
-                    <button
-                      disabled={isConfirming}
-                      onClick={() => handleRejectUserInvitation(invitation.id, invitation.betId)}
-                      className="px-3 py-2 rounded-lg bg-red-500 text-white font-semibold disabled:opacity-60 hover:bg-red-600 transition-colors text-sm"
-                    >
-                      {isConfirming ? 'Rejecting...' : 'Reject'}
-                    </button>
+                    <TxButton
+                      address={gameAddress as `0x${string}`}
+                      abi={gameABI as Abi}
+                      functionName="acceptInvitation"
+                      args={[Number(invitation.betId)]}
+                      idleLabel="Accept"
+                      className="px-3 py-2 rounded-lg bg-emerald-500 text-black font-semibold hover:bg-emerald-600 transition-colors text-sm"
+                    />
+                    <TxButton
+                      address={gameAddress as `0x${string}`}
+                      abi={gameABI as Abi}
+                      functionName="rejectInvitation"
+                      args={[Number(invitation.betId)]}
+                      idleLabel="Reject"
+                      className="px-3 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors text-sm"
+                    />
                     <button
                       onClick={() => setSelected(invitation.id)}
                       className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
@@ -281,8 +263,23 @@ export function InvitesPage() {
               })()}
             </div>
             <div className="flex gap-3 pt-2">
-              <button disabled={isConfirming} onClick={() => handleRespond(selectedInvite.id, true)} className="px-4 py-2 rounded-lg bg-emerald-500 text-black font-semibold disabled:opacity-60">Accept</button>
-              {/* <button disabled={isConfirming} onClick={() => handleRespond(selectedInvite.id, false)} className="px-4 py-2 rounded-lg bg-rose-500 text-black font-semibold disabled:opacity-60">Reject</button> */}
+              <TxButton
+                address={hubAddress as `0x${string}`}
+                abi={hubABI as Abi}
+                functionName="acceptInvite"
+                args={[selectedInvite.id]}
+                idleLabel="Accept"
+                className="px-4 py-2 rounded-lg bg-emerald-500 text-black font-semibold hover:bg-emerald-600 transition-colors"
+              />
+              <TxButton
+                address={gameAddress as `0x${string}`}
+                abi={gameABI as Abi}
+                functionName="claimReward"
+                args={[Number(selectedInvite.betId)]}
+                idleLabel="Claim"
+                className="px-4 py-2 rounded-lg bg-yellow-500 text-black font-semibold hover:bg-yellow-600 transition-colors"
+              />
+              {/* <TxButton address={hubAddress as `0x${string}`} abi={hubABI as Abi} functionName="rejectInvite" args={[selectedInvite.id]} idleLabel="Reject" className="px-4 py-2 rounded-lg bg-rose-500 text-black font-semibold hover:bg-rose-600 transition-colors" /> */}
             </div>
           </div>
         ) : (
@@ -358,13 +355,15 @@ export function InvitesPage() {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleConfirmResult}
-                disabled={selectedResult === null || isConfirming}
-                className="flex-1 px-4 py-2 rounded-lg bg-purple-500 text-white font-semibold disabled:opacity-60 hover:bg-purple-600 transition-colors"
-              >
-                {isConfirming ? 'Setting Result...' : 'Set Result'}
-              </button>
+              <TxButton
+                address={gameAddress as `0x${string}`}
+                abi={gameABI as Abi}
+                functionName="setResult"
+                args={[Number(selectedBetForResult?.betId), selectedResult]}
+                disabled={selectedResult === null}
+                idleLabel="Set Result"
+                className="flex-1 px-4 py-2 rounded-lg text-white font-semibold transition-colors disabled:opacity-60"
+              />
             </div>
           </div>
         </div>
