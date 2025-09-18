@@ -44,6 +44,7 @@ export const GET_USER_INVITATIONS = gql`
   query GetUserInvitations($user: String!) {
     userInvitations(where: { user: $user }, orderBy: id, orderDirection: desc) {
       id
+      userType
       betId
       user
     }

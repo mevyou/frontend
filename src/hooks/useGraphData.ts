@@ -61,6 +61,7 @@ export interface BetCreated {
 
 export interface UserInvitation {
   id: string;
+  userType: number; // 0 = Moderator, 1 = Participant
   betId: string;
   user: string;
 }
