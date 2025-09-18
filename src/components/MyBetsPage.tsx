@@ -15,6 +15,7 @@ import TxButton from "@/components/TxButton";
 import { gameABI, gameAddress } from "@/contract/contract";
 import type { Abi } from "viem";
 import { parseEther } from "viem";
+import { AppImages } from "@/lib/appImages";
 
 type FilterType = "all" | "open" | "matched" | "resolved";
 type ViewType = "grid" | "list";
@@ -161,8 +162,8 @@ export function MyBetsPage() {
         position: "-",
         positionDetails: "-",
         status: mapBetStatusToString(b.status),
-        user: { name: "You", image: "https://placehold.co/40x40" },
-        opponent: { name: "-", image: "https://placehold.co/40x40" },
+        user: { name: "You", image: `${AppImages.defaultAvatar}` },
+        opponent: { name: "-", image: `${AppImages.defaultAvatar2}` },
         moderator: "pending",
         createdAt: new Date(b.createdAt * 1000).toLocaleDateString(undefined, { month: 'short', day: '2-digit' }),
         totalStaked: totalStakedBig.toString(),

@@ -61,7 +61,7 @@ export function HomeDashboard() {
   // Create compatible bet objects for the existing components
   const compatibleBets = useMemo(() => {
     return filteredBets.map(bet => ({
-      id: BigInt(parseInt(bet.id) || 0),
+      id: BigInt(parseInt(bet.id.toString()) || 0),
       creator: (bet as any).owner ?? "",
       opponent: "",
       description: bet.description,

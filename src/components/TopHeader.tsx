@@ -13,6 +13,7 @@ import { AppImages } from "@/lib/appImages";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { SearchSuggestions } from "./SearchSuggestions";
+import { NotificationBell } from "./NotificationBell";
 import { useSearch as useSearchHook } from "@/hooks/useSearch";
 
 interface TopHeaderProps {
@@ -157,6 +158,10 @@ export function TopHeader({ isSidebarCollapsed, onSidebarToggle, onCreateBetClic
 
         {/* Right Section - Balance & Wallet */}
         <div className="flex items-center space-x-4">
+          {/* Notifications Bell */}
+          {mounted && isConnected && (
+            <NotificationBell onClick={() => router.push('/invites')} />
+          )}
           {/* Token Balance with dropdown */}
           {mounted && isConnected && !hideTokenBalance && (
             <div ref={tokenRef} className="relative hidden sm:flex">

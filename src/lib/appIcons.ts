@@ -29,6 +29,7 @@ export const AppIcons = {
   
   // User & Account Icons
   user: "/svg/user.svg",
+  profile: "/svg/profile-user.svg",
   addUser: "/svg/add-user.svg",
   gamer: "/svg/gamer.svg",
   
@@ -38,6 +39,8 @@ export const AppIcons = {
   addWallet: "/svg/add-wallet.svg",
   dollar: "/svg/dollar.svg",
   coins: "/svg/coins.svg",
+  deposit: "/svg/deposit.svg",
+  withdraw: "/svg/withdraw.svg",
 
   // Cryptocurrency Icons
   eth: "/svg/eth.svg",
