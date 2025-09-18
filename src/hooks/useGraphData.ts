@@ -5,7 +5,8 @@ import {
   GET_UPDATED_PROFILES,
   GET_USER_CREATEDS,
   GET_BET_CREATEDS,
-  GET_DASHBOARD_DATA
+  GET_DASHBOARD_DATA,
+  GET_USER_INVITATIONS
 } from '@/lib/graphql';
 
 // Types for the GraphQL responses
@@ -55,6 +56,12 @@ export interface BetCreated {
   bet_options: string | string[];
   user: string;
   requestId: string;
+}
+
+export interface UserInvitation {
+  id: string;
+  betId: string;
+  user: string;
 }
 
 export interface DashboardData {
@@ -121,6 +128,23 @@ export function useBetCreateds(first: number = 5) {
     },
     staleTime: 30000,
     refetchInterval: 60000,
+  });
+}
+
+export function useUserInvitations(user: string) {
+  return useQuery({
+    queryKey: ['userInvitations', user],
+    queryFn: async () => {
+      if (!user) return [] as UserInvitation[];
+      const { data } = await apolloClient.query({
+        query: GET_USER_INVITATIONS,
+        variables: { user: user.toLowerCase() },
+      });
+      return (data as { userInvitations: UserInvitation[] }).userInvitations;
+    },
+    staleTime: 30000,
+    refetchInterval: 60000,
+    enabled: !!user, // Only run query if user is provided
   });
 }
 

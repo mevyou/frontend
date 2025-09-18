@@ -40,6 +40,16 @@ export const GET_SIMPLE_TEST = gql`
 `;
 
 // GraphQL Queries
+export const GET_USER_INVITATIONS = gql`
+  query GetUserInvitations($user: String!) {
+    userInvitations(where: { user: $user }, orderBy: id, orderDirection: desc) {
+      id
+      betId
+      user
+    }
+  }
+`;
+
 export const GET_DELETED_PROFILES = gql`
   query GetDeletedProfiles($first: Int = 5) {
     deletedProfiles(first: $first, orderBy: blockTimestamp, orderDirection: desc) {
