@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { Bet } from "@/lib/contracts/BettingContract";
+import { useEffect, useState } from "react";
+import { Bet, ContractBetOption } from "@/lib/contracts/BettingContract";
 import { AppIcons, AppImages } from "@/lib/assets";
 import Image from "next/image";
 import {
   formatWeiToEther,
   getTimeUntilDeadline,
 } from "@/lib/utils";
+import { getBetFromContract, type ContractBet, type Options as UiOption } from "@/lib/contracts/BettingContract";
+import TxButton from "./TxButton";
+import { gameABI, gameAddress } from "@/contract/contract";
+import { Abi, parseEther } from "viem";
 
 interface ExpandedBettingCardProps {
   bet: Bet;
@@ -15,28 +19,47 @@ interface ExpandedBettingCardProps {
   onUpdateAction?: () => void;
 }
 
-interface BettingOption {
-  label: string;
-  percentage: string;
-  isSelected?: boolean;
-}
-
 export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardProps) {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [hoveredOption, setHoveredOption] = useState<string | null>(null);
+  const [onchainBet, setOnchainBet] = useState<ContractBet | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [stakeAmounts, setStakeAmounts] = useState<Record<string, string>>({});
+  const [ethUsd, setEthUsd] = useState<number | null>(null);
+  const [isPriceLoading, setIsPriceLoading] = useState<boolean>(false);
 
-  const bettingOptions: BettingOption[] = [
-    { label: "≥30M To <40M", percentage: "55.5%" },
-    { label: "<30M", percentage: "21.1%" },
-    { label: "≥40M To <50M", percentage: "11.1%" },
-    { label: "≥50M To <60M", percentage: "6.6%" },
-    { label: "≥60M", percentage: "5.8%" },
-  ];
+  useEffect(() => {
+    const run = async () => {
+      try {
+        setIsLoading(true);
+        // const idBig = BigInt(bet.betId);
+        const data = await getBetFromContract(BigInt(1));
+        setOnchainBet(data);
+        console.log('onchainBet', onchainBet);
+      } catch (e) {
+        console.error('Failed to load bet from contract:', e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    run();
+  }, [bet.betId]);
 
-  const handleStake = (option: string) => {
-    console.log(`Staking on ${option}`);
-    // Add stake logic here
-  };
+  // Fetch ETH/USD price
+  useEffect(() => {
+    const fetchEthPrice = async () => {
+      try {
+        setIsPriceLoading(true);
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+        const data = await response.json();
+        setEthUsd(data.ethereum.usd);
+      } catch (error) {
+        console.error('Failed to fetch ETH price:', error);
+      } finally {
+        setIsPriceLoading(false);
+      }
+    };
+    fetchEthPrice();
+  }, []);
+
 
   return (
     <div className="self-stretch px-0.5 pt-0.5 pb-3 bg-neutral-800 rounded-2xl shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] inline-flex flex-col justify-start items-center gap-2">
@@ -83,58 +106,87 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
         {/* Content Section */}
         <div className="self-stretch px-3 flex flex-col justify-start items-start gap-3">
           {/* Question Title */}
-          <div className="self-stretch h-12 inline-flex justify-start items-center gap-2.5">
-            <div className="flex-1 justify-center text-white text-base font-extrabold font-['Nunito_Sans'] leading-normal">
-              {bet.description}
+          <div className="self-stretch h-12 inline-flex justify-start items-center gap-2.5 flex-col">
+            <div className="flex-1 justify-center text-white text-base font-extrabold font-['Nunito_Sans'] leading-normal w-full">
+              {onchainBet?.name || bet.name}
+            </div>
+            <div className="flex-1 justify-center text-base font-extrabold font-['Nunito_Sans'] w-full text-left text-gray-400">
+              {onchainBet?.description || bet.description}
             </div>
           </div>
 
           {/* Scrollable Betting Options */}
           <div className="self-stretch pb-3 flex flex-col justify-start items-start gap-2.5 overflow-hidden">
             <div className="self-stretch flex flex-col justify-start items-start gap-2">
+              <div className="text-gray-400 text-sm mb-2">Options</div>
               <div className="self-stretch flex flex-col justify-center items-start gap-2 max-h-56 overflow-y-auto pt-2 mt-2">
-                {bettingOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: 'flex',
-                      height: '40px',
-                      padding: '12px 0',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      alignSelf: 'stretch',
-                      borderRadius: '8px',
-                      background: selectedOption === option.label || hoveredOption === option.label ? 'rgba(156, 163, 175, 0.15)' : '#242429'
-                    }}
-                    onMouseEnter={() => setHoveredOption(option.label)}
-                    onMouseLeave={() => setHoveredOption(null)}
-                    onClick={() => setSelectedOption(selectedOption === option.label ? null : option.label)}
-                  >
-                    <div className="p-2 bg-gray-400/20 rounded-lg flex justify-start items-center gap-2.5">
-                      <div className="text-center justify-center text-white text-sm font-bold font-['Nunito_Sans'] capitalize leading-none tracking-tight">
-                        {option.label}
-                      </div>
-                    </div>
-                    <div className="px-0.5 py-2 flex justify-center items-center gap-2.5">
-                      <div className="text-center justify-center text-white text-xs font-medium font-['Nunito_Sans'] capitalize leading-3 tracking-tight">
-                        {option.percentage}
-                      </div>
-                      {(selectedOption === option.label || hoveredOption === option.label) && (
-                        <div
-                          className="px-2 py-1.5 bg-cyan-400 rounded-md flex justify-start items-center gap-2.5 cursor-pointer hover:bg-cyan-500 transition-colors"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleStake(option.label);
-                          }}
-                        >
-                          <div className="text-center justify-center text-zinc-800 text-sm font-medium font-['Nunito_Sans'] capitalize leading-none tracking-tight">
-                            Stake
-                          </div>
+                {isLoading ? (
+                  <div className="text-gray-400 text-sm">Loading bet details...</div>
+                ) : (() => {
+                  const opts: ContractBetOption[] = (onchainBet && !isLoading)
+                    ? (onchainBet.options)
+                    : (bet.options as UiOption[] || []);
+                  return Array.isArray(opts) && opts.length > 0 ? (
+                    opts.map((opt, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-neutral-700/50 rounded-lg p-3 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white text-sm font-medium">{opt.option}</span>
+                          <span className="text-gray-400 text-xs">Staked: {String(onchainBet?.options[idx]?.totalStaked ?? 0)}</span>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                        <div className="flex items-center gap-2">
+                          <div className="flex flex-col gap-1">
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              placeholder="Amount (USD)"
+                              className="w-32 px-2 py-1 rounded bg-neutral-800 text-white text-xs border border-neutral-700 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                              value={stakeAmounts[`${bet.id}-${idx}`] ?? ''}
+                              onChange={(e) => {
+                                const v = e.target.value;
+                                setStakeAmounts((prev) => ({ ...prev, [`${bet.id}-${idx}`]: v }));
+                              }}
+                            />
+                            <div className="text-gray-400 text-[10px] w-32">
+                              {(() => {
+                                const usdStr = stakeAmounts[`${bet.id}-${idx}`];
+                                const usdVal = Number(usdStr);
+                                if (!ethUsd || Number.isNaN(usdVal) || usdVal <= 0) return '≈ 0 ETH';
+                                const ethAmt = usdVal / ethUsd;
+                                return `≈ ${ethAmt.toFixed(6)} ETH`;
+                              })()}
+                            </div>
+                          </div>
+                          <TxButton
+                            address={gameAddress as `0x${string}`}
+                            abi={gameABI as unknown as Abi}
+                            functionName="stake"
+                            args={[BigInt(bet.betId), BigInt(idx)]}
+                            value={(() => {
+                              const usdStr = stakeAmounts[`${bet.betId}-${idx}`];
+                              const usdVal = Number(usdStr);
+                              if (!ethUsd || Number.isNaN(usdVal) || usdVal <= 0) return undefined as unknown as bigint;
+                              try {
+                                const ethAmt = usdVal / ethUsd;
+                                return parseEther(ethAmt.toFixed(6));
+                              } catch {
+                                return undefined as unknown as bigint;
+                              }
+                            })()}
+                            idleLabel="Stake"
+                            pendingLabel="Staking..."
+                            successLabel="Staked"
+                            className="w-24"
+                            showCancel={false}
+                            disabled={isPriceLoading || !ethUsd || !(Number(stakeAmounts[`${bet.betId}-${idx}`]) > 0)}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500 text-xs">No options found</div>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -158,7 +210,8 @@ export function ExpandedBettingCard({ bet, onBackAction }: ExpandedBettingCardPr
           <div className="flex justify-start items-center gap-[3px]">
             <Image src={AppIcons.eth} alt="eth" width={16} height={16} className="text-blue-600" />
             <div className="text-center justify-center text-gray-400 text-xs font-medium font-['Nunito_Sans'] capitalize leading-3 tracking-tight">
-              ${formatWeiToEther(bet.amount)}k
+              {/* ${formatWeiToEther(bet.amount)}k */}
+              {onchainBet?.options.reduce((sum, o) => sum + (o.totalStaked ?? BigInt(0)), BigInt(0)).toString()}k
             </div>
           </div>
 

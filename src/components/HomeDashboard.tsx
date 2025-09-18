@@ -7,7 +7,7 @@ import { PredictionCard } from "./PredictionCard";
 import { ExpandedBettingCard } from "./ExpandedBettingCard";
 import { AppIcons } from "@/lib/assets";
 import { dummyBets } from "@/lib/dummyData";
-import { Bet, BetStatus, BetType, Options } from "@/lib/contracts/BettingContract";
+import { Bet, BetType, Options } from "@/lib/contracts/BettingContract";
 import { useSearch } from "@/contexts/SearchContext";
 import { useBetCreateds } from "@/hooks/useGraphData";
 import { transformBetCreatedToBet, TransformedBet } from "@/lib/betUtils";
@@ -25,7 +25,8 @@ export function HomeDashboard() {
     if (!betCreateds) {
       // Convert dummy bets to TransformedBet format for consistency
       return dummyBets.map((bet, index) => ({
-        id: bet.id.toString(),
+        id: bet.id,
+        betId: bet.betId,
         owner: bet.owner,
         description: bet.description,
         amount: (Number(bet.amount) / 1e18).toString(),
@@ -59,13 +60,15 @@ export function HomeDashboard() {
   }, [betCreateds, searchQuery]);
 
   // Create compatible bet objects for the existing components
+  console.log('filteredBets', filteredBets);
   const compatibleBets = useMemo(() => {
     return filteredBets.map(bet => ({
-      id: BigInt(parseInt(bet.id) || 0),
-      creator: (bet as any).owner ?? "",
-      opponent: "",
+      id: BigInt(bet.id),
+      betId: BigInt(bet.betId || 0),
+      // creator: bet.owner,
+      // opponent: "",
       description: bet.description,
-      amount: BigInt(0),
+      // amount: BigInt(0),
       deadline: BigInt((bet.createdAt || Math.floor(Date.now() / 1000)) + 86400),
       status: bet.status,
       winner: "",
@@ -74,7 +77,7 @@ export function HomeDashboard() {
       name: bet.name,
       image: bet.image,
       link: bet.link,
-      owner: (bet as any).owner ?? "",
+      owner: bet.owner,
       result: BigInt(bet.result ?? -1),
       createdAt: BigInt(bet.createdAt || 0),
       updatedAt: BigInt(bet.updatedAt || 0),

@@ -129,6 +129,7 @@ export interface Options {
 
 export interface Bet {
   id: bigint;
+  betId: bigint;
   creator: string;
   opponent: string;
   amount: bigint;

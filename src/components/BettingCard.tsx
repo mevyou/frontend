@@ -40,9 +40,9 @@ export function BettingCard({ bet, onClick }: BettingCardProps) {
           <div className="w-12 h-12 bg-neutral-800 rounded-[129.25px] inline-flex justify-start items-center mb-2">
             <div className="w-12 h-12 relative">
               <div className={`w-12 h-12 left-0 top-0 absolute rounded-full ${Number(bet.id) % 4 === 0 ? 'bg-gradient-to-b from-indigo-900 to-red-600' :
-                  Number(bet.id) % 4 === 1 ? 'bg-gradient-to-b from-purple-600 to-pink-500' :
-                    Number(bet.id) % 4 === 2 ? 'bg-gradient-to-b from-blue-600 to-cyan-500' :
-                      'bg-gradient-to-b from-green-600 to-emerald-500'
+                Number(bet.id) % 4 === 1 ? 'bg-gradient-to-b from-purple-600 to-pink-500' :
+                  Number(bet.id) % 4 === 2 ? 'bg-gradient-to-b from-blue-600 to-cyan-500' :
+                    'bg-gradient-to-b from-green-600 to-emerald-500'
                 }`} />
               <div className="w-6 h-6 left-[12px] top-[12px] absolute flex items-center justify-center">
                 <Image src={AppIcons.home1} alt="icon" width={16} height={16} className="text-white" />
@@ -68,32 +68,35 @@ export function BettingCard({ bet, onClick }: BettingCardProps) {
         {/* Content Section */}
         <div className="self-stretch px-3 flex flex-col justify-start items-start gap-3">
           {/* Question Title */}
-          <div className="self-stretch h-12 inline-flex justify-start items-center gap-2.5">
-            <div className="flex-1 justify-center text-white text-base font-extrabold font-['Nunito_Sans'] leading-normal">
+          <div className="self-stretch h-12 inline-flex justify-start items-center gap-2.5 flex-col w-full">
+            <div className="flex-1 justify-center text-white text-base font-extrabold font-['Nunito_Sans'] leading-normal w-full">
+              {truncateText(bet.name, 80)}
+            </div>
+            <div className="flex-1 justify-center text-white text-base font-extrabold font-['Nunito_Sans'] leading-normal w-full">
               {truncateText(bet.description, 80)}
             </div>
           </div>
 
           {/* Progress and Buttons */}
           <div className="self-stretch pb-3 flex flex-col justify-start items-start gap-2">
-            {/* Progress Bar */}
-            <div className="self-stretch inline-flex justify-start items-center gap-1">
+
+            {/* <div className="self-stretch inline-flex justify-start items-center gap-1">
               <div className="text-center justify-center text-white text-sm font-semibold font-['Nunito_Sans'] capitalize leading-none tracking-tight">57%</div>
               <div className="flex-1 h-2 relative bg-red-400 rounded-[99px] overflow-hidden">
                 <div className="w-36 h-2 left-0 top-0 absolute bg-green-400" />
               </div>
               <div className="text-center justify-center text-white text-sm font-semibold font-['Nunito_Sans'] capitalize leading-none tracking-tight">43%</div>
-            </div>
+            </div> */}
 
             {/* Yes/No Buttons */}
-            <div className="self-stretch inline-flex justify-start items-center gap-2">
+            {/* <div className="self-stretch inline-flex justify-start items-center gap-2">
               <div className="flex-1 h-10 p-2.5 bg-green-400/10 rounded-lg border border-green-300 flex justify-center items-center gap-1 overflow-hidden hover:bg-green-400/20 hover:border-green-400 transition-all duration-200 cursor-pointer">
                 <div className="text-center justify-center text-green-500 text-sm font-semibold font-['Inter'] capitalize leading-none tracking-tight">Yes</div>
               </div>
               <div className="flex-1 h-10 p-2.5 bg-red-400/10 rounded-lg border border-red-300 flex justify-center items-center gap-1 overflow-hidden hover:bg-red-400/20 hover:border-red-400 transition-all duration-200 cursor-pointer">
                 <div className="text-center justify-center text-red-500 text-sm font-semibold font-['Inter'] capitalize leading-none tracking-tight">No</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -115,7 +118,8 @@ export function BettingCard({ bet, onClick }: BettingCardProps) {
           <div className="flex justify-start items-center gap-[3px]">
             <Image src={AppIcons.eth} alt="eth" width={16} height={16} className="text-blue-600" />
             <div className="text-center justify-center text-gray-400 text-xs font-medium font-['Nunito_Sans'] capitalize leading-3 tracking-tight">
-              ${formatWeiToEther(bet.amount)}k
+              {/* ${formatWeiToEther(bet.opti)}k */}
+              0k
             </div>
           </div>
 
