@@ -51,7 +51,7 @@ export interface BetCreated {
   bet_createdAt: string;
   bet_updatedAt: string;
   bet_betType: string;
-  bet_options: string;
+  bet_options: string | string[];
   user: string;
   requestId: string;
 }

@@ -124,7 +124,7 @@ export enum BetType {
 
 export interface Options {
   option: string;
-  odds: bigint;
+  totalStaked: bigint;
 }
 
 export interface Bet {

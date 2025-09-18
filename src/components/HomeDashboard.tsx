@@ -45,6 +45,7 @@ export function HomeDashboard() {
     }
 
     const transformedBets = betCreateds.map(transformBetCreatedToBet);
+    console.log(transformedBets);
 
     if (!searchQuery.trim()) {
       return transformedBets;
@@ -65,7 +66,7 @@ export function HomeDashboard() {
       opponent: "",
       description: bet.description,
       amount: BigInt(0),
-      deadline: BigInt((bet.createdAt || Math.floor(Date.now()/1000)) + 86400),
+      deadline: BigInt((bet.createdAt || Math.floor(Date.now() / 1000)) + 86400),
       status: bet.status,
       winner: "",
       options: [] as Options[],
