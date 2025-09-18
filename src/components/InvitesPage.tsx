@@ -2,7 +2,7 @@
 
 import { useAccount } from "wagmi";
 import Image from "next/image";
-import { useInvites, useUserInvitations } from "@/hooks/useGraphData";
+import { useInvites, useUserInvitations, useAcceptedInvites } from "@/hooks/useGraphData";
 import { AppIcons } from "@/lib/appIcons";
 import { useState } from "react";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
@@ -13,6 +13,7 @@ export function InvitesPage() {
   const { address } = useAccount();
   const { data: invites, isLoading } = useInvites(address);
   const { data: userInvitations, isLoading: isLoadingInvitations } = useUserInvitations(address || '');
+  const { data: acceptedInvites, isLoading: isLoadingAccepted } = useAcceptedInvites(address || '');
   const [selected, setSelected] = useState<string | null>(null);
 
   const { writeContract, data: txHash } = useWriteContract();
@@ -48,20 +49,27 @@ export function InvitesPage() {
     });
   };
 
-  // Filter user invitations to only show those for the connected user
+  // Get accepted bet IDs for filtering
+  const acceptedBetIds = new Set(acceptedInvites?.map(invite => invite.betId) || []);
+
+  // Filter user invitations to only show those for the connected user and not already accepted
   const filteredUserInvitations = userInvitations?.filter(invitation =>
-    invitation.user?.toLowerCase() === address?.toLowerCase()
+    invitation.user?.toLowerCase() === address?.toLowerCase() &&
+    !acceptedBetIds.has(invitation.betId)
   ) || [];
 
   // Debug logging for user invitations
   console.log('User Invitations:', userInvitations);
+  console.log('Accepted Invites:', acceptedInvites);
+  console.log('Accepted Bet IDs:', Array.from(acceptedBetIds));
   console.log('Filtered User Invitations:', filteredUserInvitations);
   console.log('Connected Address:', address);
   console.log('Loading Invitations:', isLoadingInvitations);
+  console.log('Loading Accepted:', isLoadingAccepted);
 
   if (isLoading) return <div className="p-6 text-gray-400">Loading invites…</div>;
 
-  if ((!invites || invites.length === 0) && (!filteredUserInvitations || filteredUserInvitations.length === 0)) {
+  if ((!invites || invites.length === 0) && (!filteredUserInvitations || filteredUserInvitations.length === 0) && (!acceptedInvites || acceptedInvites.length === 0)) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center" style={{ backgroundColor: '#121214' }}>
         <Image src={AppIcons.giftInactive} alt="no invites" width={80} height={80} className="w-24 h-24" />
@@ -76,10 +84,39 @@ export function InvitesPage() {
     <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ backgroundColor: '#121214' }}>
       {/* List */}
       <div className="space-y-3">
+        {/* Accepted Invites */}
+        {acceptedInvites && acceptedInvites.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-white text-lg font-semibold mb-3">Accepted Invites</h3>
+            {acceptedInvites.map(invitation => (
+              <div key={invitation.id} className="rounded-xl border border-[#1F1F23] bg-[#0f0f12] p-4 flex items-center justify-between hover:bg-[#141418]">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-emerald-500" />
+                  <div>
+                    <div className="text-white font-semibold">Bet ID: {invitation.betId}</div>
+                    <div className="text-gray-400 text-xs">User: {invitation.user?.slice(0, 6)}…{invitation.user?.slice(-4)}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-lg bg-green-500 text-white text-sm font-semibold">
+                    Accepted
+                  </span>
+                  <button
+                    onClick={() => setSelected(invitation.id)}
+                    className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors"
+                  >
+                    <Image src={AppIcons.arrowRight} alt="view" width={16} height={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* User Invitations */}
         {filteredUserInvitations && filteredUserInvitations.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-white text-lg font-semibold mb-3">User Invitations</h3>
+            <h3 className="text-white text-lg font-semibold mb-3">Pending Invitations</h3>
             {filteredUserInvitations.map(invitation => (
               <div key={invitation.id} className="rounded-xl border border-[#1F1F23] bg-[#0f0f12] p-4 flex items-center justify-between hover:bg-[#141418]">
                 <div className="flex items-center gap-3">

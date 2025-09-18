@@ -50,6 +50,16 @@ export const GET_USER_INVITATIONS = gql`
   }
 `;
 
+export const GET_ACCEPTED_INVITES = gql`
+  query GetAcceptedInvites($user: String!) {
+    acceptedInvites(where: { user: $user }, orderBy: id, orderDirection: desc) {
+      id
+      betId
+      user
+    }
+  }
+`;
+
 export const GET_DELETED_PROFILES = gql`
   query GetDeletedProfiles($first: Int = 5) {
     deletedProfiles(first: $first, orderBy: blockTimestamp, orderDirection: desc) {
